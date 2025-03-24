@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service
 @Service
 class MqttService {
 
-    private val brokerUrl = "tcp://broker.hivemq.com:1883" // Cambia esto si usas otro broker
+    private val brokerUrl = "tcp://broker.hivemq.com:1883" // Por ahora sirve, pronto levantaremos propio
     private val clientId = "spring-boot-mqtt-client"
     private val client = MqttClient(brokerUrl, clientId)
 

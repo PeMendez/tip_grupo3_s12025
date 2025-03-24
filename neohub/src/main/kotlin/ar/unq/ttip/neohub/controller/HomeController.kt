@@ -10,6 +10,6 @@ class HomeController {
 
     @GetMapping("/status")
     fun getStatus(): String {
-        return "API is running!"
+        return "La API está VIVAAAA !"
     }
 }
