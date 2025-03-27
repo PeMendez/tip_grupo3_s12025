@@ -1,41 +1,36 @@
 package ar.unq.ttip.neohub.service
 
-import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken
-import org.eclipse.paho.client.mqttv3.MqttCallback
 import org.eclipse.paho.client.mqttv3.MqttClient
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions
+import org.eclipse.paho.client.mqttv3.MqttException
 import org.eclipse.paho.client.mqttv3.MqttMessage
 import org.springframework.stereotype.Service
 
 @Service
 class MqttService {
-
-    private val brokerUrl = "tcp://broker.hivemq.com:1883" // Por ahora sirve, pronto levantaremos propio
-    private val clientId = "spring-boot-mqtt-client"
-    private val client = MqttClient(brokerUrl, clientId)
+    private val mqttClient: MqttClient = MqttClient("tcp://broker.hivemq.com:1883", MqttClient.generateClientId())
 
     init {
-        val options = MqttConnectOptions()
-        options.isCleanSession = true
-        client.connect(options)
-
-        client.setCallback(object : MqttCallback {
-            override fun connectionLost(cause: Throwable) {
-                println("Connection lost: ${cause.message}")
+        try {
+            //mqttClient = MqttClient("tcp://broker.hivemq.com:1883", MqttClient.generateClientId())
+            val options = MqttConnectOptions().apply {
+                isAutomaticReconnect = true
+                isCleanSession = true
             }
-
-            override fun messageArrived(topic: String, message: MqttMessage) {
-                println("Message received on topic $topic: ${String(message.payload)}")
-            }
-
-            override fun deliveryComplete(token: IMqttDeliveryToken) {
-                println("Message delivered!")
-            }
-        })
+            mqttClient.connect(options)
+            println("Conectado exitosamente al broker MQTT de HiveMQ")
+        } catch (e: MqttException) {
+            throw RuntimeException("Error al conectar con el broker HiveMQ", e)
+        }
     }
 
-    fun publishMessage(topic: String, payload: String) {
-        val message = MqttMessage(payload.toByteArray())
-        client.publish(topic, message)
+    fun publish(topic: String, message: String) {
+        try {
+            val mqttMessage = MqttMessage(message.toByteArray()).apply { qos = 1 }
+            mqttClient.publish(topic, mqttMessage)
+            println("Mensaje publicado: $message en el tópico: $topic")
+        } catch (e: MqttException) {
+            println("Error al publicar mensaje: ${e.message}")
+        }
     }
 }
