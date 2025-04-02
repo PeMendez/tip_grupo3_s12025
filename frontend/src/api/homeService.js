@@ -1,13 +1,15 @@
 export const controlLight = async (isOn) => {
+
+    const apiUrl = "http://localhost:8080"
     try {
-        const response = await fetch('/api/mqtt/send', {
+        const response = await fetch(apiUrl+'/api/mqtt/send', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
             body: new URLSearchParams({
-                topic: 'luces',
-                message: isOn ? 'encender' : 'apagar'
+                topic: 'LEDCtrl',
+                message: isOn ? 'toggle' : 'toggle'
             })
         });
 
