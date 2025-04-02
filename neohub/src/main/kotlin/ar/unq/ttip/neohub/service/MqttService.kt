@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class MqttService {
-    private val mqttClient: MqttClient = MqttClient("tcp://broker.hivemq.com:1883", MqttClient.generateClientId())
+    private val mqttClient: MqttClient = MqttClient("tcp://test.mosquitto.org:1883", MqttClient.generateClientId())
 
     init {
         try {
