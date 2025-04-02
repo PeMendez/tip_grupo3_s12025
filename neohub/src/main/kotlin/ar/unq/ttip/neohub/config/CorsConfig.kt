@@ -1,4 +1,4 @@
-package ar.unq.ttip.neohub.security
+package ar.unq.ttip.neohub.config
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
