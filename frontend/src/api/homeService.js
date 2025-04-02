@@ -8,7 +8,7 @@ export const controlLight = async (isOn) => {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
             body: new URLSearchParams({
-                topic: 'LEDCtrl',
+                topic: 'LEDctrl',
                 message: isOn ? 'toggle' : 'toggle'
             })
         });
