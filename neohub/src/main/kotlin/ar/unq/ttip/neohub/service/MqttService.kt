@@ -7,8 +7,12 @@ import org.eclipse.paho.client.mqttv3.MqttMessage
 import org.springframework.stereotype.Service
 
 @Service
-class MqttService {
-    private val mqttClient: MqttClient = MqttClient("tcp://test.mosquitto.org:1883", MqttClient.generateClientId())
+class MqttService(/*private val webSocketHandler: MqttWebSocketHandler*/) {
+    private val brokerUrl = "tcp://test.mosquitto.org:1883"
+    private val clientId = "APIListener"
+    private val topic = "unq-button"
+
+    private val mqttClient: MqttClient = MqttClient(brokerUrl, clientId, null)
 
     init {
         try {
@@ -18,9 +22,10 @@ class MqttService {
                 isCleanSession = true
             }
             mqttClient.connect(options)
-            println("Conectado exitosamente al broker MQTT de HiveMQ")
+            println("Conectado exitosamente al broker MQTT.")
+            subscribeTopic(topic)
         } catch (e: MqttException) {
-            throw RuntimeException("Error al conectar con el broker HiveMQ", e)
+            throw RuntimeException("Error al conectar con el broker.", e)
         }
     }
 
@@ -31,6 +36,21 @@ class MqttService {
             println("Mensaje publicado: $message en el tópico: $topic")
         } catch (e: MqttException) {
             println("Error al publicar mensaje: ${e.message}")
+        }
+    }
+
+    private fun subscribeTopic(topic: String) {
+        try{
+            mqttClient.subscribe(topic){ receivedTopic, message -> //funcion callback para cuando se recibe un msj
+                val payload = String(message.payload)
+                println("Mensaje recibido en '$receivedTopic': $payload")
+
+                //aqui tambien lo tiene que reenviar a websocket para que lo vea el front
+                //webSocketHandler.sendMessage("MQTT $topic: $payload")
+            }
+            println("Suscrito exitosamente al tópico: $topic")
+        } catch (e: MqttException) {
+            e.printStackTrace()
         }
     }
 }
