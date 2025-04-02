@@ -59,7 +59,7 @@ const SmartHomeDashboard = () => {
     };
 
     return (
-        <div className="dashboard-container">
+        <div className="dashboard-container compact-view">
             {loading && <div className="loading-overlay">Enviando comando...</div>}
             {error && <div className="error-message">{error}</div>}
 
