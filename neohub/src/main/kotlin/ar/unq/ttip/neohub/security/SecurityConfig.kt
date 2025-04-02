@@ -15,7 +15,7 @@ class SecurityConfig {
         http
             .csrf {csrf -> csrf.disable() }
             .authorizeHttpRequests { auth ->
-                auth.requestMatchers("/api/**", "/api/mqtt/**").permitAll() // Permite acceso público a /api/**
+                auth.requestMatchers("/api/**", "/api/mqtt/**", "/ws/**").permitAll() // Permite acceso público a /api/**
                     .anyRequest().authenticated() // Requiere autenticación para todos los demás endpoints
             }
         return http.build()

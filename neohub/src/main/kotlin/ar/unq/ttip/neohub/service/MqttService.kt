@@ -1,5 +1,6 @@
 package ar.unq.ttip.neohub.service
 
+import ar.unq.ttip.neohub.handler.MqttWebSocketHandler
 import org.eclipse.paho.client.mqttv3.MqttClient
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions
 import org.eclipse.paho.client.mqttv3.MqttException
@@ -7,9 +8,9 @@ import org.eclipse.paho.client.mqttv3.MqttMessage
 import org.springframework.stereotype.Service
 
 @Service
-class MqttService(/*private val webSocketHandler: MqttWebSocketHandler*/) {
+class MqttService(private val webSocketHandler: MqttWebSocketHandler) {
     private val brokerUrl = "tcp://test.mosquitto.org:1883"
-    private val clientId = "APIListener"
+    private val clientId = "UNQ-APIListener-1234"
     private val topic = "unq-button"
 
     private val mqttClient: MqttClient = MqttClient(brokerUrl, clientId, null)
@@ -40,17 +41,21 @@ class MqttService(/*private val webSocketHandler: MqttWebSocketHandler*/) {
     }
 
     private fun subscribeTopic(topic: String) {
-        try{
-            mqttClient.subscribe(topic){ receivedTopic, message -> //funcion callback para cuando se recibe un msj
-                val payload = String(message.payload)
-                println("Mensaje recibido en '$receivedTopic': $payload")
+        try {
+                println("DEBUG: Intentando suscribirse al tópico: $topic")
 
-                //aqui tambien lo tiene que reenviar a websocket para que lo vea el front
-                //webSocketHandler.sendMessage("MQTT $topic: $payload")
-            }
-            println("Suscrito exitosamente al tópico: $topic")
+                mqttClient.subscribe(topic) { receivedTopic, message ->
+                    val payload = String(message.payload)
+                    println("DEBUG: Mensaje recibido en '$receivedTopic': $payload")
+
+                    // Reenviar a WebSocket
+                    webSocketHandler.sendMessage("MQTT $topic: $payload")
+                }
+
+                println("DEBUG: Suscripción exitosa al tópico: $topic")
         } catch (e: MqttException) {
-            e.printStackTrace()
+                println("ERROR: No se pudo suscribir a MQTT - ${e.message}")
+                e.printStackTrace()
         }
     }
 }
