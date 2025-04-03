@@ -1,6 +1,6 @@
 import './principal.css';
 import logo from './assets/NeoHub.png';
-import { useState } from 'react';
+import {useState, useEffect, useCallback, useRef} from 'react';
 import {
     FiSun,
     FiThermometer,
@@ -10,12 +10,15 @@ import {
     FiZap
 } from 'react-icons/fi';
 import { controlLight } from './api/homeService.js';
+import { connectWebSocket, disconnectWebSocket } from './websocket';
+import Toast from './Toast';
 
 const SmartHomeDashboard = () => {
+
     const [devices, setDevices] = useState([
         { id: 1, name: "Luces", type: "light", isOn: false },
         { id: 2, name: "Temperatura", type: "thermostat", temp: 22, showTemp: false },
-        { id: 3, name: "Alarma", type: "alarm", isActive: false },
+        { id: 3, name: "Alarma", type: "alarm", isActive: false }, // Estado de alarma aquí
         { id: 4, name: "Cámaras", type: "camera", isRecording: false },
         { id: 5, name: "Cerraduras", type: "lock", isLocked: true },
         { id: 6, name: "Energía", type: "plug", isOn: false },
@@ -23,6 +26,18 @@ const SmartHomeDashboard = () => {
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [toast, setToast] = useState(null);
+    const audioContextRef = useRef(null);
+    const [audioEnabled, setAudioEnabled] = useState(false);
+
+    const initAudio = () => {
+        if (!audioContextRef.current) {
+            audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
+            setAudioEnabled(true);
+        }
+    };
+
+    const isAlarmActive = devices.find(device => device.type === 'alarm')?.isActive || false;
 
     const toggleLight = async (id) => {
         setLoading(true);
@@ -52,11 +67,77 @@ const SmartHomeDashboard = () => {
                     ? { ...device, showTemp: !device.showTemp }
                     : device
             ));
-
         } else if (type !== 'light') {
             alert(`Control para ${type} aún no implementado`);
         }
     };
+    const playAlarmSound = useCallback(() => {
+        if (!audioEnabled || !audioContextRef.current) return;
+
+        try {
+            const audioContext = audioContextRef.current;
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+
+            oscillator.type = "sine";
+            oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            gainNode.gain.exponentialRampToValueAtTime(0.3, audioContext.currentTime + 0.1);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.2);
+
+            oscillator.start();
+
+            setTimeout(() => {
+                oscillator.stop();
+            }, 5000);
+
+        } catch (e) {
+            console.error("Error al crear audio:", e);
+        }
+    }, [audioEnabled]);
+
+    const handleWebSocketMessage = useCallback((data) => {
+        if (data.type === "ALARM_TRIGGERED") {
+            setDevices(prev => prev.map(device =>
+                device.type === 'alarm' ? { ...device, isActive: true } : device
+            ));
+
+            setToast({
+                message: data.message,
+                key: Date.now()
+            });
+
+            playAlarmSound();
+
+            setTimeout(() => {
+                setDevices(prev => prev.map(device =>
+                    device.type === 'alarm' ? { ...device, isActive: false } : device
+                ));
+            }, 5000);
+        }
+    }, [playAlarmSound]);
+
+    useEffect(() => {
+        connectWebSocket(handleWebSocketMessage);
+        return () => disconnectWebSocket();
+    }, [handleWebSocketMessage]);
+
+    useEffect(() => {
+        const handleFirstClick = () => {
+            initAudio();
+            document.removeEventListener('click', handleFirstClick);
+        };
+
+        document.addEventListener('click', handleFirstClick);
+
+        return () => {
+            document.removeEventListener('click', handleFirstClick);
+        };
+    }, []);
 
     return (
         <div className="dashboard-container compact-view">
@@ -71,44 +152,57 @@ const SmartHomeDashboard = () => {
                 {devices.map((device) => (
                     <div
                         key={device.id}
-                        className={`device-card ${device.isOn ? 'active' : ''}`}
+                        className={`device-card ${device.isOn ? 'active' : ''} ${
+                            device.type === 'alarm' && isAlarmActive ? 'alarm-active' : ''
+                        }`}
                         onClick={() => handleDeviceClick(device.id, device.type)}
                     >
                         <div className="device-icon">
-                            {device.type === 'light' && <FiSun/>}
-                            {device.type === 'thermostat' && <FiThermometer/>}
-                            {device.type === 'alarm' && <FiShield/>}
-                            {device.type === 'camera' && <FiVideo/>}
-                            {device.type === 'lock' && <FiLock/>}
-                            {device.type === 'plug' && <FiZap/>}
+                            {device.type === 'light' && <FiSun />}
+                            {device.type === 'thermostat' && <FiThermometer />}
+                            {device.type === 'alarm' && <FiShield />}
+                            {device.type === 'camera' && <FiVideo />}
+                            {device.type === 'lock' && <FiLock />}
+                            {device.type === 'plug' && <FiZap />}
                         </div>
                         <span className="device-label">{device.name}</span>
 
-                        <div className="device-extra-content">
-                            {device.type === 'light' && (
-                                <label className="switch">
-                                    <input
-                                        type="checkbox"
-                                        checked={device.isOn}
-                                        onChange={(e) => {
-                                            e.stopPropagation();
-                                            toggleLight(device.id);
-                                        }}
-                                    />
-                                    <span className="slider round"></span>
-                                </label>
-                            )}
-                            {device.type === 'thermostat' && device.showTemp && (
-                                <div className="temperature-display">
-                                    <span className="device-value">{device.temp}°C</span>
-                                    <div className="temperature-loading">Actualizando...</div>
-                                </div>
-                            )}
-                        </div>
+                        {device.type === 'light' && (
+                            <label className="switch">
+                                <input
+                                    type="checkbox"
+                                    checked={device.isOn}
+                                    onChange={(e) => {
+                                        e.stopPropagation();
+                                        toggleLight(device.id);
+                                    }}
+                                />
+                                <span className="slider round"></span>
+                            </label>
+                        )}
 
+                        {device.type === 'thermostat' && device.showTemp && (
+                            <div className="temperature-display">
+                                <span className="device-value">{device.temp}°C</span>
+                            </div>
+                        )}
+
+                        {device.type === 'alarm' && isAlarmActive && (
+                            <span className="alarm-status">ACTIVA</span>
+                        )}
                     </div>
                 ))}
             </div>
+
+            {toast && (
+                <Toast
+                    key={toast.key}
+                    message={toast.message}
+                    duration={3000}
+                    onClose={() => setToast(null)}
+                />
+            )}
+
         </div>
     );
 };

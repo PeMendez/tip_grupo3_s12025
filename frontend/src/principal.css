@@ -281,3 +281,56 @@ input:checked + .slider:before {
         transform: translateY(0);
     }
 }
+
+.device-status {
+    margin-top: 8px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #4f46e5;
+}
+
+.device-card.active .device-status {
+    color: #10b981;
+}
+
+.device-card.alarm-active {
+    background: #fff0f0;
+    border: 2px solid #ff4444;
+    animation: alarm-pulse 0.5s infinite alternate;
+}
+
+@keyframes alarm-pulse {
+    from { transform: scale(1); box-shadow: 0 0 5px rgba(255,0,0,0.5); }
+    to { transform: scale(1.02); box-shadow: 0 0 20px rgba(255,0,0,0.8); }
+}
+
+.alarm-status {
+    color: #ff4444;
+    font-weight: bold;
+    margin-top: 5px;
+    font-size: 12px;
+}
+
+/*@keyframes alarm-pulse {
+    from { transform: scale(1); }
+    to { transform: scale(1.02); }
+}*/
+
+.toast-notification {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ff4444;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    animation: toast-fadein 0.3s ease-out;
+}
+
+@keyframes toast-fadein {
+    from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+    to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
