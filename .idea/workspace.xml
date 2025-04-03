@@ -6,8 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="09bf219a-ddab-407c-b6b8-1beb0e5da310" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/principal.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/principal.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/principal.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/principal.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/handler/MqttWebSocketHandler.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/handler/MqttWebSocketHandler.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/service/MqttService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/service/MqttService.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,6 +16,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="ProjectErrors" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
@@ -85,7 +88,7 @@
       <option name="presentableId" value="Default" />
       <updated>1743606409596</updated>
       <workItem from="1743606410696" duration="4217000" />
-      <workItem from="1743611278285" duration="10841000" />
+      <workItem from="1743611278285" duration="25402000" />
     </task>
     <servers />
   </component>

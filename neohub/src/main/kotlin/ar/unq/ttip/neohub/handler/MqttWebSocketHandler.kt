@@ -28,4 +28,26 @@ class MqttWebSocketHandler : TextWebSocketHandler() {
             }
         }
     }
+
+    fun handlePhysicalButtonPress() {
+        println("Enviando alerta a ${sessions.size} clientes conectados")
+        val alertMessage = """
+    {
+        "type": "ALARM_TRIGGERED",
+        "message": "¡Alerta activada!",
+        "timestamp": ${System.currentTimeMillis()}
+    }
+    """.trimIndent()
+
+        sessions.forEach { session ->
+            println("Enviando a sesión ${session.id} - Abierta: ${session.isOpen}")
+            if (session.isOpen) {
+                try {
+                    session.sendMessage(TextMessage(alertMessage))
+                } catch (e: Exception) {
+                    println("Error enviando mensaje a ${session.id}: ${e.message}")
+                }
+            }
+        }
+    }
 }
