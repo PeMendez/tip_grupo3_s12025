@@ -119,6 +119,13 @@ const SmartHomeDashboard = () => {
                 ));
             }, 5000);
         }
+
+        if (data.type === "TEMP_UPDATE") {
+            setDevices(prev => prev.map(device =>
+                device.type === 'thermostat' ? { ...device, temp: data.temp } : device
+            ));
+        }
+
     }, [playAlarmSound]);
 
     useEffect(() => {
