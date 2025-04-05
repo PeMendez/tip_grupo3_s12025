@@ -1,10 +1,12 @@
 package ar.unq.ttip.neohub.handler
 
 import org.springframework.stereotype.Component
+import org.springframework.web.socket.CloseStatus
 import org.springframework.web.socket.TextMessage
 import org.springframework.web.socket.WebSocketSession
 import org.springframework.web.socket.handler.TextWebSocketHandler
 import java.util.concurrent.CopyOnWriteArrayList
+
 
 @Component
 class MqttWebSocketHandler : TextWebSocketHandler() {
@@ -16,38 +18,68 @@ class MqttWebSocketHandler : TextWebSocketHandler() {
         println("Cliente WebSocket conectado: ${session.id}")
     }
 
-    override fun afterConnectionClosed(session: WebSocketSession, status: org.springframework.web.socket.CloseStatus) {
+    override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) {
         sessions.remove(session)
         println("Cliente WebSocket desconectado: ${session.id}")
     }
 
     fun sendMessage(message: String) {
-        for (session in sessions) {
-            if (session.isOpen) {
-                session.sendMessage(TextMessage(message))
-            }
-        }
-    }
-
-    fun handlePhysicalButtonPress() {
-        println("Enviando alerta a ${sessions.size} clientes conectados")
-        val alertMessage = """
-    {
-        "type": "ALARM_TRIGGERED",
-        "message": "¡Alerta activada!",
-        "timestamp": ${System.currentTimeMillis()}
-    }
-    """.trimIndent()
-
+        println("Enviando mensaje simple a ${sessions.size} clientes: $message")
         sessions.forEach { session ->
-            println("Enviando a sesión ${session.id} - Abierta: ${session.isOpen}")
             if (session.isOpen) {
                 try {
-                    session.sendMessage(TextMessage(alertMessage))
+                    session.sendMessage(TextMessage(message))
                 } catch (e: Exception) {
                     println("Error enviando mensaje a ${session.id}: ${e.message}")
                 }
             }
         }
+    }
+
+    fun handlePhysicalButtonPress() {
+        println("Botón físico presionado. Enviando alerta a ${sessions.size} clientes WebSocket.")
+        val alertMessage = buildJsonMessage(
+            type = "ALARM_TRIGGERED",
+            message = "¡Alerta activada!"
+        )
+        broadcastJson(alertMessage)
+    }
+
+    fun sendTemperatureUpdate(temperature: String) {
+        val tempMessage = buildJsonMessage(
+            type = "TEMP_UPDATE",
+            message = "Temperatura actual: $temperature"
+        )
+        broadcastJson(tempMessage)
+    }
+
+    fun sendLedStatusUpdate(status: String) {
+        val ledMessage = buildJsonMessage(
+            type = "LED_STATUS",
+            message = "Estado del LED: $status"
+        )
+        broadcastJson(ledMessage)
+    }
+
+    private fun broadcastJson(json: String) {
+        sessions.forEach { session ->
+            if (session.isOpen) {
+                try {
+                    session.sendMessage(TextMessage(json))
+                } catch (e: Exception) {
+                    println("Error enviando JSON a ${session.id}: ${e.message}")
+                }
+            }
+        }
+    }
+
+    private fun buildJsonMessage(type: String, message: String): String {
+        return """
+        {
+            "type": "$type",
+            "message": "$message",
+            "timestamp": ${System.currentTimeMillis()}
+        }
+        """.trimIndent()
     }
 }
