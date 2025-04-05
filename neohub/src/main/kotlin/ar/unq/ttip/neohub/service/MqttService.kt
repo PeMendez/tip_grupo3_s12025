@@ -91,8 +91,8 @@ class MqttService(private val webSocketHandler: MqttWebSocketHandler) {
 
             "unq-temperature" -> {
                 println("Temperatura recibida: $payload")
-                webSocketHandler.sendMessage("TEMP: $payload")
-                //webSocketHandler.sendTemperatureUpdate(payload)
+                //webSocketHandler.sendMessage("TEMP: $payload")
+                webSocketHandler.sendTemperatureUpdate(payload)
             }
 
             else -> {

@@ -46,12 +46,16 @@ class MqttWebSocketHandler : TextWebSocketHandler() {
     }
 
     fun sendTemperatureUpdate(temperature: String) {
-        val tempMessage = buildJsonMessage(
-            type = "TEMP_UPDATE",
-            message = "Temperatura actual: $temperature"
-        )
+        val tempMessage = """
+        {
+            "type": "TEMP_UPDATE",
+            "temp": $temperature
+        }
+    """.trimIndent()
+
         broadcastJson(tempMessage)
     }
+
 
     fun sendLedStatusUpdate(status: String) {
         val ledMessage = buildJsonMessage(
