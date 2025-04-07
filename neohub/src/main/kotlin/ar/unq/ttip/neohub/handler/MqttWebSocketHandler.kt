@@ -37,30 +37,33 @@ class MqttWebSocketHandler : TextWebSocketHandler() {
     }
 
     fun handlePhysicalButtonPress() {
-        println("Botón físico presionado. Enviando alerta a ${sessions.size} clientes WebSocket.")
         val alertMessage = buildJsonMessage(
-            type = "ALARM_TRIGGERED",
-            message = "¡Alerta activada!"
+            mapOf(
+                "type" to "ALARM_TRIGGERED",
+                "message" to "¡Alerta activada!",
+                "timestamp" to System.currentTimeMillis()
+            )
         )
         broadcastJson(alertMessage)
     }
 
-    fun sendTemperatureUpdate(temperature: String) {
-        val tempMessage = """
-        {
-            "type": "TEMP_UPDATE",
-            "temp": $temperature
-        }
-    """.trimIndent()
 
+    fun sendTemperatureUpdate(temperature: String) {
+        val tempMessage = buildJsonMessage(
+            mapOf(
+                "type" to "TEMP_UPDATE",
+                "temp" to temperature
+            )
+        )
         broadcastJson(tempMessage)
     }
 
-
     fun sendLedStatusUpdate(status: String) {
         val ledMessage = buildJsonMessage(
-            type = "LED_STATUS",
-            message = "Estado del LED: $status"
+            mapOf(
+                "type" to "LED",
+                "status" to status
+            )
         )
         broadcastJson(ledMessage)
     }
@@ -76,14 +79,37 @@ class MqttWebSocketHandler : TextWebSocketHandler() {
             }
         }
     }
+//
+//    private fun buildJsonMessage2(type: String, message: String): String {
+//        return """
+//        {
+//            "type": "$type",
+//            "message": "$message",
+//            "timestamp": ${System.currentTimeMillis()}
+//        }
+//        """.trimIndent()
+//    }
 
-    private fun buildJsonMessage(type: String, message: String): String {
-        return """
-        {
-            "type": "$type",
-            "message": "$message",
-            "timestamp": ${System.currentTimeMillis()}
+    fun buildJsonMessage(data: Map<String, Any>): String {
+        val jsonBuilder = StringBuilder("{")
+
+        data.entries.forEachIndexed { index, entry ->
+            val key = entry.key
+            val value = entry.value
+
+            jsonBuilder.append("\"$key\": ")
+            jsonBuilder.append(
+                when (value) {
+                    is Number, is Boolean -> value.toString()
+                    else -> "\"${value.toString()}\""
+                }
+            )
+
+            if (index < data.size - 1) jsonBuilder.append(", ")
         }
-        """.trimIndent()
+
+        jsonBuilder.append("}")
+        return jsonBuilder.toString()
     }
+
 }
