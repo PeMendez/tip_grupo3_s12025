@@ -66,29 +66,14 @@ class MqttWebSocketHandler : TextWebSocketHandler() {
             )
         )
         broadcastJson(ledMessage)
-    }
 
-    private fun broadcastJson(json: String) {
-        sessions.forEach { session ->
-            if (session.isOpen) {
-                try {
-                    session.sendMessage(TextMessage(json))
-                } catch (e: Exception) {
-                    println("Error enviando JSON a ${session.id}: ${e.message}")
-                }
-            }
-        }
-    }
-//
-//    private fun buildJsonMessage2(type: String, message: String): String {
-//        return """
-//        {
-//            "type": "$type",
-//            "message": "$message",
-//            "timestamp": ${System.currentTimeMillis()}
-//        }
-//        """.trimIndent()
-//    }
+        println("Enviando alerta a ${sessions.size} clientes conectados")
+        val alertMessage = """
+    {
+        "type": "ALARM_TRIGGERED",
+        "message": "Se abrió la puerta sin autorización",
+        "timestamp": ${System.currentTimeMillis()}
+
 
     fun buildJsonMessage(data: Map<String, Any>): String {
         val jsonBuilder = StringBuilder("{")

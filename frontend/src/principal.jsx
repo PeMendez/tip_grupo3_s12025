@@ -24,6 +24,7 @@ const SmartHomeDashboard = () => {
         { id: 6, name: "Energía", type: "plug", isOn: false },
     ]);
 
+    const devicesRef = useRef(devices);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [toast, setToast] = useState(null);
@@ -39,13 +40,13 @@ const SmartHomeDashboard = () => {
 
     const isAlarmActive = devices.find(device => device.type === 'alarm')?.isActive || false;
 
-    const toggleLight = async (id) => {
+    const toggleLight = async (id, forceState = null) => {
         setLoading(true);
         setError(null);
 
         try {
             const device = devices.find(d => d.id === id);
-            const newState = !device.isOn;
+            const newState = forceState !== null ? forceState : !device.isOn;
 
             await controlLight(newState);
 
@@ -67,7 +68,7 @@ const SmartHomeDashboard = () => {
                     ? { ...device, showTemp: !device.showTemp }
                     : device
             ));
-        } else if (type !== 'light') {
+        } else if (type !== 'light' && type !== 'alarm') {
             alert(`Control para ${type} aún no implementado`);
         }
     };
@@ -102,10 +103,23 @@ const SmartHomeDashboard = () => {
 
     const handleWebSocketMessage = useCallback((data) => {
         if (data.type === "ALARM_TRIGGERED") {
-            setDevices(prev => prev.map(device =>
-                device.type === 'alarm' ? { ...device, isActive: true } : device
-            ));
 
+            setDevices(prev => {
+                const updated = prev.map(device =>
+                    device.type === 'alarm' ? { ...device, isActive: true } : device
+                );
+
+                const lightDevice = updated.find(d => d.type === 'light');
+                if (lightDevice && !lightDevice.isOn) {
+                    controlLight(true).then(() => {
+                        setDevices(updated.map(device =>
+                            device.type === 'light' ? { ...device, isOn: true } : device
+                        ));
+                    });
+                }
+
+                return updated;
+            });
             setToast({
                 message: data.message,
                 key: Date.now()
@@ -113,11 +127,28 @@ const SmartHomeDashboard = () => {
 
             playAlarmSound();
 
-            setTimeout(() => {
+
+            if (Notification.permission === "granted") {
+                new Notification("🚨 ¡Alarma activada!", {
+                    body: data.message || "Se detectó un evento de alarma.",
+                    icon: "https://cdn-icons-png.flaticon.com/512/484/484167.png",
+                });
+            } else if (Notification.permission !== "denied") {
+                Notification.requestPermission().then(permission => {
+                    if (permission === "granted") {
+                        new Notification("🚨 ¡Alarma activada!", {
+                            body: data.message || "Se detectó un evento de alarma.",
+                            icon: "https://cdn-icons-png.flaticon.com/512/484/484167.png",
+                        });
+                    }
+                });
+            }
+
+            /*setTimeout(() => {
                 setDevices(prev => prev.map(device =>
                     device.type === 'alarm' ? { ...device, isActive: false } : device
                 ));
-            }, 5000);
+            }, 5000);*/
         }
 
         if (data.type === "TEMP_UPDATE") {
@@ -127,6 +158,10 @@ const SmartHomeDashboard = () => {
         }
 
     }, [playAlarmSound]);
+
+    useEffect(() => {
+        devicesRef.current = devices;
+    }, [devices]);
 
     useEffect(() => {
         connectWebSocket(handleWebSocketMessage);
@@ -145,6 +180,27 @@ const SmartHomeDashboard = () => {
             document.removeEventListener('click', handleFirstClick);
         };
     }, []);
+
+    useEffect(() => {
+        const handleClick = (event) => {
+            if (event.target.tagName === 'INPUT' ||
+                event.target.tagName === 'LABEL' ||
+                event.target.closest('.switch')) {
+                return;
+            }
+            setDevices(prev => prev.map(device =>
+                device.type === 'alarm' ? { ...device, isActive: false } : device
+            ));
+        };
+
+        if (isAlarmActive) {
+            document.addEventListener('click', handleClick);
+        }
+
+        return () => {
+            document.removeEventListener('click', handleClick);
+        };
+    }, [isAlarmActive]);
 
     return (
         <div className="dashboard-container compact-view">

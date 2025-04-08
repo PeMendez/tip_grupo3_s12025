@@ -99,6 +99,7 @@
     height: 180px;
     position: relative;
     overflow: hidden;
+    border: 1px solid #fdfdfd;
 }
 
 
