@@ -74,7 +74,7 @@ class MqttService(private val webSocketHandler: MqttWebSocketHandler) {
         when (topic) {
             "unq-button" -> {
                 if (payload.equals("wasPressed", ignoreCase = true)) {
-                    println("Botón físico detectado - Activando alarma")
+                    println("Apertura de puerta detectada - Activando alarma")
                     webSocketHandler.handlePhysicalButtonPress()
                 }
             }

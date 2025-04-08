@@ -69,11 +69,12 @@ class MqttWebSocketHandler : TextWebSocketHandler() {
 
         println("Enviando alerta a ${sessions.size} clientes conectados")
         val alertMessage = """
-    {
-        "type": "ALARM_TRIGGERED",
-        "message": "Se abrió la puerta sin autorización",
-        "timestamp": ${System.currentTimeMillis()}
-
+        {
+            "type": "ALARM_TRIGGERED",
+            "message": "Se abrió la puerta sin autorización",
+            "timestamp": ${System.currentTimeMillis()}
+        """
+    }
 
     fun buildJsonMessage(data: Map<String, Any>): String {
         val jsonBuilder = StringBuilder("{")
@@ -95,6 +96,18 @@ class MqttWebSocketHandler : TextWebSocketHandler() {
 
         jsonBuilder.append("}")
         return jsonBuilder.toString()
+    }
+
+    private fun broadcastJson(json: String) {
+        sessions.forEach { session ->
+            if (session.isOpen) {
+                try {
+                    session.sendMessage(TextMessage(json))
+                } catch (e: Exception) {
+                    println("Error enviando JSON a ${session.id}: ${e.message}")
+                }
+            }
+        }
     }
 
 }
