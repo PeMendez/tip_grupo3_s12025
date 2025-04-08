@@ -34,7 +34,7 @@ class MqttWebSocketHandler : TextWebSocketHandler() {
         val alertMessage = """
     {
         "type": "ALARM_TRIGGERED",
-        "message": "¡Alerta activada!",
+        "message": "Se abrió la puerta sin autorización",
         "timestamp": ${System.currentTimeMillis()}
     }
     """.trimIndent()
