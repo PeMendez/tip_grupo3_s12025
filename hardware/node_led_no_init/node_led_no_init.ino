@@ -1,5 +1,7 @@
 #include <WiFi.h>
 #include <PubSubClient.h>
+#define RELAY_ON false
+#define RELAY_OFF true
 
 // Configuración de WiFi y MQTT
 const char* ssid = "Rengo-AP";
@@ -8,12 +10,13 @@ const char* mqttBroker = "test.mosquitto.org";
 const int mqttPort = 1883;
 const char* topic = "LEDctrl";
 
+
 WiFiClient espClient;
 PubSubClient mqttClient(espClient);
 
-// Configuración del pin del LED
-const int ledPin = 2; //Es el LED built-in de la placa, color azul
-bool ledState = false;
+// Configuración del pin del RELAY
+const int relayPin = 15; //P15 del ESP
+bool relayState = RELAY_OFF;
 
 // Función para manejar mensajes MQTT
 void callback(char* topic, byte* message, unsigned int length) {
@@ -22,21 +25,22 @@ void callback(char* topic, byte* message, unsigned int length) {
     receivedMessage += (char)message[i];
   }
 
-  if (receivedMessage == "on") digitalWrite(ledPin, true);
-  if (receivedMessage == "off") digitalWrite(ledPin, false);
+  if (receivedMessage == "on") digitalWrite(relayPin, RELAY_ON);
+  if (receivedMessage == "off") digitalWrite(relayPin, RELAY_OFF);
   
   if (receivedMessage == "toggle") {
-    ledState = !ledState;
-    digitalWrite(ledPin, ledState);
+    relayState = !relayState;
+    digitalWrite(relayPin, relayState);
   }
+  Serial.println("Estado del RELAY: " + String(relayState));
 }
 
 void setup() {
   Serial.begin(115200);
 
-  // Configuración del LED como salida
-  pinMode(ledPin, OUTPUT);
-  digitalWrite(ledPin, LOW);
+  // Configuración del RELAY como salida
+  pinMode(relayPin, OUTPUT);
+  digitalWrite(relayPin, RELAY_OFF);
 
   // Conexión a WiFi
   Serial.println("Conectando a WiFi...");

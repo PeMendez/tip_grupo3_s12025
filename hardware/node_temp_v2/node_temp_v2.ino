@@ -8,8 +8,7 @@
 
 #define DHTPIN 26
 #define DHTTYPE DHT11
-
-#define I2C_ADDRESS 0x3C // Dirección I2C del display
+#define I2C_ADDRESS 0x3C
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
 #define OLED_RESET -1
@@ -85,17 +84,18 @@ const unsigned char logo[] PROGMEM = {
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
-
-float tempHistory[5] = {24.0F, NAN, NAN, NAN, NAN}; // Historial de temperaturas
-int tempIndex = 0; // Cambié "index" por "tempIndex"
-int startTime;
+float tempHistory[5] = {NAN, NAN, NAN, NAN, NAN};
+int tempIndex = 0;
+unsigned long startTime, dbgTime;
+float lastSentTemp = NAN;
+bool initial_flag = true;
 
 // Configuración de WiFi y MQTT
 const char* ssid = "Rengo-AP";
 const char* password = "Acm27pts"; //Santo y seña por ahora hardcoded
 const char* mqttBroker = "test.mosquitto.org";
 const int mqttPort = 1883;
-const char* topic = "unq-button";
+const char* topic = "unq-temperature";
 
 WiFiClient espClient;
 PubSubClient mqttClient(espClient);
@@ -106,8 +106,23 @@ void showLogo() {
   display.display();
 }
 
-void connect_wifi(){
-	// Conexión a WiFi
+void displayTemp(float temp, float hum){
+    display.clearDisplay();
+    display.setTextSize(2);
+    display.setTextColor(SH110X_WHITE);
+    display.setCursor(35, 15);
+    display.print(temp, 1);
+    display.print(" C");
+
+    display.setTextSize(1);
+    display.setCursor(35, 45);
+    display.print("Humedad: ");
+    display.print(hum, 0);
+    display.print("%");
+    display.display();
+}
+
+void connect_wifi() {
   Serial.println("Conectando a WiFi...");
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
@@ -117,14 +132,11 @@ void connect_wifi(){
   Serial.println("\nWiFi conectado!");
 }
 
-void connect_mqtt(){
-	// Configuración del cliente MQTT
+void connect_mqtt() {
   mqttClient.setServer(mqttBroker, mqttPort);
-
-  // Generar un Client ID único usando la MAC
   uint8_t mac[6];
   WiFi.macAddress(mac);
-  String clientId = "Button-" + String(mac[4], HEX) + String(mac[5], HEX);
+  String clientId = "Temp-" + String(mac[4], HEX) + String(mac[5], HEX);
   mqttClient.connect(clientId.c_str());
 
   if (mqttClient.connected()) {
@@ -138,72 +150,86 @@ void setup() {
   Serial.begin(115200);
   dht.begin();
 
-  // Inicializar la pantalla OLED
   if (!display.begin(I2C_ADDRESS, OLED_RESET)) {
     Serial.println(F("Error al iniciar el display OLED"));
     while (1);
   }
+
   showLogo();
-	connect_wifi();
-	connect_mqtt();
+  connect_wifi();
+  connect_mqtt();
+
   startTime = millis();
+  dbgTime = millis();
 }
 
 void loop() {
+  if (!mqttClient.connected()) {
+    connect_mqtt();
+  }
+  mqttClient.loop();
+
   float temp = dht.readTemperature();
   float humidity = dht.readHumidity();
-
+  float lastValidTemp = NAN;
+  
   // Guardar el valor en el array circular
   tempHistory[tempIndex] = temp;
-  tempIndex = (tempIndex + 1) % 5; // Mantener el índice dentro de 0-4
+  tempIndex = (tempIndex + 1) % 5;
 
-  Serial.print("Temp: ");
-  Serial.print(temp);
-  Serial.print(" C. ");
-  Serial.print("Humidity: ");
-  Serial.print(humidity);
-  Serial.println("%.");
-
-  // Buscar el último valor válido en el historial
-  float lastValidTemp = temp;
+  // Obtener último valor válido
+  
   for (int i = 0; i < 5; i++) {
-    int idx = (tempIndex - 1 - i + 5) % 5; // Retroceder en el buffer circular
+    int idx = (tempIndex - 1 - i + 5) % 5;
     if (!isnan(tempHistory[idx])) {
       lastValidTemp = tempHistory[idx];
       break;
     }
   }
 
-  if (millis() - startTime < 3000) {
-    return;  // Esperamos sin hacer nada visible
+  // Esperar los 3 segundos iniciales (mostrar solo logo)
+  if (millis() - startTime < 3000){
+    return;
   }
 
-  display.clearDisplay();
+  if(millis() - dbgTime > 2000){
+    Serial.print(lastValidTemp);
+    Serial.print(" - ");
+    Serial.println(lastSentTemp);
+    dbgTime = millis();
+  }
 
+  if (initial_flag && !isnan(lastValidTemp)){
+    Serial.println("Temperatura inicial.");
+    //Ver si es la primera vez que va a displayear temperatura
+    displayTemp(lastValidTemp,humidity);
+    // Enviar por MQTT
+    char tempBuffer[10];
+    dtostrf(lastValidTemp, 4, 1, tempBuffer);
+    mqttClient.publish(topic, tempBuffer);
+    lastSentTemp = lastValidTemp;
+    initial_flag = false;
+  }
+  // Solo actualiza si cambió al menos 0.1 °C
+  if (!isnan(lastValidTemp) && fabs(lastValidTemp - lastSentTemp) >= 0.1) {
+    Serial.println("Temperatura cambió, actualizando pantalla y MQTT.");
+    displayTemp(lastValidTemp, humidity);
+
+    // Enviar por MQTT
+    char tempBuffer[10];
+    dtostrf(lastValidTemp, 4, 1, tempBuffer);
+    mqttClient.publish(topic, tempBuffer);
+
+    lastSentTemp = lastValidTemp;
+  }
   if (isnan(lastValidTemp)) {
-    // Si no hay valores válidos, mostrar error
+    // Si no hay valores válidos, mostrar mensaje
+    Serial.println("Chequear el sensor.");
     display.setTextSize(2);
     display.setTextColor(SH110X_WHITE);
     display.setCursor(5, 20);
     display.print("Esperando");
     display.setCursor(25, 45);
     display.print("sensor");
-  } else {
-    // Mostrar la temperatura en grande
-    display.setTextSize(2);
-    display.setTextColor(SH110X_WHITE);
-    display.setCursor(35, 15);
-    display.print(lastValidTemp, 1);
-    display.print(" C");
-
-    // Mostrar la humedad en más pequeño
-    display.setTextSize(1);
-    display.setCursor(35, 45);
-    display.print("Humedad: ");
-    display.print(humidity, 0);
-    display.print("%");
   }
-
-  display.display();
-  delay(2000); // Actualizar cada 2 segundos
 }

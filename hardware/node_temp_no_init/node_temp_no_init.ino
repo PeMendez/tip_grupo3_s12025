@@ -87,7 +87,7 @@ const unsigned char logo[] PROGMEM = {
 };
 
 float tempHistory[5] = {24.0F, NAN, NAN, NAN, NAN}; // Historial de temperaturas
-int tempIndex = 0; // Cambié "index" por "tempIndex"
+int tempIndex = 0;
 int startTime;
 
 // Configuración de WiFi y MQTT
@@ -95,7 +95,7 @@ const char* ssid = "Rengo-AP";
 const char* password = "Acm27pts"; //Santo y seña por ahora hardcoded
 const char* mqttBroker = "test.mosquitto.org";
 const int mqttPort = 1883;
-const char* topic = "unq-button";
+const char* topic = "unq-temperature";
 
 WiFiClient espClient;
 PubSubClient mqttClient(espClient);
@@ -124,7 +124,7 @@ void connect_mqtt(){
   // Generar un Client ID único usando la MAC
   uint8_t mac[6];
   WiFi.macAddress(mac);
-  String clientId = "Button-" + String(mac[4], HEX) + String(mac[5], HEX);
+  String clientId = "Temp-" + String(mac[4], HEX) + String(mac[5], HEX);
   mqttClient.connect(clientId.c_str());
 
   if (mqttClient.connected()) {
@@ -152,18 +152,19 @@ void setup() {
 void loop() {
   float temp = dht.readTemperature();
   float humidity = dht.readHumidity();
+  float sendTemp = temp;
 
   // Guardar el valor en el array circular
   tempHistory[tempIndex] = temp;
   tempIndex = (tempIndex + 1) % 5; // Mantener el índice dentro de 0-4
-
+/*
   Serial.print("Temp: ");
   Serial.print(temp);
   Serial.print(" C. ");
   Serial.print("Humidity: ");
   Serial.print(humidity);
   Serial.println("%.");
-
+*/
   // Buscar el último valor válido en el historial
   float lastValidTemp = temp;
   for (int i = 0; i < 5; i++) {
@@ -172,6 +173,10 @@ void loop() {
       lastValidTemp = tempHistory[idx];
       break;
     }
+  }
+
+  if(!mqttClient.connected()){
+    connect_mqtt();
   }
 
   if (millis() - startTime < 3000) {
@@ -196,6 +201,13 @@ void loop() {
     display.print(lastValidTemp, 1);
     display.print(" C");
 
+//    if(lastValidTemp != sendTemp){
+    Serial.println("Enviando nueva temp.");
+
+    mqttClient.publish(topic,String(lastValidTemp).c_str());
+//      sendTemp = lastValidTemp;
+//    }
+
     // Mostrar la humedad en más pequeño
     display.setTextSize(1);
     display.setCursor(35, 45);
@@ -203,7 +215,6 @@ void loop() {
     display.print(humidity, 0);
     display.print("%");
   }
-
   display.display();
   delay(2000); // Actualizar cada 2 segundos
 }

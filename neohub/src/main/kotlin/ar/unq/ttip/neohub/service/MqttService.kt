@@ -11,20 +11,31 @@ import java.util.*
 @Service
 class MqttService(private val webSocketHandler: MqttWebSocketHandler) {
     private val brokerUrl = "tcp://test.mosquitto.org:1883"
-    private val topic = "unq-button"
     private val clientId = "NeoHub-API-" + UUID.randomUUID().toString().substring(0, 8)
     private val mqttClient: MqttClient = MqttClient(brokerUrl, clientId, null)
 
+    // Lista de tópicos a suscribirse
+    private val topicsToSubscribe = listOf(
+        "unq-button",
+        "LEDctrl",
+        "unq-temperature"
+        //Agregar más si hace falta
+    )
+
     init {
         try {
-            //mqttClient = MqttClient("tcp://broker.hivemq.com:1883", MqttClient.generateClientId())
             val options = MqttConnectOptions().apply {
                 isCleanSession = true
                 isAutomaticReconnect = true
             }
+
             mqttClient.connect(options)
             println("Conectado exitosamente al broker MQTT.")
-            subscribeTopic(topic)
+
+            topicsToSubscribe.forEach { topic ->
+                subscribeTopic(topic)
+            }
+
         } catch (e: MqttException) {
             throw RuntimeException("Error al conectar con el broker.", e)
         }
@@ -42,34 +53,51 @@ class MqttService(private val webSocketHandler: MqttWebSocketHandler) {
 
     private fun subscribeTopic(topic: String) {
         try {
-                println("DEBUG: Intentando suscribirse al tópico: $topic")
+            println("Intentando suscribirse al tópico: $topic")
 
-                mqttClient.subscribe(topic) { receivedTopic, message ->
-                    val payload = String(message.payload)
-                    println("DEBUG: Mensaje recibido en '$receivedTopic': $payload")
+            mqttClient.subscribe(topic) { receivedTopic, message ->
+                val payload = String(message.payload)
+                println("Mensaje recibido en '$receivedTopic': $payload")
+                handleIncomingMessage(receivedTopic, payload)
+            }
 
-                    when {
-                        payload.equals("wasPressed", ignoreCase = true) -> {
-                            println("Botón físico detectado - Activando alarma")
-                            webSocketHandler.handlePhysicalButtonPress()
-                        }
+            println("Suscripción exitosa al tópico: $topic")
 
-                        payload.startsWith("LED_") || payload == "toggle" -> {
-                            println("Comando para LED recibido: $payload")
-                            webSocketHandler.sendMessage(
-                                if (payload == "toggle") "LED_TOGGLE" else payload
-                            )
-                        }
-                        else -> {
-                            println("Mensaje no reconocido: '$payload'")
-                        }
-
-                    }
-                }
-                println("DEBUG: Suscripción exitosa al tópico: $topic")
         } catch (e: MqttException) {
-                println("ERROR: No se pudo suscribir a MQTT - ${e.message}")
-                e.printStackTrace()
+            println("ERROR: No se pudo suscribir a MQTT - ${e.message}")
+            e.printStackTrace()
+        }
+    }
+
+    // Manejo modular de cada mensaje según el tópico
+    private fun handleIncomingMessage(topic: String, payload: String) {
+        when (topic) {
+            "unq-button" -> {
+                if (payload.equals("wasPressed", ignoreCase = true)) {
+                    println("Botón físico detectado - Activando alarma")
+                    webSocketHandler.handlePhysicalButtonPress()
+                }
+            }
+
+            "LEDctrl" -> {
+                if (payload == "toggle") {
+                    println("Comando toggle para LED recibido")
+                    webSocketHandler.sendMessage("LED_TOGGLE")
+                    //webSocketHandler.sendLedStatusUpdate()
+                } else {
+                    println("Comando no reconocido en LEDctrl: $payload")
+                }
+            }
+
+            "unq-temperature" -> {
+                println("Temperatura recibida: $payload")
+                //webSocketHandler.sendMessage("TEMP: $payload")
+                webSocketHandler.sendTemperatureUpdate(payload)
+            }
+
+            else -> {
+                println("Tópico no manejado: $topic, mensaje: $payload")
+            }
         }
     }
 }
