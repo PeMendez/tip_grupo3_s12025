@@ -1,0 +1,73 @@
+### General ###
+HELP.md
+*.log
+*.tmp
+*.temp
+*.bak
+*.swp
+.DS_Store
+Thumbs.db
+
+### Maven ###
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### MQTT ###
+paho*
+__pycache__/
+*.pyc
+
+### IDEs ###
+# STS
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# IntelliJ
+.idea/
+*.iws
+*.iml
+*.ipr
+*.ids
+*.orig
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# VS Code
+.vscode/
+
+### Java ###
+*.class
+*.war
+*.ear
+*.jar
+
+### Node.js ###
+node_modules/
+npm-debug.log
+yarn-error.log
+.next/
+out/
+
+### React ###
+.eslintcache
+.env.local
+.env.development
+.env.test
+.env.production
+.cache/
+dist/
