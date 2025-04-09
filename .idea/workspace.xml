@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="09bf219a-ddab-407c-b6b8-1beb0e5da310" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/index.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/principal.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/principal.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/principal.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/principal.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/handler/MqttWebSocketHandler.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/handler/MqttWebSocketHandler.kt" afterDir="false" />
@@ -94,7 +93,7 @@
       <workItem from="1743611278285" duration="25651000" />
       <workItem from="1743857042526" duration="899000" />
       <workItem from="1743958469626" duration="2990000" />
-      <workItem from="1744143511710" duration="8326000" />
+      <workItem from="1744143511710" duration="18179000" />
     </task>
     <servers />
   </component>

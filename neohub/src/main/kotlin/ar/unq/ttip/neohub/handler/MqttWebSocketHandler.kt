@@ -40,7 +40,7 @@ class MqttWebSocketHandler : TextWebSocketHandler() {
         val alertMessage = buildJsonMessage(
             mapOf(
                 "type" to "ALARM_TRIGGERED",
-                "message" to "¡Alerta activada!",
+                "message" to "Se abrió la puerta sin autorización",
                 "timestamp" to System.currentTimeMillis()
             )
         )

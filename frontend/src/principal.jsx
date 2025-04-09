@@ -6,9 +6,9 @@ import {
     FiThermometer,
     FiShield,
     FiVideo,
-    FiLock,
-    FiZap
+    FiLock
 } from 'react-icons/fi';
+import { LuAirVent } from "react-icons/lu";
 import { controlLight } from './api/homeService.js';
 import { connectWebSocket, disconnectWebSocket } from './websocket';
 import Toast from './Toast';
@@ -18,10 +18,10 @@ const SmartHomeDashboard = () => {
     const [devices, setDevices] = useState([
         { id: 1, name: "Luces", type: "light", isOn: false },
         { id: 2, name: "Temperatura", type: "thermostat", temp: 22, showTemp: false },
-        { id: 3, name: "Alarma", type: "alarm", isActive: false }, // Estado de alarma aquí
+        { id: 3, name: "Alarma", type: "alarm", isActive: false },
         { id: 4, name: "Cámaras", type: "camera", isRecording: false },
         { id: 5, name: "Cerraduras", type: "lock", isLocked: true },
-        { id: 6, name: "Energía", type: "plug", isOn: false },
+        { id: 6, name: "Aire acondicionado", type: "ac", isOn: false, mode: 'off'},
     ]);
 
     const devicesRef = useRef(devices);
@@ -101,9 +101,39 @@ const SmartHomeDashboard = () => {
         }
     }, [audioEnabled]);
 
+    const showNotification = (title, message, options = {}) => {
+        const {
+            icon = "https://cdn-icons-png.flaticon.com/512/619/619153.png)",
+            duration = 3000,
+            toastClass = ''
+        } = options;
+
+        if (Notification.permission === "granted") {
+            new Notification(title, {
+                body: message,
+                icon: icon
+            });
+        } else if (Notification.permission !== "denied") {
+            Notification.requestPermission().then(permission => {
+                if (permission === "granted") {
+                    new Notification(title, {
+                        body: message,
+                        icon: icon
+                    });
+                }
+            });
+        }
+
+        setToast({
+            message: message,
+            key: Date.now(),
+            duration: duration,
+            toastClass: toastClass
+        });
+    };
+
     const handleWebSocketMessage = useCallback((data) => {
         if (data.type === "ALARM_TRIGGERED") {
-
             setDevices(prev => {
                 const updated = prev.map(device =>
                     device.type === 'alarm' ? { ...device, isActive: true } : device
@@ -120,44 +150,76 @@ const SmartHomeDashboard = () => {
 
                 return updated;
             });
-            setToast({
-                message: data.message,
-                key: Date.now()
-            });
+
+            showNotification(
+                "🚨 ¡Alarma activada!",
+                data.message || "Se abrió una puerta sin autorización.",
+                {
+                    icon: "https://cdn-icons-png.flaticon.com/512/3179/3179068.png",
+                    duration: 5000,
+                    toastClass: 'alarm-toast',
+
+                }
+            );
 
             playAlarmSound();
-
-
-            if (Notification.permission === "granted") {
-                new Notification("🚨 ¡Alarma activada!", {
-                    body: data.message || "Se detectó un evento de alarma.",
-                    icon: "https://cdn-icons-png.flaticon.com/512/484/484167.png",
-                });
-            } else if (Notification.permission !== "denied") {
-                Notification.requestPermission().then(permission => {
-                    if (permission === "granted") {
-                        new Notification("🚨 ¡Alarma activada!", {
-                            body: data.message || "Se detectó un evento de alarma.",
-                            icon: "https://cdn-icons-png.flaticon.com/512/484/484167.png",
-                        });
-                    }
-                });
-            }
-
-            /*setTimeout(() => {
-                setDevices(prev => prev.map(device =>
-                    device.type === 'alarm' ? { ...device, isActive: false } : device
-                ));
-            }, 5000);*/
         }
 
         if (data.type === "TEMP_UPDATE") {
-            setDevices(prev => prev.map(device =>
-                device.type === 'thermostat' ? { ...device, temp: data.temp } : device
-            ));
+            const temp = parseFloat(data.temp);
+
+            setDevices(prev => prev.map(device => {
+                if (device.type === 'thermostat') {
+                    return {
+                        ...device,
+                        temp: data.temp,
+                        showTemp: true
+                    };
+                }
+                if (device.type === 'ac') {
+                    let mode = 'off';
+                    let notificationOptions  = {};
+
+                    if (temp >= 28) {
+                        mode = 'cool';
+                        notificationOptions  = {
+                            title: "¡Hace mucho calor!",
+                            message: "Vamos a enfriar el ambiente.",
+                            icon: "https://cdn-icons-png.flaticon.com/512/599/599502.png",
+                            toastClass: 'cool-toast'
+                        };
+                    } else if (temp <= 14) {
+                        mode = 'heat';
+                        notificationOptions  = {
+                            title: "Esto parece el polo sur",
+                            message: "Vamos a calentar el ambiente.",
+                            icon: "https://cdn-icons-png.flaticon.com/512/2740/2740650.png",
+                            toastClass: 'heat-toast'
+                        };
+                    }
+
+                    if (mode !== 'off' && device.mode !== mode) {
+                        showNotification(
+                            notificationOptions.title,
+                            notificationOptions.message,
+                            notificationOptions
+                        );
+                    }
+
+                    return {
+                        ...device,
+                        isOn: mode !== 'off',
+                        mode: mode
+                    };
+                }
+                return device;
+            }));
         }
 
+
+
     }, [playAlarmSound]);
+
 
     useEffect(() => {
         devicesRef.current = devices;
@@ -202,6 +264,18 @@ const SmartHomeDashboard = () => {
         };
     }, [isAlarmActive]);
 
+    useEffect(() => {
+        if (devices.some(d => d.type === 'thermostat' && d.showTemp)) {
+            const timer = setTimeout(() => {
+                setDevices(prev => prev.map(device =>
+                    device.type === 'thermostat' ? { ...device, showTemp: false } : device
+                ));
+            }, 10000);
+
+            return () => clearTimeout(timer);
+        }
+    }, [devices]);
+
     return (
         <div className="dashboard-container compact-view">
             {loading && <div className="loading-overlay">Enviando comando...</div>}
@@ -221,14 +295,18 @@ const SmartHomeDashboard = () => {
                         onClick={() => handleDeviceClick(device.id, device.type)}
                     >
                         <div className="device-icon">
-                            {device.type === 'light' && <FiSun />}
-                            {device.type === 'thermostat' && <FiThermometer />}
-                            {device.type === 'alarm' && <FiShield />}
-                            {device.type === 'camera' && <FiVideo />}
-                            {device.type === 'lock' && <FiLock />}
-                            {device.type === 'plug' && <FiZap />}
+                            {device.type === 'light' && <FiSun/>}
+                            {device.type === 'thermostat' && <FiThermometer/>}
+                            {device.type === 'alarm' && <FiShield/>}
+                            {device.type === 'camera' && <FiVideo/>}
+                            {device.type === 'lock' && <FiLock/>}
+                            {device.type === 'ac' && (
+                                <LuAirVent className={device.mode !== 'off' ? `ac-icon-${device.mode}` : ''}/>
+                            )}
                         </div>
-                        <span className="device-label">{device.name}</span>
+                        <span className={`device-label ${
+                            device.type === 'ac' && device.mode !== 'off' ? `mode-${device.mode}` : ''}`}>
+                            {device.name} </span>
 
                         {device.type === 'light' && (
                             <label className="switch">
@@ -252,6 +330,10 @@ const SmartHomeDashboard = () => {
 
                         {device.type === 'alarm' && isAlarmActive && (
                             <span className="alarm-status">ACTIVA</span>
+                        )}
+
+                        {device.type === 'ac' && device.mode !== 'off' && (
+                            <span className={`ac-mode mode-${device.mode}`}></span>
                         )}
                     </div>
                 ))}
