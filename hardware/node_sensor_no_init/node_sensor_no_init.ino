@@ -6,22 +6,22 @@ const char* ssid = "Rengo-AP";
 const char* password = "Acm27pts"; //Santo y seña por ahora hardcoded
 const char* mqttBroker = "test.mosquitto.org";
 const int mqttPort = 1883;
-const char* topic = "unq-button";
+const char* topic = "unq-button"; //rever nombres de los topics
 
 WiFiClient espClient;
 PubSubClient mqttClient(espClient);
 
-// Configuración del botón
-const int buttonPin = 4;  // Es el marcado como P4 en la placa
-bool lastButtonState = HIGH;
+// Configuración del sensor
+const int sensorPin = 26;
+bool lastSensorState = HIGH;
 unsigned long lastDebounceTime = 0;
-const unsigned long debounceDelay = 50;  // 50ms para antirrebote del pulsador
+const unsigned long debounceDelay = 50;  // ms para antirrebote
 
 void setup() {
   Serial.begin(115200);
 
   // Configuración del botón como entrada con pull-up
-  pinMode(buttonPin, INPUT_PULLUP);
+  pinMode(sensorPin, INPUT_PULLUP);
 
   // Conexión a WiFi
   Serial.println("Conectando a WiFi...");
@@ -38,7 +38,7 @@ void setup() {
   // Generar un Client ID único usando la MAC
   uint8_t mac[6];
   WiFi.macAddress(mac);
-  String clientId = "Button-" + String(mac[4], HEX) + String(mac[5], HEX);
+  String clientId = "Sensor-" + String(mac[4], HEX) + String(mac[5], HEX);
   mqttClient.connect(clientId.c_str());
 
   if (mqttClient.connected()) {
@@ -53,7 +53,7 @@ void loop() {
     Serial.println("Reconectando al broker MQTT...");
     uint8_t mac[6];
     WiFi.macAddress(mac);
-    String clientId = "Button-" + String(mac[4], HEX) + String(mac[5], HEX);
+    String clientId = "Sensor-" + String(mac[4], HEX) + String(mac[5], HEX);
     mqttClient.connect(clientId.c_str());
 
     if (mqttClient.connected()) {
@@ -64,17 +64,24 @@ void loop() {
     }
   }
 
-  // Lectura del botón con debounce
-  int buttonState = digitalRead(buttonPin);
-  if (buttonState == LOW && lastButtonState == HIGH) {
-    unsigned long currentTime = millis(); //Con delay no bloqueante
+  // Lectura del sensor con debounce
+  int sensorState = digitalRead(sensorPin); //lee estado actual
+
+  if (sensorState != lastSensorState) { //detecta si cambió
+    unsigned long currentTime = millis(); //toma el tiempo 
     if ((currentTime - lastDebounceTime) > debounceDelay) {
-      Serial.println("Botón presionado! Enviando mensaje MQTT...");
-      mqttClient.publish(topic, "wasPressed");
-      lastDebounceTime = currentTime;
+    //si pasó el tiempo de rebote
+      if (sensorState == HIGH) {
+        Serial.println("Puerta cerrada (haz interrumpido)");
+        //enviar mensaje si se cerro ? 
+      } else {
+        Serial.println("Puerta abierta (haz no interrumpido)");
+        mqttClient.publish(topic, "wasPressed"); //mensaje que alerta que se abrio la puerta.
+      }
+      lastDebounceTime = currentTime; //actualiza el tiempo
     }
   }
-  lastButtonState = buttonState;
+  lastSensorState = sensorState; //actualiza el último estado
 
   mqttClient.loop();
 }
