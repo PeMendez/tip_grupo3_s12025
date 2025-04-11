@@ -1,5 +1,7 @@
 import './principal.css';
 import logo from './assets/NeoHub.png';
+import snow from './assets/snowflake.png';
+import warning from './assets/warning.png'
 import {useState, useEffect, useCallback, useRef} from 'react';
 import {
     FiSun,
@@ -103,7 +105,7 @@ const SmartHomeDashboard = () => {
 
     const showNotification = (title, message, options = {}) => {
         const {
-            icon = "https://cdn-icons-png.flaticon.com/512/619/619153.png)",
+            icon = "https://cdn-icons-png.flaticon.com/512/619/619153.png",
             duration = 3000,
             toastClass = ''
         } = options;
@@ -155,7 +157,7 @@ const SmartHomeDashboard = () => {
                 "🚨 ¡Alarma activada!",
                 data.message || "Se abrió una puerta sin autorización.",
                 {
-                    icon: "https://cdn-icons-png.flaticon.com/512/3179/3179068.png",
+                    icon: warning,
                     duration: 5000,
                     toastClass: 'alarm-toast',
 
@@ -167,58 +169,28 @@ const SmartHomeDashboard = () => {
 
         if (data.type === "TEMP_UPDATE") {
             const temp = parseFloat(data.temp);
+            const prevTemp = devices.find(d => d.type === 'thermostat')?.temp;
 
+            if (temp !== prevTemp && (temp <= 14 || temp >= 28)) {
+                const notificationOptions = {
+                    title: temp >= 28 ? "¡Hace mucho calor!" : "Esto parece el polo sur",
+                    message: temp >= 28 ? "Vamos a enfriar el ambiente." : "Vamos a calentar el ambiente.",
+                    icon: temp >= 28 ? "https://cdn-icons-png.flaticon.com/512/599/599502.png" : snow,
+                    toastClass: temp >= 28 ? 'cool-toast' : 'heat-toast'
+                };
+                showNotification(notificationOptions.title, notificationOptions.message, notificationOptions);
+            }
             setDevices(prev => prev.map(device => {
-                if (device.type === 'thermostat') {
-                    return {
-                        ...device,
-                        temp: data.temp,
-                        showTemp: true
-                    };
-                }
+                if (device.type === 'thermostat') return { ...device, temp, showTemp: true };
                 if (device.type === 'ac') {
-                    let mode = 'off';
-                    let notificationOptions  = {};
-
-                    if (temp >= 28) {
-                        mode = 'cool';
-                        notificationOptions  = {
-                            title: "¡Hace mucho calor!",
-                            message: "Vamos a enfriar el ambiente.",
-                            icon: "https://cdn-icons-png.flaticon.com/512/599/599502.png",
-                            toastClass: 'cool-toast'
-                        };
-                    } else if (temp <= 14) {
-                        mode = 'heat';
-                        notificationOptions  = {
-                            title: "Esto parece el polo sur",
-                            message: "Vamos a calentar el ambiente.",
-                            icon: "https://cdn-icons-png.flaticon.com/512/2740/2740650.png",
-                            toastClass: 'heat-toast'
-                        };
-                    }
-
-                    if (mode !== 'off' && device.mode !== mode) {
-                        showNotification(
-                            notificationOptions.title,
-                            notificationOptions.message,
-                            notificationOptions
-                        );
-                    }
-
-                    return {
-                        ...device,
-                        isOn: mode !== 'off',
-                        mode: mode
-                    };
+                    const mode = temp >= 28 ? 'cool' : temp <= 14 ? 'heat' : 'off';
+                    return { ...device, isOn: mode !== 'off', mode };
                 }
                 return device;
             }));
         }
 
-
-
-    }, [playAlarmSound]);
+    }, [playAlarmSound, devices]);
 
 
     useEffect(() => {
@@ -313,9 +285,13 @@ const SmartHomeDashboard = () => {
                                 <input
                                     type="checkbox"
                                     checked={device.isOn}
-                                    onChange={(e) => {
+                                    onChange={async (e) => {
                                         e.stopPropagation();
-                                        toggleLight(device.id);
+                                        try {
+                                            await toggleLight(device.id);
+                                        } catch (err) {
+                                            console.error(err);
+                                        }
                                     }}
                                 />
                                 <span className="slider round"></span>
