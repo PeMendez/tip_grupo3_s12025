@@ -6,6 +6,6 @@ import Principal from './principal.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <Principal />
+    <App />
   </StrictMode>,
 )

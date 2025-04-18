@@ -1,42 +1,56 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap');
+
+.app {
+  font-family: 'Rubik', sans-serif;
+  background-size: cover;
+  background-position: center;
+  color: white;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero {
+  background-color: rgba(0, 0, 0, 0.7);
+  max-width: 490px;
   padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
   text-align: center;
 }
 
 .logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+  width: 120px;
+  margin-bottom: 1rem;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2rem;
+  margin-bottom: 1rem;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+
+p {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
 }
 
-.card {
-  padding: 2em;
+button {
+  padding: 0.6rem 1.4rem;
+  background-color: #0abde3;
+  border: none;
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+  font-family: 'Orbitron', sans-serif;
 }
 
-.read-the-docs {
-  color: #888;
+button:hover {
+  background-color: #009ecb;
 }
