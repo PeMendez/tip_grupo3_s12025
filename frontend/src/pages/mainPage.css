@@ -1,0 +1,14 @@
+
+
+.add-room-btn:hover {
+    background-color: #17a789 !important;
+}
+
+.room-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    max-height: 60vh;
+    overflow-y: auto;
+    padding: 5px;
+}

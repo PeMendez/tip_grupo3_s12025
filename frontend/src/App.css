@@ -1,20 +1,31 @@
 @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
 
 .app {
+  min-height: 100vh;
+}
+
+.app-container {
   font-family: 'Rubik', sans-serif;
   background-size: cover;
   background-position: center;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 20px;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
   color: white;
+  text-align: center;
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
+  max-width: 490px;
 }
 
 .hero {
   background-color: rgba(0, 0, 0, 0.7);
   max-width: 490px;
-  padding: 2rem;
+  padding: 10px;
   border-radius: 20px;
   box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
   text-align: center;

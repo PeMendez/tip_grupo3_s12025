@@ -1,6 +1,11 @@
 import './LoginPopup.css';
 
-function LoginPopup({ onClose }) {
+function LoginPopup({ onClose, onSuccessLogin}) {
+
+    const handleLogin = () => {
+        onSuccessLogin();
+    };
+
     return (
         <div className="modal-backdrop">
             <div className="modal">
@@ -8,7 +13,7 @@ function LoginPopup({ onClose }) {
                 <input type="text" placeholder="Usuario o email" />
                 <input type="password" placeholder="Contraseña" />
                 <div className="modal-actions">
-                    <button className="login">Entrar</button>
+                    <button onClick={handleLogin}>Entrar</button>
                     <button onClick={onClose}>Cancelar</button>
                 </div>
             </div>
