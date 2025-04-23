@@ -5,31 +5,49 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="09bf219a-ddab-407c-b6b8-1beb0e5da310" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/frontend/src/assets/fondo.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/components/LoginPopUp.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/components/loginPopup.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/controller/AuthController.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/dto/LoginRequest.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/dto/LoginResponse.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/dto/RegisterRequest.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/model/User.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/repository/UserRepository.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/security/CustomUserDetailsService.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/security/JwtAuthenticationFilter.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/service/AuthService.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/service/JwtService.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/main.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/mainPage.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/mainPage.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/neohub/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/security/SecurityConfig.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/security/SecurityConfig.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/neohub/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Kotlin Class" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="ProjectErrors" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
 }</component>
   <component name="ProjectId" id="2vB72sWaQ0xUWJal858VA7hR6Wy" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -47,7 +65,7 @@
     "javascript.nodejs.core.library.configured.version": "22.14.0",
     "javascript.nodejs.core.library.typings.version": "22.13.17",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/Peque/IdeaProjects/tip_grupo3_s12025/frontend/src/assets",
+    "last_opened_file_path": "C:/Users/Peque/IdeaProjects/UNQ-epers",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -58,6 +76,11 @@
     "project.structure.side.proportion": "0.2",
     "ts.external.directory.path": "C:\\Program Files\\JetBrains\\IntelliJ IDEA 2024.2.1\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
     "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql"
+    ]
   }
 }]]></component>
   <component name="RecentsManager">
@@ -66,6 +89,8 @@
       <recent name="C:\Users\Peque\IdeaProjects\tip_grupo3_s12025\frontend\public" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Peque\IdeaProjects\tip_grupo3_s12025\frontend\src\pages" />
+      <recent name="C:\Users\Peque\IdeaProjects\tip_grupo3_s12025\frontend\src\components" />
       <recent name="C:\Users\Peque\IdeaProjects\tip_grupo3_s12025\frontend\src\assets" />
       <recent name="C:\Users\Peque\IdeaProjects\tip_grupo3_s12025\frontend\public" />
     </key>
@@ -105,7 +130,9 @@
       <workItem from="1744236965071" duration="3859000" />
       <workItem from="1744378489267" duration="3660000" />
       <workItem from="1744459826689" duration="3640000" />
-      <workItem from="1744999956721" duration="4928000" />
+      <workItem from="1744999956721" duration="8627000" />
+      <workItem from="1745352857218" duration="9088000" />
+      <workItem from="1745434134626" duration="14895000" />
     </task>
     <servers />
   </component>
