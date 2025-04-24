@@ -15,7 +15,10 @@ data class User(
     @Column(nullable = false)
     val password: String,
 
-    val email: String? = null,
+    val enabled: Boolean = true,
 
-    val enabled: Boolean = true
+    @OneToOne(mappedBy = "user", cascade = [CascadeType.ALL])
+    val home: Home? = null
+
+
 )

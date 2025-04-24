@@ -20,7 +20,6 @@ class AuthService(
         val user = User(
             username = dto.username,
             password = passwordEncoder.encode(dto.password),
-            email = dto.email,
             enabled = true
         )
         return userRepository.save(user)

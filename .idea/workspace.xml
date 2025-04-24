@@ -4,23 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="09bf219a-ddab-407c-b6b8-1beb0e5da310" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/frontend/src/assets/Baño.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/assets/Dormitorio.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/assets/Garaje.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/assets/Lavadero.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/assets/Living.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/assets/SalaDeJuegos.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/assets/cocina.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/LoginPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/LoginPage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/MainPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/MainPage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/mainPage.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/mainPage.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/config/CorsConfig.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/security/SecurityConfig.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/security/SecurityConfig.kt" afterDir="false" />
-    </list>
+    <list default="true" id="09bf219a-ddab-407c-b6b8-1beb0e5da310" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -131,7 +115,7 @@
       <workItem from="1744999956721" duration="8627000" />
       <workItem from="1745352857218" duration="9088000" />
       <workItem from="1745434134626" duration="19572000" />
-      <workItem from="1745526299159" duration="3829000" />
+      <workItem from="1745526299159" duration="4143000" />
     </task>
     <servers />
   </component>
