@@ -37,7 +37,7 @@ function LoginPage() {
                 <RegisterPopup
                     onClose={() => setShowRegister(false)}
                     onSuccessRegister={() => {
-                        navigate('/home') // o redirigir a otra ruta que quieras
+                        navigate('/home')
                         setShowRegister(false)
                     }}
                 />
