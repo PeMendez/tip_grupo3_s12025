@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import axios from 'axios'
+import { register } from '../api/authService.js'
 
 function RegisterPopup({ onClose, onSuccessRegister }) {
     const [usernameOrEmail, setUsernameOrEmail] = useState('')
@@ -13,14 +13,11 @@ function RegisterPopup({ onClose, onSuccessRegister }) {
         }
 
         try {
-            const response = await axios.post('http://localhost:8080/auth/register', {
-                usernameOrEmail,
-                password
-            })
-            onSuccessRegister(response.data)
+            const response = await register(usernameOrEmail, password)
+            onSuccessRegister(response)
             onClose()
         } catch (err) {
-            setError('Error en el registro. Intente de nuevo.')
+            setError(err + 'Error en el registro. Intente de nuevo.')
         }
     }
 

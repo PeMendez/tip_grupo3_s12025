@@ -3,7 +3,9 @@ package ar.unq.ttip.neohub.controller
 import ar.unq.ttip.neohub.dto.LoginRequest
 import ar.unq.ttip.neohub.dto.LoginResponse
 import ar.unq.ttip.neohub.dto.RegisterRequest
+import ar.unq.ttip.neohub.model.Home
 import ar.unq.ttip.neohub.model.User
+import ar.unq.ttip.neohub.repository.HomeRepository
 import ar.unq.ttip.neohub.repository.UserRepository
 import ar.unq.ttip.neohub.service.JwtService
 import org.springframework.security.authentication.AuthenticationManager
@@ -17,7 +19,8 @@ class AuthController(
     private val authenticationManager: AuthenticationManager,
     private val jwtService: JwtService,
     private val userRepository: UserRepository,
-    private val passwordEncoder: PasswordEncoder
+    private val passwordEncoder: PasswordEncoder,
+    private val homeRepository: HomeRepository
 ) {
 
     @PostMapping("/login")
@@ -37,6 +40,9 @@ class AuthController(
         val encodedPassword = passwordEncoder.encode(request.password)
         val newUser = User(username = request.username, password = encodedPassword)
         userRepository.save(newUser)
+
+        val newHome = Home(user = newUser)
+        homeRepository.save(newHome)
 
         val token = jwtService.generateToken(newUser.username)
         return LoginResponse(token)
