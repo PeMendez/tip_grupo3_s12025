@@ -5,7 +5,6 @@ import jakarta.persistence.*
 @Entity
 data class Home(
     @Id @GeneratedValue val id: Long = 0,
-    val name: String,
 
     @OneToOne
     @JoinColumn(name = "user_id")
@@ -14,3 +13,8 @@ data class Home(
     @OneToMany(mappedBy = "home", cascade = [CascadeType.ALL], orphanRemoval = true)
     val rooms: List<Room> = mutableListOf()
 )
+{
+    override fun toString(): String {
+        return "Home(id=$id, user=$user, rooms=$rooms)"
+    }
+}

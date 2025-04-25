@@ -20,5 +20,8 @@ data class User(
     @OneToOne(mappedBy = "user", cascade = [CascadeType.ALL])
     val home: Home? = null
 
-
-)
+) {
+    override fun toString(): String {
+        return "User(id=$id, username='$username', enabled=$enabled)" 
+    }
+}
