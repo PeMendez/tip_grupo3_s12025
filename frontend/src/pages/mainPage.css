@@ -1,6 +1,4 @@
-/* No más estilos globales para todos los divs */
 .main-container {
-    padding-top: 80px; /* Altura del header + margen */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -16,45 +14,45 @@
     text-align: center;
 }
 
+.no-rooms {
+     text-align: center;
+ }
+
 .room-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 16px;
-    padding: 20px;
-    width: 100%;
-    margin: 0 auto;
+    margin-top: 20px;
 }
 
 .room-button {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: #7397ba;
-    border: 1px solid #ccc;
     border-radius: 12px;
     padding: 10px;
-    cursor: pointer;
-    transition: transform 0.2s ease;
-}
-
-.room-button:hover {
-    transform: scale(1.05);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    width: 120px;
+    text-align: center;
 }
 
 .room-button img {
-    width: 80px;
+    width: 100%;
     height: 80px;
     object-fit: cover;
     border-radius: 8px;
 }
 
-.room-button span {
-    margin-top: 8px;
-    font-weight: bold;
+.edit-button {
+    margin-top: 20px;
     text-align: center;
 }
-.botones {
-    flex-wrap: wrap;
-    gap: 1rem;
+
+.add-room-icon {
+    display: flex;
     justify-content: center;
+    margin-top: 20px;
+    flex-direction: column-reverse;
+}
+
+.icon {
+    padding: 10px 0;
 }

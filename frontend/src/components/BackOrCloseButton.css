@@ -1,0 +1,15 @@
+.back-or-close {
+    position: absolute;
+    top: 20px;
+    cursor: pointer;
+    z-index: 20;
+    color: white;
+}
+
+.back-or-close.arrow {
+    left: 20px;
+}
+
+.back-or-close.x {
+    right: 20px;
+}

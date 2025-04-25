@@ -3,6 +3,7 @@ import LoginPage from './pages/LoginPage'
 import MainPage from './pages/MainPage'
 import fondo from './assets/fondo.png';
 import './App.css'
+import RoomDetail from "./pages/RoomDetail.jsx";
 
 function App() {
     return (
@@ -19,6 +20,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={<LoginPage/>}/>
                     <Route path="/home" element={<MainPage/>}/>
+                    <Route path="/room/:nameroom" element={<RoomDetail />} />
                 </Routes>
             </Router>
         </div>

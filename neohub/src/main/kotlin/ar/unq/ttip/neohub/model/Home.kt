@@ -5,6 +5,7 @@ import jakarta.persistence.*
 @Entity
 data class Home(
     @Id @GeneratedValue val id: Long = 0,
+    val name: String,
 
     @OneToOne
     @JoinColumn(name = "user_id")

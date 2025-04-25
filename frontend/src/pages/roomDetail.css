@@ -1,0 +1,111 @@
+.room-detail-container {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.no-devices {
+    text-align: center;
+}
+
+.no-devices p {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.add-device-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.add-device-btn:hover {
+    background-color: #818cf8;
+}
+
+.device-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    width: 100%;
+    max-width: 900px;
+    margin-top: 20px;
+}
+
+.device-card {
+    background-color: white;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.device-card:hover {
+    transform: scale(1.05);
+}
+
+.device-icon {
+    font-size: 48px;
+    color: #475569;
+    margin-bottom: 12px;
+}
+
+.device-name {
+    font-size: 16px;
+    color: #334155;
+    font-weight: bold;
+}
+
+.device-options {
+    margin-top: 30px;
+    width: 100%;
+    max-width: 900px;
+    text-align: center;
+}
+
+.device-options h3 {
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.device-options-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.device-option-btn {
+    background-color: white;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    border: 1px solid #e5e7eb;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.device-option-btn:hover {
+    background-color: #f3f4f6;
+    transform: scale(1.05);
+}
+
+.device-option-btn .device-icon {
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+
+.device-option-btn .device-name {
+    font-size: 14px;
+    color: #334155;
+}

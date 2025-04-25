@@ -4,7 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="09bf219a-ddab-407c-b6b8-1beb0e5da310" name="Changes" comment="" />
+    <list default="true" id="09bf219a-ddab-407c-b6b8-1beb0e5da310" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/BackOrCloseButton.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/BackOrCloseButton.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/pages/RoomDetail.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/pages/roomDetail.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/MainPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/MainPage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/mainPage.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/mainPage.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/model/Home.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/model/Home.kt" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -76,6 +86,9 @@
       <recent name="C:\Users\Peque\IdeaProjects\tip_grupo3_s12025\frontend\src\components" />
       <recent name="C:\Users\Peque\IdeaProjects\tip_grupo3_s12025\frontend\public" />
     </key>
+    <key name="CreateKotlinClassDialog.RecentsKey">
+      <recent name="ar.unq.ttip.neohub.model" />
+    </key>
   </component>
   <component name="RunManager">
     <configuration name="NeohubApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
@@ -115,7 +128,7 @@
       <workItem from="1744999956721" duration="8627000" />
       <workItem from="1745352857218" duration="9088000" />
       <workItem from="1745434134626" duration="19572000" />
-      <workItem from="1745526299159" duration="4143000" />
+      <workItem from="1745526299159" duration="8558000" />
     </task>
     <servers />
   </component>
