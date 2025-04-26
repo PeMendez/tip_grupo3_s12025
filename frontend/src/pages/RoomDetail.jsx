@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { FiSun, FiThermometer, FiShield, FiVideo, FiLock } from 'react-icons/fi';
 import { LuAirVent } from "react-icons/lu";
+import BackOrCloseButton from "../components/BackOrCloseButton.jsx";
 import './roomDetail.css';
 
 const RoomDetail = () => {
@@ -24,12 +25,15 @@ const RoomDetail = () => {
 
     return (
         <div className="room-detail-container">
-            <h2>{nameroom}</h2>
-            {dispositivos.length === 0 ? (
-                <div className="no-devices">
-                    <p>Aún no tenés dispositivos en esta habitación.</p>
-                    <button className="add-device-btn" onClick={() => setShowDeviceOptions(true)}>Agregar dispositivo</button>
-                </div>
+            <div className="header">
+                <BackOrCloseButton></BackOrCloseButton>
+                <h2>{nameroom}</h2>
+            </div>
+                {dispositivos.length === 0 ? (
+                    <div className="no-devices">
+                        <p>Aún no tenés dispositivos en esta habitación.</p>
+                        <button className="add-device-btn" onClick={() => setShowDeviceOptions(true)}>Agregar dispositivo</button>
+                    </div>
             ) : (
                 <div className="device-grid">
                     {dispositivos.map((device, index) => (

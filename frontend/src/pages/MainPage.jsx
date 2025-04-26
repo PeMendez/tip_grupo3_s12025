@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import BackOrCloseButton from "../components/BackOrCloseButton.jsx";
 import cocinaImg from '../assets/cocina.jpg'
 import dormitorioImg from '../assets/dormitorio.jpg'
 import livingImg from '../assets/living.jpg'
@@ -28,6 +29,7 @@ function MainPage() {
     return (
         <div className="main-container">
             <div className="header">
+                <BackOrCloseButton></BackOrCloseButton>
                 <h2>Mi Hogar</h2>
             </div>
 
