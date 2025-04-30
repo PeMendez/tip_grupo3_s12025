@@ -11,14 +11,12 @@
 }
 
 .header {
+    width: 100%;
+    text-align: center;
     position: fixed;
     top: 0;
-    left: 0;
-    width: 100%;
-    padding: 10px;
-    z-index: 10;
-    text-align: center;
 }
+
 
 h2 {
     font-size: 24px;

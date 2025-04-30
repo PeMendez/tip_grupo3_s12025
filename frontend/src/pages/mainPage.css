@@ -5,13 +5,17 @@
     margin: 0 auto;
 }
 
-.header {
-    position: relative;
+.header-wrapper {
+    position: fixed;
     top: 0;
-    left: 0;
+    display: flex;
+    justify-content: center;
     width: 100%;
-    padding: 10px;
-    z-index: 10;
+}
+
+.header {
+    width: 100%;
+    max-width: 490px;
     text-align: center;
 }
 
@@ -33,6 +37,13 @@
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     width: 120px;
     text-align: center;
+    background-color: #7397ba;
+    cursor: pointer;
+}
+
+.room-button:hover {
+    transform: scale(1.1);
+    background-color: #818cf8;
 }
 
 .room-button img {
@@ -43,15 +54,37 @@
 }
 
 .edit-button {
-    margin-top: 20px;
-    text-align: center;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 10;
 }
 
+.edit-button button {
+    background: transparent;
+    border: none;
+    padding: 0;
+}
+
+.edit-button button svg {
+    font-size: 24px;
+}
+
+
+
 .add-room-icon {
+    border-radius: 12px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    background-color: #7397ba;
     display: flex;
     justify-content: center;
-    margin-top: 20px;
+    margin-top: 40px;
     flex-direction: column-reverse;
+    margin-bottom: 40px;
 }
 
 .icon {

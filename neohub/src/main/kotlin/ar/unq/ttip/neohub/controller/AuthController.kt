@@ -7,6 +7,7 @@ import ar.unq.ttip.neohub.model.Home
 import ar.unq.ttip.neohub.model.User
 import ar.unq.ttip.neohub.repository.HomeRepository
 import ar.unq.ttip.neohub.repository.UserRepository
+import ar.unq.ttip.neohub.service.AuthService
 import ar.unq.ttip.neohub.service.JwtService
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -16,14 +17,15 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/auth")
 class AuthController(
-    private val authenticationManager: AuthenticationManager,
+    /*private val authenticationManager: AuthenticationManager,
     private val jwtService: JwtService,
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
-    private val homeRepository: HomeRepository
+    private val homeRepository: HomeRepository*/
+    private val authService: AuthService
 ) {
 
-    @PostMapping("/login")
+    /*@PostMapping("/login")
     fun login(@RequestBody request: LoginRequest): LoginResponse {
         val authToken = UsernamePasswordAuthenticationToken(request.username, request.password)
         authenticationManager.authenticate(authToken)
@@ -46,5 +48,15 @@ class AuthController(
 
         val token = jwtService.generateToken(newUser.username)
         return LoginResponse(token)
+    }*/
+
+    @PostMapping("/login")
+    fun login(@RequestBody request: LoginRequest): LoginResponse {
+        return authService.login(request)
+    }
+
+    @PostMapping("/register")
+    fun register(@RequestBody request: RegisterRequest): LoginResponse {
+        return authService.register(request)
     }
 }

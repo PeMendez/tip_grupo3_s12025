@@ -15,7 +15,9 @@ import org.springframework.web.filter.OncePerRequestFilter
 import java.io.IOException
 
 @Component
-class JwtAuthenticationFilter : OncePerRequestFilter() {
+class JwtAuthenticationFilter(
+    private val userDetailsService: CustomUserDetailsService
+) : OncePerRequestFilter() {
 
     @Value("\${jwt.secret}")
     private lateinit var secretKey: String
@@ -34,7 +36,8 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
                     .subject
 
                 if (username != null && SecurityContextHolder.getContext().authentication == null) {
-                    val authentication = UsernamePasswordAuthenticationToken(username, null, null)
+                    val userDetails = userDetailsService.loadUserByUsername(username)
+                    val authentication = UsernamePasswordAuthenticationToken(userDetails, null, userDetails.authorities)
                     authentication.details = WebAuthenticationDetailsSource().buildDetails(request)
                     SecurityContextHolder.getContext().authentication = authentication
                 }

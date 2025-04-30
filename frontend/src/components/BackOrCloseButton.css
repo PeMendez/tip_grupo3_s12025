@@ -7,10 +7,9 @@
 }*/
 
 .back-or-close {
-    position: absolute;
+    position: fixed;
     top: 30px;
-    left: 10px;
-    background: transparent;
+    background: #7397ba;
     border: none;
     cursor: pointer;
     display: flex;
@@ -26,13 +25,13 @@
 
 .back-or-close:hover {
     transform: scale(1.1);
-    background-color: rgba(0, 0, 0, 0.05);
+    background-color: #818cf8;
 }
 
 .back-or-close.arrow {
-    left: 20px;
+    margin: 20px;
 }
 
 .back-or-close.x {
-    right: 20px;
+    margin: 20px;
 }
