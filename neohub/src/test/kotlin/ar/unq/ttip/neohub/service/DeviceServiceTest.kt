@@ -1,15 +1,22 @@
 package ar.unq.ttip.neohub.service
 import ar.unq.ttip.neohub.model.Room
+import ar.unq.ttip.neohub.model.devices.DeviceFactory
 import ar.unq.ttip.neohub.model.devices.SmartOutlet
 import ar.unq.ttip.neohub.repository.DeviceRepository
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.stereotype.Repository
 
+@SpringBootTest
 class DeviceServiceTest {
     private val mqttService = mock(MqttService::class.java)
-    private val repository :DeviceRepository = mock(DeviceRepository::class.java)
-    private val deviceService = DeviceService(mqttService, repository )
+    private val repository = mock(DeviceRepository::class.java)
+    private val factory = mock(DeviceFactory::class.java)
+    //tengo que inyectar yo esto poerque sino no anda.. vale la pena testear esto ?
+    private var deviceService = DeviceService(mqttService,repository, factory)
 
     @Test
     fun `registrar un dispositivo debería delegar al MqttService`() {

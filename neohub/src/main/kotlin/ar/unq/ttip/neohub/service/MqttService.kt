@@ -10,13 +10,16 @@ import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class MqttService(private val webSocketHandler: MqttWebSocketHandler) {
+class MqttService(
+    private val webSocketHandler: MqttWebSocketHandler
+) {
     private val brokerUrl = "tcp://test.mosquitto.org:1883"
     private val clientId = "NeoHub-API-" + UUID.randomUUID().toString().substring(0, 8)
     private val mqttClient: MqttClient = MqttClient(brokerUrl, clientId, null)
     private val subscribedTopics = mutableSetOf<String>()
     private val topicDeviceMap = mutableMapOf<String, Device>() //necesito dado el topic encontrar el dispositivo
     private val unconfiguredTopic = "neohub/unconfigured"
+
     init {
         try {
             val options = MqttConnectOptions().apply {
@@ -34,16 +37,13 @@ class MqttService(private val webSocketHandler: MqttWebSocketHandler) {
 
     fun registerDevice(device: Device) {
         // Agrega al mapa y suscribe al tópico
-        //topicDeviceMap[device.topic] = device
         topicDeviceMap.putIfAbsent(device.topic, device)
         subscribe(device.topic)
-        //updateDeviceTopic(device)
     }
 
     fun unregisterDevice(device: Device) {
         unsubscribe(device.topic)
         topicDeviceMap.remove(device.topic)
-        //updateDeviceTopic(device)
     }
 
     fun publish(topic: String, message: String) {
@@ -89,15 +89,6 @@ class MqttService(private val webSocketHandler: MqttWebSocketHandler) {
         }
     }
 
-    fun updateDeviceTopic(device: Device) {
-        // Desuscribir del tópico actual si no es el por defecto
-        if (device.topic != unconfiguredTopic) {
-            unsubscribe(device.topic)
-        }
-        device.configureTopic() // Configurar el nuevo tópico
-        subscribe(device.topic) // Suscribirse al nuevo tópico
-    }
-
     fun handleMqttMessage(topic: String, message: String) {
         println("Received message on topic $topic: $message")
         if(topic.startsWith(unconfiguredTopic)) {
@@ -108,9 +99,10 @@ class MqttService(private val webSocketHandler: MqttWebSocketHandler) {
         }
     }
 
-    private fun handleUnconfiguredDevice(message: String) {
+    fun handleUnconfiguredDevice(message: String) {
         println("Received unconfigured device: $message")
         //Acá tendría que crearse un dispositivo nuevo si es que no existia ya.
+        //Eso lo debería hacer DeviceService en su metodo handleNewDevice, pero no puedo traer la dependencia.
     }
 
 
