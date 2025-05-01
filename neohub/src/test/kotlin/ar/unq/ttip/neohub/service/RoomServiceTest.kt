@@ -1,14 +1,14 @@
-package ar.unq.ttip.neohub.model
+package ar.unq.ttip.neohub.service
 
+import ar.unq.ttip.neohub.model.Room
 import ar.unq.ttip.neohub.model.devices.SmartOutlet
-import ar.unq.ttip.neohub.service.RoomService
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
-class RoomTest {
+class RoomServiceTest {
     @Autowired
     lateinit var roomService: RoomService
     @Test

@@ -2,7 +2,6 @@ package ar.unq.ttip.neohub
 import ar.unq.ttip.neohub.model.Room
 import ar.unq.ttip.neohub.model.devices.SmartOutlet
 import ar.unq.ttip.neohub.service.DeviceService
-import ar.unq.ttip.neohub.service.MqttService
 import ar.unq.ttip.neohub.service.RoomService
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -11,7 +10,6 @@ import kotlin.test.assertEquals
 
 @SpringBootTest
 class MqttIntegrationTest @Autowired constructor(
-    private val mqttService: MqttService,
     private val roomService: RoomService,
     private val deviceService: DeviceService,
 ) {

@@ -2,6 +2,7 @@ package ar.unq.ttip.neohub.service
 
 import ar.unq.ttip.neohub.model.Device
 import ar.unq.ttip.neohub.repository.DeviceRepository
+import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 
 @Service
@@ -17,5 +18,23 @@ class DeviceService(private val mqttService: MqttService, private val repository
 
     fun publishToDevice(device: Device, message: String) {
         mqttService.publish(device.topic, message) // Publica un mensaje al tópico del dispositivo.
+    }
+
+    @Transactional
+    fun saveDevice(device: Device): Device {
+        return repository.save(device)
+    }
+
+    @Transactional
+    fun deleteDevice(deviceId: Long) {
+        repository.deleteById(deviceId)
+    }
+
+    fun getDeviceById(id: Long): Device? {
+        return repository.findById(id).orElse(null)
+    }
+
+    fun getUnconfiguredDevices(): List<Device> {
+        return repository.findByRoomIsNull()
     }
 }

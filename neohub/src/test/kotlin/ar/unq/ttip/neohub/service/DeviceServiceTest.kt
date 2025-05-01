@@ -1,13 +1,15 @@
 package ar.unq.ttip.neohub.service
 import ar.unq.ttip.neohub.model.Room
 import ar.unq.ttip.neohub.model.devices.SmartOutlet
+import ar.unq.ttip.neohub.repository.DeviceRepository
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 
 class DeviceServiceTest {
     private val mqttService = mock(MqttService::class.java)
-    private val deviceService = DeviceService(mqttService)
+    private val repository :DeviceRepository = mock(DeviceRepository::class.java)
+    private val deviceService = DeviceService(mqttService, repository )
 
     @Test
     fun `registrar un dispositivo debería delegar al MqttService`() {

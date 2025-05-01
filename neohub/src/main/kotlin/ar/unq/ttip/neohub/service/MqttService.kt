@@ -16,7 +16,7 @@ class MqttService(private val webSocketHandler: MqttWebSocketHandler) {
     private val mqttClient: MqttClient = MqttClient(brokerUrl, clientId, null)
     private val subscribedTopics = mutableSetOf<String>()
     private val topicDeviceMap = mutableMapOf<String, Device>() //necesito dado el topic encontrar el dispositivo
-
+    private val unconfiguredTopic = "neohub/unconfigured"
     init {
         try {
             val options = MqttConnectOptions().apply {
@@ -91,7 +91,7 @@ class MqttService(private val webSocketHandler: MqttWebSocketHandler) {
 
     fun updateDeviceTopic(device: Device) {
         // Desuscribir del tópico actual si no es el por defecto
-        if (device.topic != "neohub/unconfigured") {
+        if (device.topic != unconfiguredTopic) {
             unsubscribe(device.topic)
         }
         device.configureTopic() // Configurar el nuevo tópico
@@ -100,10 +100,18 @@ class MqttService(private val webSocketHandler: MqttWebSocketHandler) {
 
     fun handleMqttMessage(topic: String, message: String) {
         println("Received message on topic $topic: $message")
-        topicDeviceMap[topic]?.handleIncomingMessage(message)
-            ?: println("ERROR: No se encontró ningún dispositivo para el tópico: $topic")
+        if(topic.startsWith(unconfiguredTopic)) {
+            handleUnconfiguredDevice(message)
+        }else {
+            topicDeviceMap[topic]?.handleIncomingMessage(message)
+                ?: println("ERROR: No se encontró ningún dispositivo para el tópico: $topic")
+        }
     }
 
+    private fun handleUnconfiguredDevice(message: String) {
+        println("Received unconfigured device: $message")
+        //Acá tendría que crearse un dispositivo nuevo si es que no existia ya.
+    }
 
 
 }
