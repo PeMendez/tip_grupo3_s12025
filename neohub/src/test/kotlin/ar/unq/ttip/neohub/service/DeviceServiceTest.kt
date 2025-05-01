@@ -2,8 +2,8 @@ package ar.unq.ttip.neohub.service
 import ar.unq.ttip.neohub.model.Room
 import ar.unq.ttip.neohub.model.devices.SmartOutlet
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito.*
-import kotlin.test.assertEquals
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.verify
 
 class DeviceServiceTest {
     private val mqttService = mock(MqttService::class.java)

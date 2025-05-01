@@ -5,8 +5,6 @@ import ar.unq.ttip.neohub.model.devices.SmartOutlet
 import ar.unq.ttip.neohub.model.devices.TemperatureSensor
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
-import kotlin.test.assertNull
 
 class MqttServiceTest {
 
