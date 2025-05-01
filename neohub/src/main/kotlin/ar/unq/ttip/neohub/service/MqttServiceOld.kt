@@ -22,7 +22,7 @@ class MqttServiceOld(private val webSocketHandler: MqttWebSocketHandler) {
         //Agregar más si hace falta
     )
 
-    init {
+    /*init {
         try {
             val options = MqttConnectOptions().apply {
                 isCleanSession = true
@@ -40,7 +40,7 @@ class MqttServiceOld(private val webSocketHandler: MqttWebSocketHandler) {
             throw RuntimeException("Error al conectar con el broker.", e)
         }
     }
-
+*/
     fun publish(topic: String, message: String) {
         try {
             val mqttMessage = MqttMessage(message.toByteArray()).apply { qos = 1 }

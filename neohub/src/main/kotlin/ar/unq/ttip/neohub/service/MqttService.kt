@@ -34,15 +34,16 @@ class MqttService(private val webSocketHandler: MqttWebSocketHandler) {
 
     fun registerDevice(device: Device) {
         // Agrega al mapa y suscribe al tópico
-        topicDeviceMap[device.topic] = device
+        //topicDeviceMap[device.topic] = device
+        topicDeviceMap.putIfAbsent(device.topic, device)
         subscribe(device.topic)
-        updateDeviceTopic(device)
+        //updateDeviceTopic(device)
     }
 
     fun unregisterDevice(device: Device) {
         unsubscribe(device.topic)
         topicDeviceMap.remove(device.topic)
-        updateDeviceTopic(device)
+        //updateDeviceTopic(device)
     }
 
     fun publish(topic: String, message: String) {
