@@ -26,10 +26,10 @@ const RoomDetail = () => {
     return (
         <div className="room-detail-container">
             <div className="header">
-                <BackOrCloseButton></BackOrCloseButton>
+                <BackOrCloseButton/>
                 <h2>{nameroom}</h2>
             </div>
-                {dispositivos.length === 0 ? (
+                {dispositivos.length === 0 && !showDeviceOptions ? (
                     <div className="no-devices">
                         <p>Aún no tenés dispositivos en esta habitación.</p>
                         <button className="add-device-btn" onClick={() => setShowDeviceOptions(true)}>Agregar dispositivo</button>

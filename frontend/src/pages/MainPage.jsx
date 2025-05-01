@@ -47,7 +47,7 @@ function MainPage() {
         try {
             await addRoom(token, roomName)
             const updatedRooms = await getHome(token)
-            setRooms(updatedRooms)
+            setRooms(updatedRooms.rooms || [])
             setEditMode(false)
         } catch (error) {
             console.error("Error al agregar habitación", error)
@@ -56,9 +56,17 @@ function MainPage() {
 
     return (
         <div className="main-container">
-            <div className="header-wrapper">
+            <div className="header-wrapper" >
                 <div className="header">
-                    <BackOrCloseButton></BackOrCloseButton>
+                    <BackOrCloseButton
+                        onClick={() => {
+                            if (editMode) {
+                                setEditMode(false);
+                            } else {
+                                navigate(-1);
+                            }
+                        }}
+                    />
                     <h2>Mi Hogar</h2>
                 </div>
             </div>

@@ -2,11 +2,14 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { X, ArrowLeft } from 'lucide-react';
 import './BackOrCloseButton.css';
 
-const BackOrCloseButton = ({ type = 'arrow' }) => {
+const BackOrCloseButton = ({ type = 'arrow', onClick }) => {
     const navigate = useNavigate();
     const location = useLocation();
     const handleClick = () => {
-        if (location.pathname !== '/home') {
+        if(onClick){
+            onClick();
+        }
+        else if (location.pathname !== '/home') {
             navigate(-1);
         } else {
             console.log("Si hiciera esto me desloguearía.");
