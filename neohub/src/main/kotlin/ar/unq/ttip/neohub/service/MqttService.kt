@@ -1,6 +1,7 @@
 package ar.unq.ttip.neohub.service
 
 import ar.unq.ttip.neohub.handler.MqttWebSocketHandler
+import ar.unq.ttip.neohub.model.Device
 import org.eclipse.paho.client.mqttv3.MqttClient
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions
 import org.eclipse.paho.client.mqttv3.MqttException
@@ -13,14 +14,8 @@ class MqttService(private val webSocketHandler: MqttWebSocketHandler) {
     private val brokerUrl = "tcp://test.mosquitto.org:1883"
     private val clientId = "NeoHub-API-" + UUID.randomUUID().toString().substring(0, 8)
     private val mqttClient: MqttClient = MqttClient(brokerUrl, clientId, null)
-
-    // Lista de tópicos a suscribirse
-    private val topicsToSubscribe = listOf(
-        "unq-button",
-        "LEDctrl",
-        "unq-temperature"
-        //Agregar más si hace falta
-    )
+    private val subscribedTopics = mutableSetOf<String>()
+    private val topicDeviceMap = mutableMapOf<String, Device>() //necesito dado el topic encontrar el dispositivo
 
     init {
         try {
@@ -32,13 +27,22 @@ class MqttService(private val webSocketHandler: MqttWebSocketHandler) {
             mqttClient.connect(options)
             println("Conectado exitosamente al broker MQTT.")
 
-            topicsToSubscribe.forEach { topic ->
-                subscribeTopic(topic)
-            }
-
         } catch (e: MqttException) {
             throw RuntimeException("Error al conectar con el broker.", e)
         }
+    }
+
+    fun registerDevice(device: Device) {
+        // Agrega al mapa y suscribe al tópico
+        topicDeviceMap[device.topic] = device
+        subscribe(device.topic)
+        updateDeviceTopic(device)
+    }
+
+    fun unregisterDevice(device: Device) {
+        unsubscribe(device.topic)
+        topicDeviceMap.remove(device.topic)
+        updateDeviceTopic(device)
     }
 
     fun publish(topic: String, message: String) {
@@ -51,53 +55,54 @@ class MqttService(private val webSocketHandler: MqttWebSocketHandler) {
         }
     }
 
-    private fun subscribeTopic(topic: String) {
-        try {
-            println("Intentando suscribirse al tópico: $topic")
+    fun subscribe(topic: String, device: Device? = null) {
+        if (!subscribedTopics.contains(topic)) {
+            try {
+                println("Intentando suscribirse al tópico: $topic")
+                mqttClient.subscribe(topic) { receivedTopic, message ->
+                    val payload = String(message.payload)
+                    handleMqttMessage(receivedTopic,payload)
+                }
+                println("Suscripción exitosa al tópico: $topic")
+                subscribedTopics.add(topic)
 
-            mqttClient.subscribe(topic) { receivedTopic, message ->
-                val payload = String(message.payload)
-                println("Mensaje recibido en '$receivedTopic': $payload")
-                handleIncomingMessage(receivedTopic, payload)
+            } catch (e: MqttException) {
+                println("ERROR: No se pudo suscribir a MQTT - ${e.message}")
+                e.printStackTrace()
             }
-
-            println("Suscripción exitosa al tópico: $topic")
-
-        } catch (e: MqttException) {
-            println("ERROR: No se pudo suscribir a MQTT - ${e.message}")
-            e.printStackTrace()
         }
     }
 
-    // Manejo modular de cada mensaje según el tópico
-    private fun handleIncomingMessage(topic: String, payload: String) {
-        when (topic) {
-            "unq-button" -> {
-                if (payload.equals("wasPressed", ignoreCase = true)) {
-                    println("Apertura de puerta detectada - Activando alarma")
-                    webSocketHandler.handlePhysicalButtonPress()
-                }
+    fun unsubscribe(topic: String) {
+        if (subscribedTopics.contains(topic)) {
+            try {
+                mqttClient.unsubscribe(topic)
+                println("Desuscripción exitosa al tópico: $topic")
+                subscribedTopics.remove(topic)
+                topicDeviceMap.remove(topic)
+            } catch (e: MqttException) {
+                println("ERROR: No se pudo desuscribir de MQTT - ${e.message}")
+                e.printStackTrace()
             }
 
-            "LEDctrl" -> {
-                if (payload == "toggle") {
-                    println("Comando toggle para LED recibido")
-                    webSocketHandler.sendMessage("LED_TOGGLE")
-                    //webSocketHandler.sendLedStatusUpdate()
-                } else {
-                    println("Comando no reconocido en LEDctrl: $payload")
-                }
-            }
-
-            "unq-temperature" -> {
-                println("Temperatura recibida: $payload")
-                //webSocketHandler.sendMessage("TEMP: $payload")
-                webSocketHandler.sendTemperatureUpdate(payload)
-            }
-
-            else -> {
-                println("Tópico no manejado: $topic, mensaje: $payload")
-            }
         }
     }
+
+    fun updateDeviceTopic(device: Device) {
+        // Desuscribir del tópico actual si no es el por defecto
+        if (device.topic != "neohub/unconfigured") {
+            unsubscribe(device.topic)
+        }
+        device.configureTopic() // Configurar el nuevo tópico
+        subscribe(device.topic) // Suscribirse al nuevo tópico
+    }
+
+    fun handleMqttMessage(topic: String, message: String) {
+        println("Received message on topic $topic: $message")
+        topicDeviceMap[topic]?.handleIncomingMessage(message)
+            ?: println("ERROR: No se encontró ningún dispositivo para el tópico: $topic")
+    }
+
+
+
 }
