@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component
 class DeviceFactory {
 
     fun createDevice(name: String, type: String): Device {
+        println("Creating $type: $name")
         return when (type) {
             "smartOutlet" -> SmartOutlet(name)
             "temperatureSensor" -> TemperatureSensor(name)

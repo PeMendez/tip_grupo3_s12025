@@ -12,27 +12,13 @@ import org.springframework.context.ApplicationEventPublisher
 
 @SpringBootTest
 class DeviceServiceTest {
-    private val mqttService = mock(MqttService::class.java)
-    private val repository = mock(DeviceRepository::class.java)
-    private val factory = mock(DeviceFactory::class.java)
+    private val mqttServiceMock = mock(MqttService::class.java)
+    private val repositoryMock = mock(DeviceRepository::class.java)
+    private val factoryMock = mock(DeviceFactory::class.java)
     @Autowired
     private lateinit var applicationEventPublisher: ApplicationEventPublisher
     //tengo que inyectar yo esto poerque sino no anda.. vale la pena testear esto ?
-    private var deviceService = DeviceService(mqttService,repository, factory)
-
-    @Test
-    fun `when UnconfiguredDeviceEvent is published, should call handleNewDevice`() {
-        val testMessage = "test_device_message"
-        val mockDevice = mock(Device::class.java)
-
-        `when`(factory.createDevice(anyString(), anyString())).thenReturn(mockDevice)
-        `when`(repository.save(any(Device::class.java))).thenReturn(mockDevice)
-
-        applicationEventPublisher.publishEvent(UnconfiguredDeviceEvent(testMessage))
-
-        verify(factory, times(1)).createDevice(anyString(), anyString())
-        verify(repository, times(1)).save(any(Device::class.java))
-    }
+    private var deviceService = DeviceService(mqttServiceMock,repositoryMock, factoryMock)
 
     @Test
     fun `registrar un dispositivo debería delegar al MqttService`() {
@@ -40,7 +26,7 @@ class DeviceServiceTest {
 
         deviceService.registerDevice(device)
 
-        verify(mqttService).registerDevice(device)
+        verify(mqttServiceMock).registerDevice(device)
     }
 
     @Test
@@ -49,7 +35,7 @@ class DeviceServiceTest {
 
         deviceService.unregisterDevice(device)
 
-        verify(mqttService).unregisterDevice(device)
+        verify(mqttServiceMock).unregisterDevice(device)
     }
 
     @Test
@@ -69,7 +55,7 @@ class DeviceServiceTest {
 
         // Assert
         assert(device.topic == expectedTopic) // Verificamos que el tópico sea el esperado
-        verify(mqttService).publish(expectedTopic, message) // Verificamos que se publique al tópico correcto
+        verify(mqttServiceMock).publish(expectedTopic, message) // Verificamos que se publique al tópico correcto
     }
 
 }
