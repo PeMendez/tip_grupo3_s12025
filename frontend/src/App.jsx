@@ -1,18 +1,30 @@
-import neoLogo from '/NeoHub.png'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import LoginPage from './pages/LoginPage'
+import MainPage from './pages/MainPage'
+import fondo from './assets/fondo.png';
 import './App.css'
+import RoomDetail from "./pages/RoomDetail.jsx";
 
 function App() {
-
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={neoLogo} className="logo" alt="NeoHub logo" />
-        </a>
-      </div>
-      <h1>Neo Hub</h1>
-    </>
-  )
-}
+    return (
+        <div
+            className="app-container"
+            style={{
+                backgroundImage: `url(${fondo})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                minHeight: '100vh'
+            }}
+        >
+            <Router>
+                <Routes>
+                    <Route path="/" element={<LoginPage/>}/>
+                    <Route path="/home" element={<MainPage/>}/>
+                    <Route path="/room/:id" element={<RoomDetail />} />
+                </Routes>
+            </Router>
+        </div>
+            )
+            }
 
 export default App

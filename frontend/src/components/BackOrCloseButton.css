@@ -1,0 +1,36 @@
+/*.back-or-close {
+    position: absolute;
+    top: 20px;
+    cursor: pointer;
+    z-index: 20;
+    color: white;
+}*/
+
+.back-or-close {
+    position: fixed;
+    top: 30px;
+    background: #7397ba;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    z-index: 20;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.back-or-close:hover {
+    transform: scale(1.1);
+    background-color: #818cf8;
+}
+
+.back-or-close.arrow {
+    margin: 20px;
+}
+
+.back-or-close.x {
+    margin: 20px;
+}
