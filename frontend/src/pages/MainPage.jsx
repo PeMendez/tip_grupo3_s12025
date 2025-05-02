@@ -11,7 +11,6 @@ import banoImg from '../assets/Baño.jpg'
 import salaImg from '../assets/salaDeJuegos.jpg'
 import { FiEdit, FiPlus } from 'react-icons/fi'
 import './mainPage.css'
-import './loginPage.css'
 
 function MainPage() {
     const [rooms, setRooms] = useState([])
