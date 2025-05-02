@@ -4,6 +4,7 @@ import ar.unq.ttip.neohub.model.Device
 import ar.unq.ttip.neohub.model.devices.DeviceFactory
 import ar.unq.ttip.neohub.repository.DeviceRepository
 import jakarta.transaction.Transactional
+import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Service
 
 @Service
@@ -12,10 +13,14 @@ class DeviceService(
     private val repository: DeviceRepository,
     private val factory: DeviceFactory) {
 
-    fun handleNewDevice(message: String){
-        // Crea un nuevo dispositivo basado en el mensaje recibido.
-        val newDevice = factory.createDevice("test1","smartOutlet")
-        registerDevice(newDevice)
+    @EventListener
+    fun onUnconfiguredDeviceEvent(event: UnconfiguredDeviceEvent) {
+        handleNewDevice(event.message)
+    }
+
+    fun handleNewDevice(message: String) {
+        val newDevice = factory.createDevice("test1", "smartOutlet")
+        saveDevice(newDevice)
     }
 
     fun registerDevice(device: Device) {

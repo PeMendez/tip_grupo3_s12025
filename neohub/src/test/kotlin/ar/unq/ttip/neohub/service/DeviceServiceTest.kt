@@ -1,22 +1,38 @@
 package ar.unq.ttip.neohub.service
+import ar.unq.ttip.neohub.model.Device
 import ar.unq.ttip.neohub.model.Room
 import ar.unq.ttip.neohub.model.devices.DeviceFactory
 import ar.unq.ttip.neohub.model.devices.SmartOutlet
 import ar.unq.ttip.neohub.repository.DeviceRepository
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.verify
+import org.mockito.Mockito.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.stereotype.Repository
+import org.springframework.context.ApplicationEventPublisher
 
 @SpringBootTest
 class DeviceServiceTest {
     private val mqttService = mock(MqttService::class.java)
     private val repository = mock(DeviceRepository::class.java)
     private val factory = mock(DeviceFactory::class.java)
+    @Autowired
+    private lateinit var applicationEventPublisher: ApplicationEventPublisher
     //tengo que inyectar yo esto poerque sino no anda.. vale la pena testear esto ?
     private var deviceService = DeviceService(mqttService,repository, factory)
+
+    @Test
+    fun `when UnconfiguredDeviceEvent is published, should call handleNewDevice`() {
+        val testMessage = "test_device_message"
+        val mockDevice = mock(Device::class.java)
+
+        `when`(factory.createDevice(anyString(), anyString())).thenReturn(mockDevice)
+        `when`(repository.save(any(Device::class.java))).thenReturn(mockDevice)
+
+        applicationEventPublisher.publishEvent(UnconfiguredDeviceEvent(testMessage))
+
+        verify(factory, times(1)).createDevice(anyString(), anyString())
+        verify(repository, times(1)).save(any(Device::class.java))
+    }
 
     @Test
     fun `registrar un dispositivo debería delegar al MqttService`() {

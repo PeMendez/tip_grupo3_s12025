@@ -1,17 +1,18 @@
 package ar.unq.ttip.neohub.service
 
-import ar.unq.ttip.neohub.handler.MqttWebSocketHandler
 import ar.unq.ttip.neohub.model.Device
 import org.eclipse.paho.client.mqttv3.MqttClient
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions
 import org.eclipse.paho.client.mqttv3.MqttException
 import org.eclipse.paho.client.mqttv3.MqttMessage
+import org.springframework.context.ApplicationEvent
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
 class MqttService(
-    private val webSocketHandler: MqttWebSocketHandler
+    private val applicationEventPublisher: ApplicationEventPublisher
 ) {
     private val brokerUrl = "tcp://test.mosquitto.org:1883"
     private val clientId = "NeoHub-API-" + UUID.randomUUID().toString().substring(0, 8)
@@ -101,9 +102,8 @@ class MqttService(
 
     fun handleUnconfiguredDevice(message: String) {
         println("Received unconfigured device: $message")
-        //Acá tendría que crearse un dispositivo nuevo si es que no existia ya.
-        //Eso lo debería hacer DeviceService en su metodo handleNewDevice, pero no puedo traer la dependencia.
+        applicationEventPublisher.publishEvent(UnconfiguredDeviceEvent(message))
     }
-
-
 }
+
+class UnconfiguredDeviceEvent(val message: String): ApplicationEvent(message)
