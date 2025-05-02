@@ -19,7 +19,10 @@ class DeviceService(
     }
 
     fun handleNewDevice(message: String) {
-        val newDevice = factory.createDevice("test1", "smartOutlet")
+        //hay que cambiar esto para que el nombre y tipo los parsee del mensaje
+        val name = "test1"
+        val type = "smartOutlet"
+        val newDevice = factory.createDevice(name, type)
         saveDevice(newDevice)
     }
 
