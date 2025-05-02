@@ -73,7 +73,6 @@ function MainPage() {
         }
     }
 
-    // Función para manejar el cierre del modal
     const handleCloseModal = (e) => {
         if (e.target === e.currentTarget) {
             setShowDeletePopup(false)

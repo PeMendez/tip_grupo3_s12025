@@ -39,3 +39,20 @@ export const addDeviceToRoom = async (roomId, device, token) => {
         throw error;
     }
 };
+
+export const deleteDevice = async (roomId, deviceId, token) => {
+    try {
+        const response = await axios.delete(
+            `${API_URL}/${roomId}/devices/${deviceId}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
+        return response.data;
+    } catch (error) {
+        console.error('Error deleting device:', error);
+        throw error;
+    }
+};
