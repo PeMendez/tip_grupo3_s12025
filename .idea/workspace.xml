@@ -5,9 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="09bf219a-ddab-407c-b6b8-1beb0e5da310" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/frontend/src/api/roomService.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/controller/RoomController.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/repository/DeviceRepository.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/service/RoomService.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/BackOrCloseButton.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/BackOrCloseButton.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/api/homeService2.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/api/homeService2.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/BackOrCloseButton.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/BackOrCloseButton.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/pages/MainPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/MainPage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/RoomDetail.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/RoomDetail.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/pages/mainPage.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/mainPage.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -18,9 +24,10 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Kotlin Interface" />
         <option value="Class" />
         <option value="Kotlin Class" />
+        <option value="Kotlin Interface" />
+        <option value="JavaScript File" />
       </list>
     </option>
   </component>
@@ -126,7 +133,8 @@
       <workItem from="1745352857218" duration="9088000" />
       <workItem from="1745434134626" duration="19572000" />
       <workItem from="1745526299159" duration="8558000" />
-      <workItem from="1746041555053" duration="15522000" />
+      <workItem from="1746041555053" duration="17126000" />
+      <workItem from="1746126326783" duration="15364000" />
     </task>
     <servers />
   </component>

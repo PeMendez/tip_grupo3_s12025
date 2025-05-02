@@ -19,4 +19,13 @@ export const addRoom = async (token, roomName) => {
         }
     });
     return response.data;
+}
+
+export const deleteRoom = async (token, roomId) => {
+    const response = await axios.delete(`${API_URL}/rooms/${roomId}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+    return response.data;
 };

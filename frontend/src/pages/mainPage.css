@@ -32,6 +32,7 @@
 }
 
 .room-button {
+    position: relative;
     border-radius: 12px;
     padding: 10px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
@@ -53,11 +54,17 @@
     border-radius: 8px;
 }
 
+.edit-container {
+    min-width: 490px;
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 30px;
+}
+
 .edit-button {
-    position: fixed;
-    top: 100px;
-    right: 370px;
+    position: relative;
     background: #7397ba;
+    top: 0;
     border: none;
     cursor: pointer;
     display: flex;
@@ -97,4 +104,72 @@
 
 .icon {
     padding: 10px 0;
+}
+.room-editable {
+    position: relative;
+}
+
+.room-editable-container {
+    position: relative;
+    cursor: pointer;
+}
+
+/* Estilo cuando está en modo edición */
+.room-button.edit-mode {
+    transition: all 0.3s ease;
+}
+
+.room-button.edit-mode:hover {
+    opacity: 0.7;
+}
+
+/* Ícono de basura que ocupa todo el espacio */
+.delete-icon-full {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 12px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    font-size: 2rem;
+    color: white;
+}
+
+.room-editable-container:hover .delete-icon-full {
+    opacity: 1;
+}
+
+
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal {
+    background-color: rgba(0, 0, 0, 0.85);
+    padding: 2rem;
+    border-radius: 8px;
+    width: 300px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-actions {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: space-between;
 }

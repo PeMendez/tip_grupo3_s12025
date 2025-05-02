@@ -4,6 +4,7 @@ import { FiSun, FiThermometer, FiShield, FiVideo, FiLock } from 'react-icons/fi'
 import { LuAirVent } from "react-icons/lu";
 import BackOrCloseButton from "../components/BackOrCloseButton.jsx";
 import './roomDetail.css';
+import * as deviceService from "../api/roomService.js";
 
 const RoomDetail = () => {
     const { nameroom } = useParams();
@@ -18,9 +19,19 @@ const RoomDetail = () => {
         { name: 'Enchufe', icon: <FiLock size={24} /> },
     ];
 
-    const handleAddDevice = (device) => {
-        setDispositivos([...dispositivos, device]);
-        setShowDeviceOptions(false);
+    const token = localStorage.getItem('token');
+
+    const handleAddDevice = async (device) => {
+        try {
+            const newDispositivos = [...dispositivos, device];
+            setDispositivos(newDispositivos);
+
+            const updatedRoom = await deviceService.addDeviceToRoom(nameroom, device, token);
+            setDispositivos(updatedRoom.devices);
+            setShowDeviceOptions(false);
+        } catch (error) {
+            console.error('Error al agregar dispositivo:', error)
+        }
     };
 
     return (
