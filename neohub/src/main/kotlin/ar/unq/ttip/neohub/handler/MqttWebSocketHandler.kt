@@ -9,8 +9,8 @@ import java.util.concurrent.CopyOnWriteArrayList
 
 
 @Component
-class MqttWebSocketHandler : TextWebSocketHandler() {
-
+class MqttWebSocketHandler : TextWebSocketHandler()
+{
     private val sessions = CopyOnWriteArrayList<WebSocketSession>()
 
     override fun afterConnectionEstablished(session: WebSocketSession) {

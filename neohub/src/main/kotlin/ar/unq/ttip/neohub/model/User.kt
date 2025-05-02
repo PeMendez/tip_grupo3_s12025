@@ -17,8 +17,8 @@ data class User(
 
     val enabled: Boolean = true,
 
-    @OneToOne(mappedBy = "user", cascade = [CascadeType.ALL])
-    val home: Home? = null
+//    @OneToOne(mappedBy = "user", cascade = [CascadeType.ALL])
+//    val home: Home? = null
 
 ) {
     override fun toString(): String {
