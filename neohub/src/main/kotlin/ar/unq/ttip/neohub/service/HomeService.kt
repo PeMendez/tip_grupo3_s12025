@@ -45,4 +45,9 @@ class HomeService(
 
         roomRepository.delete(room)
     }
+
+    @Transactional
+    fun newHome(home: Home): Home {
+        return homeRepository.save(home)
+    }
 }

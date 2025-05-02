@@ -10,6 +10,6 @@ fun Room.toDTO(): RoomDTO {
     return RoomDTO(
         id = this.id,
         name = this.name,
-        devices = this.devices.map { it.toDTO() }
+        devices = this.deviceList.map { it.toDTO() }
     )
 }

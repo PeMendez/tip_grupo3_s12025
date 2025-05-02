@@ -9,12 +9,12 @@ data class Home(
     @OneToOne
     @JoinColumn(name = "user_id")
     val user: User,
-/*
+
     @OneToMany(mappedBy = "home", cascade = [CascadeType.ALL], orphanRemoval = true)
-    val rooms: List<Room> = mutableListOf() */
+    val rooms: List<Room> = mutableListOf()
 )
-//{
-//    override fun toString(): String {
-//        return "Home(id=$id, user=$user, rooms=$rooms)"
-//    }
-//}
+{
+    override fun toString(): String {
+        return "Home(id=$id, user=$user, rooms=$rooms)"
+    }
+}

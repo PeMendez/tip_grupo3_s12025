@@ -1,10 +1,13 @@
 package ar.unq.ttip.neohub
+import ar.unq.ttip.neohub.dto.toDTO
+import ar.unq.ttip.neohub.model.Home
 import ar.unq.ttip.neohub.model.Room
+import ar.unq.ttip.neohub.model.User
+import ar.unq.ttip.neohub.model.devices.DeviceFactory
 import ar.unq.ttip.neohub.model.devices.SmartOutlet
-import ar.unq.ttip.neohub.service.DeviceService
-import ar.unq.ttip.neohub.service.MqttService
-import ar.unq.ttip.neohub.service.RoomService
-import ar.unq.ttip.neohub.service.UnconfiguredDeviceEvent
+import ar.unq.ttip.neohub.repository.HomeRepository
+import ar.unq.ttip.neohub.service.*
+import jakarta.transaction.Transactional
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentCaptor
 import org.mockito.Mockito.mock
@@ -13,14 +16,20 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.ApplicationEventPublisher
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 
 @SpringBootTest
 class MqttIntegrationTest @Autowired constructor(
     private val roomService: RoomService,
     private val deviceService: DeviceService,
+    private val homeService: HomeService,
     private val mqttService: MqttService
 ) {
+    @Autowired
+    private lateinit var deviceFactory: DeviceFactory
     private val applicationEventPublisher = mock(ApplicationEventPublisher::class.java)
+    private val user = User(21,"carlos","sdasdada")
+    private val home = Home(user=user)
 
     @Test
     fun `when handleUnconfiguredDevice is called, should publish UnconfiguredDeviceEvent`() {
@@ -36,13 +45,17 @@ class MqttIntegrationTest @Autowired constructor(
         assertEquals(publishedEvent.message, testMessage)
     }
 
+    @Transactional
     @Test
     fun `smart outlet maneja correctamente mensajes MQTT reales`() {
         // Arrange
+        val newHome = homeService.newHome(home)
         val smartOutlet = SmartOutlet(name = "Lamp")
-        val room = Room(name = "LivingRoom")
-        roomService.addDeviceToRoom(smartOutlet, room)
-        deviceService.registerDevice(smartOutlet) // Registra el dispositivo en MQTT
+        val room = roomService.addNewRoom(Room(home= newHome, name = "LivingRoom"))
+        //val deviceA = deviceService.registerDevice(smartOutlet) as SmartOutlet // Registra el dispositivo en MQTT
+        roomService.addDeviceToRoom(room.id, smartOutlet.toDTO())
+        val device = room.deviceList.first() as SmartOutlet //no se como sacarlo sino
+
 
         val validMessages = mapOf(
             "turn_on" to true,
@@ -53,18 +66,18 @@ class MqttIntegrationTest @Autowired constructor(
 
         // Act & Assert
         validMessages.forEach { (message, expectedState) ->
-            deviceService.publishToDevice(smartOutlet, message)
+            deviceService.publishToDevice(device, message)
             Thread.sleep(500) // Esperar un momento para que se procese el mensaje
 
-            assertEquals(expectedState, smartOutlet.isOn, "El estado del SmartOutlet no coincide con el mensaje enviado: $message")
+            assertEquals(expectedState, device.isOn, "El estado del SmartOutlet no coincide con el mensaje enviado: $message")
         }
 
         // Probar un mensaje inválido
-        deviceService.publishToDevice(smartOutlet, invalidMessage)
+        deviceService.publishToDevice(device, invalidMessage)
         Thread.sleep(500) // Esperar un momento para que se procese el mensaje
 
         // Verificar que el estado del SmartOutlet no cambió
-        assertEquals(false, smartOutlet.isOn, "El SmartOutlet no debería cambiar de estado con un mensaje inválido.")
+        assertFalse(device.isOn, "El SmartOutlet no debería cambiar de estado con un mensaje inválido.")
     }
 
 }

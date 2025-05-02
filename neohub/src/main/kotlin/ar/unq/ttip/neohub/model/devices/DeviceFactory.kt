@@ -15,4 +15,8 @@ class DeviceFactory {
             else -> throw IllegalArgumentException("Tipo de dispositivo desconocido: $type")
         }
     }
+
+    fun createFromDevice(device: Device) :Device {
+        return createDevice(device.name, device.type)
+    }
 }

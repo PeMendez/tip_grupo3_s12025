@@ -11,7 +11,8 @@ import org.springframework.stereotype.Service
 class DeviceService(
     private val mqttService: MqttService,
     private val repository: DeviceRepository,
-    private val factory: DeviceFactory) {
+    private val factory: DeviceFactory,
+) {
 
     @EventListener
     fun onUnconfiguredDeviceEvent(event: UnconfiguredDeviceEvent) {
@@ -26,9 +27,11 @@ class DeviceService(
         saveDevice(newDevice)
     }
 
-    fun registerDevice(device: Device) {
+    fun registerDevice(device: Device): Device {
         device.configureTopic() // Configura el topic basado en la room.
         mqttService.registerDevice(device) // Delega el registro al MqttService.
+        val savedDevice= repository.save(device)
+        return savedDevice
     }
 
     fun unregisterDevice(device: Device) {

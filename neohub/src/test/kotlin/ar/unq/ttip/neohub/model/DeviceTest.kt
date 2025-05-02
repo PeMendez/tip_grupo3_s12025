@@ -1,5 +1,7 @@
 package ar.unq.ttip.neohub.model
 
+import ar.unq.ttip.neohub.dto.toDTO
+import ar.unq.ttip.neohub.model.User
 import ar.unq.ttip.neohub.model.devices.SmartOutlet
 import ar.unq.ttip.neohub.model.devices.TemperatureSensor
 import ar.unq.ttip.neohub.service.RoomService
@@ -12,17 +14,20 @@ import org.springframework.boot.test.context.SpringBootTest
 class DeviceTest {
     @Autowired
     lateinit var roomService: RoomService
+    private val user = User(21,"carlos","sdasdada")
+    private val home = Home(1,user)
 
     @Test
     fun `create device without room and add it later`() {
         val device = SmartOutlet(name = "Smart Outlet")
-        val room = Room(name = "Kitchen")
+        val room = Room(home = home, name = "Kitchen")
 
         // Dispositivo inicialmente no asociado a ninguna sala
         assert(device.room == null)
 
         // Asocia el dispositivo a una sala
-        roomService.addDeviceToRoom(device,room)
+        //roomService.addDeviceToRoom(room.id,device.toDTO())
+        room.addDevice(device)
 
         assert(device.room == room)
         assert(room.deviceList.contains(device))
@@ -30,7 +35,7 @@ class DeviceTest {
 
     @Test
     fun `test smart outlet turn on, turn off, and toggle`() {
-        val room = Room(name = "Living Room")
+        val room = Room(home = home, name = "Living Room")
         val smartOutlet = SmartOutlet(name = "Smart Outlet", room = room)
 
         assertFalse(smartOutlet.isOn)
@@ -51,7 +56,7 @@ class DeviceTest {
     @Test
     fun `SmartOutlet processes MQTT messages correctly`() {
         // Crear un cuarto y un SmartOutlet
-        val room = Room(name = "LivingRoom")
+        val room = Room(home = home, name = "LivingRoom")
         val smartOutlet = SmartOutlet(name = "Lamp", room = room)
 
         // Configurar el topic del SmartOutlet
@@ -75,7 +80,7 @@ class DeviceTest {
     @Test
     fun `TemperatureSensor processes MQTT messages correctly`() {
         // Crear un cuarto y un TemperatureSensor
-        val room = Room(name = "Bedroom")
+        val room = Room(home = home, name = "Bedroom")
         val tempSensor = TemperatureSensor(name = "Thermometer", room = room)
 
         // Configurar el topic del TemperatureSensor
@@ -106,7 +111,7 @@ class DeviceTest {
         kotlin.test.assertEquals("neohub/unconfigured", tempSensor.topic)
 
         // Asignar un cuarto y actualizar el tópico
-        val room = Room(name = "Kitchen")
+        val room = Room(home = home, name = "Kitchen")
         tempSensor.room = room
         tempSensor.configureTopic()
         kotlin.test.assertEquals("neohub/Kitchen/temperatureSensor/Thermometer", tempSensor.topic)
