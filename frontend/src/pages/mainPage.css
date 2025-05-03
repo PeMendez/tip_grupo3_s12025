@@ -114,7 +114,6 @@
     cursor: pointer;
 }
 
-/* Estilo cuando está en modo edición */
 .room-button.edit-mode {
     transition: all 0.3s ease;
 }
@@ -123,7 +122,6 @@
     opacity: 0.7;
 }
 
-/* Ícono de basura que ocupa todo el espacio */
 .delete-icon-full {
     position: absolute;
     top: 0;

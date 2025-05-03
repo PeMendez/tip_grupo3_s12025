@@ -181,3 +181,19 @@ h2 {
 .room-editable-container:hover .delete-icon-full {
     opacity: 1;
 }
+
+.add-device-icon {
+    border-radius: 12px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    background-color: #7397ba;
+    display: flex;
+    justify-content: center;
+    flex-direction: column-reverse;
+}
+
+.edit-container-room{
+    display: flex;
+    justify-content: flex-end;
+    padding: 30px;
+}

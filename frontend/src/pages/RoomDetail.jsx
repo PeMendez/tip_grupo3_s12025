@@ -14,11 +14,11 @@ import './roomDetail.css';
 
 const deviceOptions = [
     { name: 'Luz', type: 'LIGHT', icon: <FiSun size={24} /> },
-    { name: 'Temperatura', type: 'THERMOMETER', icon: <FiThermometer size={24} /> },
+    { name: 'Temperatura', type: 'temperatureSensor', icon: <FiThermometer size={24} />, temp: 22, showTemp: false  },
     { name: 'Alarma', type: 'ALARM', icon: <FiShield size={24} /> },
     { name: 'Aire Acondicionado', type: 'AIR_CONDITIONER', icon: <LuAirVent size={24} /> },
     { name: 'Control TV', type: 'TV_CONTROL', icon: <FiVideo size={24} /> },
-    { name: 'Enchufe', type: 'SOCKET', icon: <FiLock size={24} /> },
+    { name: 'Enchufe', type: 'smartOutlet', icon: <FiLock size={24} /> },
 ];
 
 const RoomDetail = () => {
@@ -51,6 +51,18 @@ const RoomDetail = () => {
         fetchRoom();
     }, [id, token]);
 
+    useEffect(() => {
+        if (devices.some(d => d.type === 'temperatureSensor' && d.showTemp)) {
+            const timer = setTimeout(() => {
+                setDevices(prev => prev.map(device =>
+                    device.type === 'temperatureSensor' ? { ...device, showTemp: false } : device
+                ));
+            }, 10000);
+
+            return () => clearTimeout(timer);
+        }
+    }, [devices]);
+
     const handleAddDevice = async (device) => {
         try {
             await addDeviceToRoom(id, device, token);
@@ -72,6 +84,18 @@ const RoomDetail = () => {
             setDeviceToDelete(null);
         } catch (err) {
             console.error("Error al eliminar dispositivo", err);
+        }
+    };
+
+    const handleDeviceClick = (id, type) => {
+        if (type === 'temperatureSensor') {
+            setDevices(devices.map(device =>
+                device.id === id
+                    ? { ...device, showTemp: !device.showTemp }
+                    : device
+            ));
+        } else if (type !== 'light' && type !== 'alarm') {
+            alert(`Control para ${type} aún no implementado`);
         }
     };
 
@@ -144,7 +168,7 @@ const RoomDetail = () => {
                             </div>
                         );
                     })}
-                    <div className="add-room-icon">
+                    <div className="add-device-icon">
                         <button onClick={() => {
                             setEditMode(false);
                             setAddMode(true);
@@ -176,9 +200,13 @@ const RoomDetail = () => {
                     <BackOrCloseButton/>
                     <h2>{roomName}</h2>
                     {devices.length > 0 && (
+                        <div className="edit-container-room">
+                            <div className="edit-button">
                         <button onClick={() => setEditMode(true)}>
                             <FiEdit size={24}/>
                         </button>
+                            </div>
+                        </div>
                     )}
                 </div>
             </div>
@@ -191,9 +219,15 @@ const RoomDetail = () => {
                             <div
                                 key={index}
                                 className="room-button"
+                                onClick={() => handleDeviceClick(device.id, device.type)}
                             >
                                 <div className="device-icon">{iconMatch?.icon || <FiSun size={24}/>}</div>
                                 <span>{device.name}</span>
+                                {device.type === 'temperatureSensor' && device.showTemp && (
+                                    <div className="temperature-display">
+                                        <span className="device-value">{device.temp}°C</span>
+                                    </div>
+                                )}
                             </div>
                         );
                     })

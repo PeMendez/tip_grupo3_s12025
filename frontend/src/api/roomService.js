@@ -18,8 +18,6 @@ export const getRoomDetails = async (roomId, token) => {
 
 export const addDeviceToRoom = async (roomId, device, token) => {
     try {
-        console.log("aca llego")
-        console.log(token, roomId, device)
         const response = await axios.post(`${API_URL}/${roomId}/devices`,
             {
                 name: device.name,
@@ -32,7 +30,6 @@ export const addDeviceToRoom = async (roomId, device, token) => {
                 }
             }
         );
-        console.log("aca llego2")
         return response.data;
     } catch (error) {
         console.error('Error al agregar dispositivo:', error);
