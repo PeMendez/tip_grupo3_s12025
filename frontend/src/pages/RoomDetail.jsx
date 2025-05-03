@@ -14,11 +14,11 @@ import './roomDetail.css';
 
 const deviceOptions = [
     { name: 'Luz', type: 'LIGHT', icon: <FiSun size={24} /> },
-    { name: 'Temperatura', type: 'THERMOMETER', icon: <FiThermometer size={24} /> },
+    { name: 'Temperatura', type: 'temperatureSensor', icon: <FiThermometer size={24} /> },
     { name: 'Alarma', type: 'ALARM', icon: <FiShield size={24} /> },
     { name: 'Aire Acondicionado', type: 'AIR_CONDITIONER', icon: <LuAirVent size={24} /> },
     { name: 'Control TV', type: 'TV_CONTROL', icon: <FiVideo size={24} /> },
-    { name: 'Enchufe', type: 'SOCKET', icon: <FiLock size={24} /> },
+    { name: 'Enchufe', type: 'smartOutlet', icon: <FiLock size={24} /> },
 ];
 
 const RoomDetail = () => {
