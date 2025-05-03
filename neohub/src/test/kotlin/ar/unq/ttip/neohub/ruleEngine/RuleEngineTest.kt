@@ -4,11 +4,14 @@ import ar.unq.ttip.neohub.model.devices.TemperatureSensor
 import ar.unq.ttip.neohub.model.ruleEngine.Action
 import ar.unq.ttip.neohub.model.ruleEngine.Condition
 import ar.unq.ttip.neohub.model.ruleEngine.Rule
+import ar.unq.ttip.neohub.model.ruleEngine.RuleEngine
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
-
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.ActiveProfiles
+@SpringBootTest
+@ActiveProfiles("test")
 class RuleEngineTest {
-
     @Test
     fun `cuando la temperatura excede el umbral de la regla, la regla da verdadero y se ejecuta la accion`() {
         // Configurar dispositivos

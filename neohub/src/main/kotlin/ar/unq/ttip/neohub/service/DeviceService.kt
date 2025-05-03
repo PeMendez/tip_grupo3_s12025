@@ -3,6 +3,8 @@ package ar.unq.ttip.neohub.service
 import ar.unq.ttip.neohub.model.Device
 import ar.unq.ttip.neohub.model.devices.DeviceFactory
 import ar.unq.ttip.neohub.repository.DeviceRepository
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import jakarta.transaction.Transactional
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Service
@@ -21,8 +23,11 @@ class DeviceService(
 
     fun handleNewDevice(message: String) {
         //hay que cambiar esto para que el nombre y tipo los parsee del mensaje
-        val name = "test1"
-        val type = "smartOutlet"
+        val mapper = jacksonObjectMapper()
+
+        val deviceData : DeviceData = mapper.readValue<DeviceData>(message, DeviceData::class.java)
+        val type = deviceData.type
+        val name = deviceData.name
         val newDevice = factory.createDevice(name, type)
         saveDevice(newDevice)
     }
@@ -60,3 +65,8 @@ class DeviceService(
         return repository.findByRoomIsNull()
     }
 }
+
+data class DeviceData(
+    val name: String,
+    val type: String
+)

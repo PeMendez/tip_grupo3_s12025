@@ -15,9 +15,10 @@ import org.mockito.Mockito.verify
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.ApplicationEventPublisher
+import org.springframework.test.context.ActiveProfiles
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
-
+@ActiveProfiles("test")
 @SpringBootTest
 class MqttIntegrationTest @Autowired constructor(
     private val roomService: RoomService,

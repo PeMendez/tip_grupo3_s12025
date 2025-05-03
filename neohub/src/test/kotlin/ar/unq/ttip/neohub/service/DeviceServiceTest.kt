@@ -5,12 +5,15 @@ import ar.unq.ttip.neohub.model.User
 import ar.unq.ttip.neohub.model.devices.DeviceFactory
 import ar.unq.ttip.neohub.model.devices.SmartOutlet
 import ar.unq.ttip.neohub.repository.DeviceRepository
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.ApplicationEventPublisher
+import org.springframework.test.context.ActiveProfiles
 
+@ActiveProfiles("test")
 @SpringBootTest
 class DeviceServiceTest {
     private val mqttServiceMock = mock(MqttService::class.java)
@@ -23,18 +26,27 @@ class DeviceServiceTest {
     lateinit var deviceFactory: DeviceFactory
 
     //tengo que inyectar yo esto poerque sino no anda.. vale la pena testear esto ?
-    private var deviceService = DeviceService(mqttServiceMock,repositoryMock, factoryMock)
     private val user = User(21,"carlos","sdasdada")
     private val home = Home(1,user)
+    private var deviceService = DeviceService(mqttServiceMock,repositoryMock, factoryMock)
 
     @Test
     fun `registrar un dispositivo debería delegar al MqttService`() {
+        // Arrange
         val device = SmartOutlet(name = "Lamp")
 
-        deviceService.registerDevice(device)
+        // Configura el mock para que repository.save(device) devuelva el dispositivo
+        `when`(repositoryMock.save(device)).thenReturn(device)
 
-        verify(mqttServiceMock).registerDevice(device)
+        // Act
+        val result = deviceService.registerDevice(device)
+
+        // Assert
+        verify(mqttServiceMock).registerDevice(device) // Verifica que se llamó a mqttService
+        verify(repositoryMock).save(device) // Verifica que se guardó en el repositorio
+        assertEquals(device, result) // Asegúrate de que se devolvió el dispositivo esperado
     }
+
 
     @Test
     fun `desregistrar un dispositivo debería delegar al MqttService`() {
