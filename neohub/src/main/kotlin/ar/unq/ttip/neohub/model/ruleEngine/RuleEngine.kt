@@ -1,11 +1,8 @@
-package ar.unq.ttip.neohub.ruleEngine
+package ar.unq.ttip.neohub.model.ruleEngine
 
 import ar.unq.ttip.neohub.model.Device
 import ar.unq.ttip.neohub.model.devices.SmartOutlet
 import ar.unq.ttip.neohub.model.devices.TemperatureSensor
-import ar.unq.ttip.neohub.model.ruleEngine.Action
-import ar.unq.ttip.neohub.model.ruleEngine.Condition
-import ar.unq.ttip.neohub.model.ruleEngine.Rule
 
 class RuleEngine {
     fun evaluate(rule: Rule): Boolean {

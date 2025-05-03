@@ -1,16 +1,17 @@
 package ar.unq.ttip.neohub.model
 
-import ar.unq.ttip.neohub.dto.toDTO
-import ar.unq.ttip.neohub.model.User
 import ar.unq.ttip.neohub.model.devices.SmartOutlet
 import ar.unq.ttip.neohub.model.devices.TemperatureSensor
 import ar.unq.ttip.neohub.service.RoomService
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.Assertions.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.ActiveProfiles
 
 @SpringBootTest
+@ActiveProfiles("test")
 class DeviceTest {
     @Autowired
     lateinit var roomService: RoomService
