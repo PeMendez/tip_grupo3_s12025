@@ -22,8 +22,9 @@ class RoomController(private val roomService: RoomService) {
         return ResponseEntity.ok(room.toDTO())
     }
 
-    @PostMapping("/{roomId}/devices")
+    @PostMapping("/{roomId}/addDevice")
     fun addDeviceToRoom(
+        @AuthenticationPrincipal userDetails: UserDetails,
         @PathVariable roomId: Long,
         @RequestBody deviceDto: DeviceDTO
     ): ResponseEntity<RoomDTO> {

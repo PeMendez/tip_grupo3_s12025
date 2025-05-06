@@ -1,5 +1,6 @@
 package ar.unq.ttip.neohub.model
 
+import com.fasterxml.jackson.annotation.JsonBackReference
 import jakarta.persistence.*
 
 @Entity
@@ -9,6 +10,7 @@ data class Room(
 
     @ManyToOne
     @JoinColumn(name = "home_id")
+    @JsonBackReference
     val home: Home,
 
     @OneToMany(mappedBy = "room", cascade = [CascadeType.ALL], orphanRemoval = true)

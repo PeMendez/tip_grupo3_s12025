@@ -51,7 +51,7 @@ class RuleEngineTest {
         action.rule = rule
 
         // Simular evaluación de regla
-        val ruleEngine = RuleEngine() // Clase que evaluará las reglas (a implementar)
+        val ruleEngine = RuleEngine() // Clase que evaluará las reglas
         val result = ruleEngine.evaluate(rule)
 
         // Verificar que la regla se evalúa y la acción se ejecuta

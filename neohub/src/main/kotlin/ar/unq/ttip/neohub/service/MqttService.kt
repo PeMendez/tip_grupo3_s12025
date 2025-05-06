@@ -30,6 +30,7 @@ class MqttService(
 
             mqttClient.connect(options)
             println("Conectado exitosamente al broker MQTT.")
+            subscribe(unconfiguredTopic)
 
         } catch (e: MqttException) {
             throw RuntimeException("Error al conectar con el broker.", e)

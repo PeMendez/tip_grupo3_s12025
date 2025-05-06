@@ -8,7 +8,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage
 import org.springframework.stereotype.Service
 import java.util.*
 
-@Service
+//@Service
 class MqttServiceOld(private val webSocketHandler: MqttWebSocketHandler) {
     private val brokerUrl = "tcp://test.mosquitto.org:1883"
     private val clientId = "NeoHub-API-" + UUID.randomUUID().toString().substring(0, 8)

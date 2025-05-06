@@ -1,5 +1,6 @@
 package ar.unq.ttip.neohub.model
 
+import com.fasterxml.jackson.annotation.JsonManagedReference
 import jakarta.persistence.*
 
 @Entity
@@ -10,7 +11,8 @@ data class Home(
     @JoinColumn(name = "user_id")
     val user: User,
 
-    @OneToMany(mappedBy = "home", cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(mappedBy = "home", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
     val rooms: List<Room> = mutableListOf()
 )
 {

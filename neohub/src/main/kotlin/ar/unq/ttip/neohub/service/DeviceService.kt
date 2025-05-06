@@ -3,7 +3,6 @@ package ar.unq.ttip.neohub.service
 import ar.unq.ttip.neohub.model.Device
 import ar.unq.ttip.neohub.model.devices.DeviceFactory
 import ar.unq.ttip.neohub.repository.DeviceRepository
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import jakarta.transaction.Transactional
 import org.springframework.context.event.EventListener
@@ -25,7 +24,7 @@ class DeviceService(
         //hay que cambiar esto para que el nombre y tipo los parsee del mensaje
         val mapper = jacksonObjectMapper()
 
-        val deviceData : DeviceData = mapper.readValue<DeviceData>(message, DeviceData::class.java)
+        val deviceData : DeviceData = mapper.readValue(message, DeviceData::class.java)
         val type = deviceData.type
         val name = deviceData.name
         val newDevice = factory.createDevice(name, type)

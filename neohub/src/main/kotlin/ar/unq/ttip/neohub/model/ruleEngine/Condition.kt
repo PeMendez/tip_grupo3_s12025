@@ -4,6 +4,7 @@ import ar.unq.ttip.neohub.model.Device
 import jakarta.persistence.*
 
 @Entity
+@Table(name="rule_condition")
 data class Condition(
     @Id @GeneratedValue val id: Long = 0,
     @ManyToOne @JoinColumn(name = "rule_id")
