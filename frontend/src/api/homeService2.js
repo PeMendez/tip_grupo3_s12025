@@ -22,7 +22,9 @@ export const addRoom = async (token, roomName) => {
 }
 
 export const deleteRoom = async (token, roomId) => {
-    const response = await axios.delete(`${API_URL}/rooms/${roomId}`, {
+    const response = await axios.post(`${API_URL}/rooms/${roomId}`, {
+        roomId: roomId
+    },{
         headers: {
             'Authorization': `Bearer ${token}`
         }
