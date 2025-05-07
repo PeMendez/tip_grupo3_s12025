@@ -14,7 +14,7 @@ data class Room(
     @JsonBackReference
     var home: Home?,
 
-    @OneToMany(mappedBy = "room", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "room", cascade = [CascadeType.PERSIST, CascadeType.MERGE], fetch = FetchType.LAZY)
     val deviceList: MutableList<Device> = mutableListOf()
 ){
     fun addDevice(device: Device){

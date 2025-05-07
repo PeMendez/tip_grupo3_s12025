@@ -39,9 +39,11 @@ export const addDeviceToRoom = async (roomId, deviceId, token) => {
 
 export const deleteDevice = async (roomId, deviceId, token) => {
     try {
-        const response = await axios.delete(
-            `${API_URL}/${roomId}/devices/${deviceId}`,
+        const response = await axios.post(`${API_URL}/${roomId}/removeDevice/${deviceId}`,
             {
+                roomId: roomId,
+                deviceId: deviceId
+            },{
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

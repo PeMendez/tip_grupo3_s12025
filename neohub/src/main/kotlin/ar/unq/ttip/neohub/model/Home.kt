@@ -11,7 +11,7 @@ data class Home(
     @JoinColumn(name = "user_id")
     val user: User,
 
-    @OneToMany(mappedBy = "home", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "home", cascade = [CascadeType.PERSIST, CascadeType.MERGE], fetch = FetchType.LAZY)
     @JsonManagedReference
     val rooms: MutableList<Room> = mutableListOf()
 )
