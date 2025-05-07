@@ -5,8 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="09bf219a-ddab-407c-b6b8-1beb0e5da310" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/api/roomService.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/api/roomService.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/service/RoomService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/service/RoomService.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -128,7 +127,7 @@
       <workItem from="1745526299159" duration="8558000" />
       <workItem from="1746041555053" duration="17126000" />
       <workItem from="1746126326783" duration="25529000" />
-      <workItem from="1746641144309" duration="6935000" />
+      <workItem from="1746641144309" duration="7571000" />
     </task>
     <servers />
   </component>

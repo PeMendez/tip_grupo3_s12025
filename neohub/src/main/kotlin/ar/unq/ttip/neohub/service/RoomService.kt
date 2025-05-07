@@ -2,7 +2,6 @@ package ar.unq.ttip.neohub.service
 
 import ar.unq.ttip.neohub.dto.*
 import ar.unq.ttip.neohub.model.Room
-import ar.unq.ttip.neohub.model.devices.DeviceFactory
 import ar.unq.ttip.neohub.repository.DeviceRepository
 import ar.unq.ttip.neohub.repository.HomeRepository
 import ar.unq.ttip.neohub.repository.RoomRepository
@@ -14,9 +13,7 @@ class RoomService(
     private val roomRepository: RoomRepository,
     private val deviceRepository: DeviceRepository,
     private val homeRepository: HomeRepository,
-    private val mqttService: MqttService,
-    private val deviceFactory: DeviceFactory,
-    private val deviceService: DeviceService,
+    private val mqttService: MqttService
 ) {
     fun getRoomDetails(roomId: Long): Room {
         return roomRepository.findById(roomId)

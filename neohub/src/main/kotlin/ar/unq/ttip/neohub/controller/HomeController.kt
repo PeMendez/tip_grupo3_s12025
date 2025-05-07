@@ -7,6 +7,7 @@ import ar.unq.ttip.neohub.dto.toDTO
 import ar.unq.ttip.neohub.model.Room
 import ar.unq.ttip.neohub.service.HomeService
 import ar.unq.ttip.neohub.service.UserService
+import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.web.bind.annotation.*
@@ -39,8 +40,17 @@ class HomeController(
         return homeService.addRoomToHome(user, roomRequest.name)
     }
 
-    @DeleteMapping("/rooms/{roomId}")
+    /*@DeleteMapping("/rooms/{roomId}")
     fun deleteRoom(
+        @AuthenticationPrincipal userDetails: UserDetails,
+        @PathVariable roomId: Long
+    ) {
+        val user = userService.getUserByUsername(userDetails.username)
+        homeService.removeRoomFromHome(user, roomId)
+    }*/
+
+    @PostMapping("/rooms/{roomId}")
+    fun removeRoomFromHome(
         @AuthenticationPrincipal userDetails: UserDetails,
         @PathVariable roomId: Long
     ) {
