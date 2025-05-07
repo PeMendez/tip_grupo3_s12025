@@ -11,6 +11,9 @@ import java.util.concurrent.CopyOnWriteArrayList
 @Component
 class MqttWebSocketHandler : TextWebSocketHandler()
 {
+    init {
+        println("MqttWebSocketHandler iniciandose")
+    }
     private val sessions = CopyOnWriteArrayList<WebSocketSession>()
 
     override fun afterConnectionEstablished(session: WebSocketSession) {
@@ -104,6 +107,7 @@ class MqttWebSocketHandler : TextWebSocketHandler()
         sessions.forEach { session ->
             if (session.isOpen) {
                 try {
+                    println("Si lo mandéee....")
                     session.sendMessage(TextMessage(json))
                 } catch (e: Exception) {
                     println("Error enviando JSON a ${session.id}: ${e.message}")
