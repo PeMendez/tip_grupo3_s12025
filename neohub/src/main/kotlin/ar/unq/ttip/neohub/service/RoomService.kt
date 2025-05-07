@@ -26,21 +26,17 @@ class RoomService(
     @Transactional
     fun addDeviceToRoom(roomId: Long, deviceId: Long): Room {
         val room = roomRepository.findById(roomId).orElseThrow { RuntimeException("Room not found") }
-        //no se puede instanciar devices, para eso esta el factory
-        //val newDevice = deviceFactory.createDevice(deviceId.name, deviceId.type)
         val newDevice = deviceRepository.findById(deviceId).orElseThrow { RuntimeException("Device not found") }
-        //newDevice.room=room
+
         room.addDevice(newDevice)
 
-        //debe registrarlo
-        deviceService.registerDevice(newDevice.toDTO())
         deviceRepository.save(newDevice)
         roomRepository.save(room)
         return room
     }
 
     @Transactional
-    fun removeDeviceFromRoom(deviceId: Long, roomId: Long) {
+    fun removeDeviceFromRoom(deviceId: Long, roomId: Long) : Room {
         val targetRoom = roomRepository.findById(roomId)
             .orElseThrow { RuntimeException("Room not found") }
         val targetDevice = deviceRepository.findById(deviceId)
@@ -57,7 +53,7 @@ class RoomService(
         targetDevice.configureTopic()
 
         deviceRepository.save(targetDevice)
-        roomRepository.save(targetRoom)
+        return roomRepository.save(targetRoom)
     }
     @Transactional
     fun addNewRoom(homeId: Long, roomDTO: RoomDTO): RoomDTO {
