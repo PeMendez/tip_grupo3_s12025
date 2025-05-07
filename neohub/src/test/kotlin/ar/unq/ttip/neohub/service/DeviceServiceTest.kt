@@ -1,6 +1,7 @@
 package ar.unq.ttip.neohub.service
 import ar.unq.ttip.neohub.dto.DeviceDTO
 import ar.unq.ttip.neohub.dto.toDTO
+import ar.unq.ttip.neohub.dto.toEntity
 import ar.unq.ttip.neohub.model.Home
 import ar.unq.ttip.neohub.model.Room
 import ar.unq.ttip.neohub.model.User
@@ -43,7 +44,7 @@ class DeviceServiceTest {
         `when`(repositoryMock.save(device)).thenReturn(device)
 
         // Act
-        val result = deviceService.registerDevice(deviceDTO)
+        val result = deviceService.registerDeviceOnMqtt(deviceDTO.toEntity(deviceFactory))
 
         // Assert
         verify(mqttServiceMock).registerDevice(device)
