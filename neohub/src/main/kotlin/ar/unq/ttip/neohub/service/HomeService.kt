@@ -43,8 +43,12 @@ class HomeService(
         if (room.home?.id != home.id) {
             throw IllegalAccessException("La habitación no pertenece a este hogar")
         }
-        //FALTA desconfigurar todos los dispositivos de este room
-        
+        //Desconfigurar todos los dispositivos de este room
+        val devices = room.deviceList.toList()
+        devices.forEach { device ->
+            roomService.removeDeviceFromRoom(device.id,roomId)
+        }
+
         roomRepository.delete(room)
     }
 
