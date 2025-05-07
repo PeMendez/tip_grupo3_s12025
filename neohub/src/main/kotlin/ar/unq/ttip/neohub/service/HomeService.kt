@@ -11,7 +11,8 @@ import org.springframework.stereotype.Service
 @Service
 class HomeService(
     private val homeRepository: HomeRepository,
-    private val roomRepository: RoomRepository
+    private val roomRepository: RoomRepository,
+    private val roomService: RoomService
 ){
     fun getHomeByUser(user: User): Home? {
         return homeRepository.findByUser(user)
@@ -42,7 +43,8 @@ class HomeService(
         if (room.home?.id != home.id) {
             throw IllegalAccessException("La habitación no pertenece a este hogar")
         }
-
+        //FALTA desconfigurar todos los dispositivos de este room
+        
         roomRepository.delete(room)
     }
 

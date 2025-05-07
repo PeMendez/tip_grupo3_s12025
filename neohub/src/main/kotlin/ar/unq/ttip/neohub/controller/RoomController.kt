@@ -1,6 +1,5 @@
 package ar.unq.ttip.neohub.controller
 
-import ar.unq.ttip.neohub.dto.DeviceDTO
 import ar.unq.ttip.neohub.dto.RoomDTO
 import ar.unq.ttip.neohub.dto.toDTO
 import ar.unq.ttip.neohub.service.RoomService
@@ -30,4 +29,18 @@ class RoomController(private val roomService: RoomService) {
         val room = roomService.addDeviceToRoom(roomId, deviceId)
         return ResponseEntity.ok(room.toDTO())
     }
+
+    @PostMapping("/{roomId}/removeDevice/{deviceId}")
+    fun removeDeviceFromRoom(
+        @AuthenticationPrincipal userDetails: UserDetails,
+        @PathVariable roomId: Long,
+        @PathVariable deviceId: Long
+    ): ResponseEntity<RoomDTO> {
+        val room = roomService.removeDeviceFromRoom(deviceId, roomId)
+        return ResponseEntity.ok(room.toDTO())
+    }
+
+
 }
+
+

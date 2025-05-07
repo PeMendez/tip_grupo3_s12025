@@ -6,7 +6,7 @@ import ar.unq.ttip.neohub.service.DeviceService
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/api/devices")
+@RequestMapping("/devices")
 class DeviceController(private val deviceService: DeviceService) {
 
     // Endpoint para obtener un dispositivo por ID

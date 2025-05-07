@@ -1,6 +1,7 @@
 package ar.unq.ttip.neohub.controller
 
 import ar.unq.ttip.neohub.dto.HomeDTO
+import ar.unq.ttip.neohub.dto.RoomDTO
 import ar.unq.ttip.neohub.dto.RoomRequest
 import ar.unq.ttip.neohub.dto.toDTO
 import ar.unq.ttip.neohub.model.Room
@@ -24,9 +25,9 @@ class HomeController(
     }
 
     @GetMapping("/rooms")
-    fun getRooms(@AuthenticationPrincipal userDetails: UserDetails): List<Room> {
+    fun getRooms(@AuthenticationPrincipal userDetails: UserDetails): List<RoomDTO> {
         val user = userService.getUserByUsername(userDetails.username)
-        return homeService.getRooms(user)
+        return homeService.getRooms(user).map { it.toDTO() }
     }
 
     @PostMapping("/rooms")
