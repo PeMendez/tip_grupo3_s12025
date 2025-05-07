@@ -2,7 +2,6 @@ package ar.unq.ttip.neohub.service
 
 import ar.unq.ttip.neohub.dto.DeviceDTO
 import ar.unq.ttip.neohub.dto.toDTO
-import ar.unq.ttip.neohub.dto.toEntity
 import ar.unq.ttip.neohub.model.Device
 import ar.unq.ttip.neohub.model.devices.DeviceFactory
 import ar.unq.ttip.neohub.repository.DeviceRepository
@@ -34,12 +33,8 @@ class DeviceService(
         saveDevice(newDevice)
     }
 
-    fun registerDevice(deviceDTO: DeviceDTO): DeviceDTO {
-        val device = deviceDTO.toEntity(factory)
-        device.configureTopic() // Configura el topic basado en la room.
+    fun registerDeviceOnMqtt(device: Device) {
         mqttService.registerDevice(device) // Delega el registro al MqttService.
-        val savedDevice = repository.save(device)
-        return savedDevice.toDTO()
     }
 
     fun unregisterDevice(deviceId: Long) {
@@ -53,6 +48,7 @@ class DeviceService(
         val device = repository.findById(deviceId).orElseThrow {
             IllegalArgumentException("Device with ID $deviceId not found.")
         }
+        println("publishToDevice: publicando al device ID: $deviceId, mensaje: $message")
         mqttService.publish(device.topic, message)
     }
 

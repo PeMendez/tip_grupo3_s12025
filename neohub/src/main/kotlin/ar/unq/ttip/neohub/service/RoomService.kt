@@ -13,7 +13,8 @@ class RoomService(
     private val roomRepository: RoomRepository,
     private val deviceRepository: DeviceRepository,
     private val homeRepository: HomeRepository,
-    private val mqttService: MqttService
+    private val mqttService: MqttService,
+    private val deviceService: DeviceService
 ) {
     fun getRoomDetails(roomId: Long): Room {
         return roomRepository.findById(roomId)
@@ -29,6 +30,9 @@ class RoomService(
 
         deviceRepository.save(newDevice)
         roomRepository.save(room)
+
+        deviceService.registerDeviceOnMqtt(newDevice)
+
         return room
     }
 
