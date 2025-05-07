@@ -11,15 +11,7 @@ import {
     deleteDevice
 } from "../api/roomService";
 import './roomDetail.css';
-
-const deviceOptions = [
-    { name: 'Luz', type: 'LIGHT', icon: <FiSun size={24} /> },
-    { name: 'Temperatura', type: 'temperatureSensor', icon: <FiThermometer size={24} />, temp: 22, showTemp: false  },
-    { name: 'Alarma', type: 'ALARM', icon: <FiShield size={24} /> },
-    { name: 'Aire Acondicionado', type: 'AIR_CONDITIONER', icon: <LuAirVent size={24} /> },
-    { name: 'Control TV', type: 'TV_CONTROL', icon: <FiVideo size={24} /> },
-    { name: 'Enchufe', type: 'smartOutlet', icon: <FiLock size={24} /> },
-];
+import { getUnconfiguredDevices } from "../api/deviceService.js"
 
 const RoomDetail = () => {
     const { id } = useParams();
@@ -27,6 +19,7 @@ const RoomDetail = () => {
 
     const [roomName, setRoomName] = useState("");
     const [devices, setDevices] = useState([]);
+    const [availableDevices, setAvailableDevices] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [editMode, setEditMode] = useState(false);
@@ -34,13 +27,24 @@ const RoomDetail = () => {
     const [showDeletePopup, setShowDeletePopup] = useState(false);
     const [deviceToDelete, setDeviceToDelete] = useState(null);
 
+    const deviceTypeIcons = {
+        LIGHT: <FiSun size={24} />,
+        temperatureSensor: <FiThermometer size={24} />,
+        ALARM: <FiShield size={24} />,
+        AIR_CONDITIONER: <LuAirVent size={24} />,
+        TV_CONTROL: <FiVideo size={24} />,
+        smartOutlet: <FiLock size={24} />
+    };
+
+    const getDeviceIcon = (type) => deviceTypeIcons[type] || <FiSun size={24} />;
+
     useEffect(() => {
         const fetchRoom = async () => {
             try {
                 setLoading(true);
                 const room = await getRoomDetails(id, token);
                 setRoomName(room.name || "Habitación sin nombre");
-                setDevices(room.devices || []);
+                setDevices(room.deviceList || []);
             } catch (err) {
                 console.error(err);
                 setError("Error al cargar detalles de la habitación");
@@ -51,11 +55,26 @@ const RoomDetail = () => {
         fetchRoom();
     }, [id, token]);
 
+    const handleAddClick = async () => {
+        setEditMode(false);
+        setAddMode(true);
+        try {
+            setLoading(true);
+            const devices = await getUnconfiguredDevices(token);
+            setAvailableDevices(devices || []);
+        } catch (err) {
+            console.error(err);
+            setError("Error al cargar los dispositivos");
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const handleAddDevice = async (device) => {
         try {
-            await addDeviceToRoom(id, device, token);
+            await addDeviceToRoom(id, device.id, token);
             const updatedRoom = await getRoomDetails(id, token);
-            setDevices(updatedRoom.devices || []);
+            setDevices(updatedRoom.deviceList || []);
             setAddMode(false);
         } catch (err) {
             console.error("Error al agregar dispositivo", err);
@@ -67,7 +86,7 @@ const RoomDetail = () => {
         try {
             await deleteDevice(id, deviceToDelete.id, token);
             const updatedRoom = await getRoomDetails(id, token);
-            setDevices(updatedRoom.devices || []);
+            setDevices(updatedRoom.deviceList || []);
             setShowDeletePopup(false);
             setDeviceToDelete(null);
         } catch (err) {
@@ -97,16 +116,13 @@ const RoomDetail = () => {
                     </div>
                 </div>
                 <div className="room-grid">
-                    {deviceOptions.map((device, index) => (
+                    {availableDevices.map((device, index) => (
                         <button
                             key={index}
-                            onClick={() => handleAddDevice({
-                                name: device.name,
-                                type: device.type
-                            })}
+                            onClick={() => handleAddDevice(device)}
                             className="room-button"
                         >
-                            <div className="device-icon">{device.icon}</div>
+                            <div className="device-icon">{getDeviceIcon(device.type)}</div>
                             <span>{device.name}</span>
                         </button>
                     ))}
@@ -126,7 +142,6 @@ const RoomDetail = () => {
                 </div>
                 <div className="room-grid">
                     {devices.map((device, index) => {
-                        const iconMatch = deviceOptions.find(d => d.type === device.type);
                         return (
                             <div
                                 key={index}
@@ -137,18 +152,15 @@ const RoomDetail = () => {
                                 }}
                             >
                                 <div className="room-button edit-mode">
-                                    <div className="device-icon">{iconMatch?.icon || <FiSun size={24}/>}</div>
+                                    <div className="device-icon">{getDeviceIcon(device.type)}</div>
                                     <span>{device.name}</span>
                                     <div className="delete-icon-full">🗑️</div>
                                 </div>
                             </div>
                         );
                     })}
-                    <div className="add-room-icon">
-                        <button onClick={() => {
-                            setEditMode(false);
-                            setAddMode(true);
-                        }}>
+                    <div className="add-device-icon">
+                        <button onClick={handleAddClick}>
                             <FiPlus size={24} className="icon"/>
                         </button>
                     </div>
@@ -175,39 +187,42 @@ const RoomDetail = () => {
                 <div className="header">
                     <BackOrCloseButton/>
                     <h2>{roomName}</h2>
-                    {devices.length > 0 && (
-                        <button onClick={() => setEditMode(true)}>
-                            <FiEdit size={24}/>
-                        </button>
-                    )}
                 </div>
             </div>
-
-            <div className="room-grid">
-                {devices.length > 0 ? (
-                    devices.map((device, index) => {
-                        const iconMatch = deviceOptions.find(d => d.type === device.type);
-                        return (
-                            <div
-                                key={index}
-                                className="room-button"
-                            >
-                                <div className="device-icon">{iconMatch?.icon || <FiSun size={24}/>}</div>
-                                <span>{device.name}</span>
+                    {devices.length > 0 && (
+                        <div className="edit-container">
+                            <div className="edit-button">
+                                <button onClick={() => setEditMode(true)}>
+                                    <FiEdit size={24}/>
+                                </button>
                             </div>
-                        );
-                    })
-                ) : (
-                    <div className="no-devices">
-                        <p>Aún no tenés dispositivos...</p>
-                        <button onClick={() => setAddMode(true)}>
-                            <FiPlus /> Agregar dispositivo
-                        </button>
-                    </div>
-                )}
-            </div>
-        </div>
-    );
-};
+                        </div>
+                                )}
 
-export default RoomDetail;
+                                <div className="room-grid">
+                                    {devices.length > 0 ? (
+                                        devices.map((device, index) => {
+                                            return (
+                                                <div
+                                                    key={index}
+                                                    className="room-button"
+                                                >
+                                                    <div className="device-icon">{getDeviceIcon(device.type)}</div>
+                                                    <span>{device.name}</span>
+                                                </div>
+                                            );
+                                        })
+                                    ) : (
+                                        <div className="no-devices">
+                                            <p>Aún no tenés dispositivos...</p>
+                                            <button onClick={handleAddClick}>
+                                                <FiPlus/> Agregar dispositivo
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                            );
+                            };
+
+                            export default RoomDetail;

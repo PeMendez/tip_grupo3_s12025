@@ -33,7 +33,7 @@ class RoomService(
         room.addDevice(newDevice)
 
         //debe registrarlo
-        deviceService.registerDevice(newDevice.toDTO())
+        //deviceService.registerDevice(newDevice.toDTO())
         deviceRepository.save(newDevice)
         roomRepository.save(room)
         return room
