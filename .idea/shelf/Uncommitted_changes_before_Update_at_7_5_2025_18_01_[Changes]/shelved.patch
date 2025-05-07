@@ -1,0 +1,221 @@
+Index: neohub/src/main/kotlin/ar/unq/ttip/neohub/service/DeviceService.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ar.unq.ttip.neohub.service\r\n\r\nimport ar.unq.ttip.neohub.dto.DeviceDTO\r\nimport ar.unq.ttip.neohub.dto.toDTO\r\nimport ar.unq.ttip.neohub.dto.toEntity\r\nimport ar.unq.ttip.neohub.model.Device\r\nimport ar.unq.ttip.neohub.model.devices.DeviceFactory\r\nimport ar.unq.ttip.neohub.repository.DeviceRepository\r\nimport com.fasterxml.jackson.module.kotlin.jacksonObjectMapper\r\nimport jakarta.transaction.Transactional\r\nimport org.springframework.context.event.EventListener\r\nimport org.springframework.stereotype.Service\r\n\r\n@Service\r\nclass DeviceService(\r\n    private val mqttService: MqttService,\r\n    private val repository: DeviceRepository,\r\n    private val factory: DeviceFactory,\r\n) {\r\n\r\n    @EventListener\r\n    fun onUnconfiguredDeviceEvent(event: UnconfiguredDeviceEvent) {\r\n        handleNewDevice(event.message)\r\n    }\r\n\r\n    fun handleNewDevice(message: String) {\r\n        //hay que cambiar esto para que el nombre y tipo los parsee del mensaje\r\n        val mapper = jacksonObjectMapper()\r\n\r\n        val deviceData : DeviceData = mapper.readValue(message, DeviceData::class.java)\r\n        val type = deviceData.type\r\n        val name = deviceData.name\r\n        val newDevice = factory.createDevice(name, type)\r\n        saveDevice(newDevice)\r\n    }\r\n\r\n    fun registerDevice(deviceDTO: DeviceDTO): DeviceDTO {\r\n        val device = deviceDTO.toEntity(factory)\r\n        device.configureTopic() // Configura el topic basado en la room.\r\n        mqttService.registerDevice(device) // Delega el registro al MqttService.\r\n        val savedDevice = repository.save(device)\r\n        return savedDevice.toDTO()\r\n    }\r\n\r\n    fun unregisterDevice(deviceId: Long) {\r\n        val device = repository.findById(deviceId).orElseThrow {\r\n            IllegalArgumentException(\"Device with ID $deviceId not found.\")\r\n        }\r\n        mqttService.unregisterDevice(device)\r\n    }\r\n\r\n    fun publishToDevice(deviceId: Long, message: String) {\r\n        val device = repository.findById(deviceId).orElseThrow {\r\n            IllegalArgumentException(\"Device with ID $deviceId not found.\")\r\n        }\r\n        mqttService.publish(device.topic, message)\r\n    }\r\n\r\n    @Transactional\r\n    fun saveDevice(device: Device): DeviceDTO {\r\n        val savedDevice = repository.save(device)\r\n        return savedDevice.toDTO()\r\n    }\r\n\r\n    @Transactional\r\n    fun deleteDevice(deviceId: Long) {\r\n        repository.deleteById(deviceId)\r\n    }\r\n\r\n    fun getDeviceById(id: Long): DeviceDTO {\r\n        val device = repository.findById(id).orElseThrow {\r\n            IllegalArgumentException(\"Device with ID $id not found.\")\r\n        }\r\n        return device.toDTO()\r\n    }\r\n\r\n    fun getUnconfiguredDevices(): List<DeviceDTO> {\r\n        return repository.findByRoomIsNull().map { it.toDTO() }\r\n    }\r\n}\r\n\r\ndata class DeviceData(\r\n    val name: String,\r\n    val type: String\r\n)
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/neohub/src/main/kotlin/ar/unq/ttip/neohub/service/DeviceService.kt b/neohub/src/main/kotlin/ar/unq/ttip/neohub/service/DeviceService.kt
+--- a/neohub/src/main/kotlin/ar/unq/ttip/neohub/service/DeviceService.kt	(revision 006ef1058fd56770be9a3fbaf7aa9c917a5b9b9d)
++++ b/neohub/src/main/kotlin/ar/unq/ttip/neohub/service/DeviceService.kt	(date 1746651593643)
+@@ -2,7 +2,6 @@
+ 
+ import ar.unq.ttip.neohub.dto.DeviceDTO
+ import ar.unq.ttip.neohub.dto.toDTO
+-import ar.unq.ttip.neohub.dto.toEntity
+ import ar.unq.ttip.neohub.model.Device
+ import ar.unq.ttip.neohub.model.devices.DeviceFactory
+ import ar.unq.ttip.neohub.repository.DeviceRepository
+@@ -34,12 +33,8 @@
+         saveDevice(newDevice)
+     }
+ 
+-    fun registerDevice(deviceDTO: DeviceDTO): DeviceDTO {
+-        val device = deviceDTO.toEntity(factory)
+-        device.configureTopic() // Configura el topic basado en la room.
++    fun registerDeviceOnMqtt(device: Device) {
+         mqttService.registerDevice(device) // Delega el registro al MqttService.
+-        val savedDevice = repository.save(device)
+-        return savedDevice.toDTO()
+     }
+ 
+     fun unregisterDevice(deviceId: Long) {
+@@ -53,6 +48,7 @@
+         val device = repository.findById(deviceId).orElseThrow {
+             IllegalArgumentException("Device with ID $deviceId not found.")
+         }
++        println("publishToDevice: publicando al device ID: $deviceId, mensaje: $message")
+         mqttService.publish(device.topic, message)
+     }
+ 
+Index: neohub/src/main/resources/application.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>spring.application.name=neohub\r\n\r\n# application.properties\r\n# Configuración predeterminada\r\nspring.datasource.url=jdbc:mysql://localhost:3306/neohub_db?allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC\r\nspring.datasource.username=neohub_db\r\nspring.datasource.password=neo_hub\r\n\r\nspring.jpa.hibernate.ddl-auto=update\r\nspring.jpa.show-sql=true\r\nspring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect\r\nspring.jpa.properties.hibernate.format_sql=true\r\n\r\nspring.datasource.hikari.connection-timeout=20000\r\nspring.datasource.hikari.maximum-pool-size=5\r\n\r\n\r\n\r\nlogging.level.org.springframework.security=DEBUG\r\nlogging.level.org.springframework=DEBUG\r\nlogging.level.org.hibernate.SQL=DEBUG\r\nlogging.level.org.springframework.transaction=DEBUG\r\n# Le quite la verbosidad por ahora porque me rompia las bolas\r\n\r\njwt.secret=Vbmxz3dX7LkJc8E4J1XbN6GvXuBgME6HrGoYixTx9PvCPkquv+6WOkU3kE+INXAIu6x7RYeR9s7UEX3L4IUZrA==\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>ISO-8859-1
+===================================================================
+diff --git a/neohub/src/main/resources/application.properties b/neohub/src/main/resources/application.properties
+--- a/neohub/src/main/resources/application.properties	(revision 006ef1058fd56770be9a3fbaf7aa9c917a5b9b9d)
++++ b/neohub/src/main/resources/application.properties	(date 1746651593644)
+@@ -16,10 +16,10 @@
+ 
+ 
+ 
+-logging.level.org.springframework.security=DEBUG
+-logging.level.org.springframework=DEBUG
+-logging.level.org.hibernate.SQL=DEBUG
+-logging.level.org.springframework.transaction=DEBUG
++#logging.level.org.springframework.security=DEBUG
++#logging.level.org.springframework=DEBUG
++#logging.level.org.hibernate.SQL=DEBUG
++#logging.level.org.springframework.transaction=DEBUG
+ # Le quite la verbosidad por ahora porque me rompia las bolas
+ 
+ jwt.secret=Vbmxz3dX7LkJc8E4J1XbN6GvXuBgME6HrGoYixTx9PvCPkquv+6WOkU3kE+INXAIu6x7RYeR9s7UEX3L4IUZrA==
+Index: neohub/src/main/kotlin/ar/unq/ttip/neohub/service/RoomService.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ar.unq.ttip.neohub.service\r\n\r\nimport ar.unq.ttip.neohub.dto.*\r\nimport ar.unq.ttip.neohub.model.Room\r\nimport ar.unq.ttip.neohub.repository.DeviceRepository\r\nimport ar.unq.ttip.neohub.repository.HomeRepository\r\nimport ar.unq.ttip.neohub.repository.RoomRepository\r\nimport jakarta.transaction.Transactional\r\nimport org.springframework.stereotype.Service\r\n\r\n@Service\r\nclass RoomService(\r\n    private val roomRepository: RoomRepository,\r\n    private val deviceRepository: DeviceRepository,\r\n    private val homeRepository: HomeRepository,\r\n    private val mqttService: MqttService\r\n) {\r\n    fun getRoomDetails(roomId: Long): Room {\r\n        return roomRepository.findById(roomId)\r\n            .orElseThrow { RuntimeException(\"Habitación no encontrada\") }\r\n    }\r\n\r\n    @Transactional\r\n    fun addDeviceToRoom(roomId: Long, deviceId: Long): Room {\r\n        val room = roomRepository.findById(roomId).orElseThrow { RuntimeException(\"Room not found\") }\r\n        val newDevice = deviceRepository.findById(deviceId).orElseThrow { RuntimeException(\"Device not found\") }\r\n\r\n        room.addDevice(newDevice)\r\n\r\n        deviceRepository.save(newDevice)\r\n        roomRepository.save(room)\r\n        return room\r\n    }\r\n\r\n    @Transactional\r\n    fun removeDeviceFromRoom(deviceId: Long, roomId: Long) : Room {\r\n        val targetRoom = roomRepository.findById(roomId)\r\n            .orElseThrow { RuntimeException(\"Room not found\") }\r\n        val targetDevice = deviceRepository.findById(deviceId)\r\n            .orElseThrow { RuntimeException(\"Device not found\") }\r\n\r\n        // Eliminar el dispositivo de la lista del cuarto\r\n        targetRoom.deviceList.remove(targetDevice)\r\n\r\n        // Desregistrar el dispositivo\r\n        mqttService.unregisterDevice(targetDevice)\r\n\r\n        // Resetear el cuarto y el tópico\r\n        targetDevice.room = null\r\n        targetDevice.configureTopic()\r\n\r\n        deviceRepository.save(targetDevice)\r\n        return roomRepository.save(targetRoom)\r\n    }\r\n    @Transactional\r\n    fun addNewRoom(homeId: Long, roomDTO: RoomDTO): RoomDTO {\r\n        val home = homeRepository.findById(homeId).orElseThrow { RuntimeException(\"Home not found\") }\r\n        val room = roomDTO.toEntity()\r\n        home.addRoom(room)\r\n        val newRoom = roomRepository.save(room)\r\n        homeRepository.save(home)\r\n        return newRoom.toDTO()\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/neohub/src/main/kotlin/ar/unq/ttip/neohub/service/RoomService.kt b/neohub/src/main/kotlin/ar/unq/ttip/neohub/service/RoomService.kt
+--- a/neohub/src/main/kotlin/ar/unq/ttip/neohub/service/RoomService.kt	(revision 006ef1058fd56770be9a3fbaf7aa9c917a5b9b9d)
++++ b/neohub/src/main/kotlin/ar/unq/ttip/neohub/service/RoomService.kt	(date 1746651593644)
+@@ -13,7 +13,8 @@
+     private val roomRepository: RoomRepository,
+     private val deviceRepository: DeviceRepository,
+     private val homeRepository: HomeRepository,
+-    private val mqttService: MqttService
++    private val mqttService: MqttService,
++    private val deviceService: DeviceService
+ ) {
+     fun getRoomDetails(roomId: Long): Room {
+         return roomRepository.findById(roomId)
+@@ -29,6 +30,9 @@
+ 
+         deviceRepository.save(newDevice)
+         roomRepository.save(room)
++
++        deviceService.registerDeviceOnMqtt(newDevice)
++
+         return room
+     }
+ 
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"09bf219a-ddab-407c-b6b8-1beb0e5da310\" name=\"Changes\" comment=\"\">\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/frontend/src/pages/RoomDetail.jsx\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/frontend/src/pages/RoomDetail.jsx\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/dto/DeviceDTO.kt\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/dto/DeviceDTO.kt\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Class\" />\r\n        <option value=\"Kotlin Class\" />\r\n        <option value=\"Kotlin Interface\" />\r\n        <option value=\"JavaScript File\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"ProblemsViewState\">\r\n    <option name=\"selectedTabId\" value=\"CurrentFile\" />\r\n  </component>\r\n  <component name=\"ProjectColorInfo\">{\r\n  &quot;associatedIndex&quot;: 1\r\n}</component>\r\n  <component name=\"ProjectId\" id=\"2vB72sWaQ0xUWJal858VA7hR6Wy\" />\r\n  <component name=\"ProjectLevelVcsManager\">\r\n    <ConfirmationsSetting value=\"2\" id=\"Add\" />\r\n  </component>\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\">{\r\n  &quot;keyToString&quot;: {\r\n    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,\r\n    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,\r\n    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,\r\n    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,\r\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\r\n    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,\r\n    &quot;Spring Boot.NeohubApplication.executor&quot;: &quot;Run&quot;,\r\n    &quot;git-widget-placeholder&quot;: &quot;main&quot;,\r\n    &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;22.14.0&quot;,\r\n    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;22.13.17&quot;,\r\n    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,\r\n    &quot;last_opened_file_path&quot;: &quot;C:/Users/Peque/IdeaProjects/UNQ-epers&quot;,\r\n    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,\r\n    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,\r\n    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,\r\n    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,\r\n    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,\r\n    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,\r\n    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,\r\n    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,\r\n    &quot;ts.external.directory.path&quot;: &quot;C:\\\\Program Files\\\\JetBrains\\\\IntelliJ IDEA 2024.2.1\\\\plugins\\\\javascript-plugin\\\\jsLanguageServicesImpl\\\\external&quot;,\r\n    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;\r\n  },\r\n  &quot;keyToStringList&quot;: {\r\n    &quot;DatabaseDriversLRU&quot;: [\r\n      &quot;mysql&quot;\r\n    ]\r\n  }\r\n}</component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"CopyFile.RECENT_KEYS\">\r\n      <recent name=\"C:\\Users\\Peque\\IdeaProjects\\tip_grupo3_s12025\\frontend\\src\\assets\" />\r\n      <recent name=\"C:\\Users\\Peque\\IdeaProjects\\tip_grupo3_s12025\\frontend\\public\" />\r\n    </key>\r\n    <key name=\"MoveFile.RECENT_KEYS\">\r\n      <recent name=\"C:\\Users\\Peque\\IdeaProjects\\tip_grupo3_s12025\\frontend\\src\\assets\" />\r\n      <recent name=\"C:\\Users\\Peque\\IdeaProjects\\tip_grupo3_s12025\\frontend\\src\\pages\" />\r\n      <recent name=\"C:\\Users\\Peque\\IdeaProjects\\tip_grupo3_s12025\\frontend\\src\\components\" />\r\n      <recent name=\"C:\\Users\\Peque\\IdeaProjects\\tip_grupo3_s12025\\frontend\\public\" />\r\n    </key>\r\n    <key name=\"CreateKotlinClassDialog.RecentsKey\">\r\n      <recent name=\"ar.unq.ttip.neohub.dto\" />\r\n      <recent name=\"ar.unq.ttip.neohub.model\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"RunManager\">\r\n    <configuration name=\"NeohubApplication\" type=\"SpringBootApplicationConfigurationType\" factoryName=\"Spring Boot\" nameIsGenerated=\"true\">\r\n      <option name=\"FRAME_DEACTIVATION_UPDATE_POLICY\" value=\"UpdateClassesAndResources\" />\r\n      <module name=\"neohub\" />\r\n      <option name=\"SPRING_BOOT_MAIN_CLASS\" value=\"ar.unq.ttip.neohub.NeohubApplication\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n  </component>\r\n  <component name=\"SharedIndexes\">\r\n    <attachedChunks>\r\n      <set>\r\n        <option value=\"bundled-jdk-9823dce3aa75-b114ca120d71-intellij.indexing.shared.core-IU-242.21829.142\" />\r\n        <option value=\"bundled-js-predefined-d6986cc7102b-7c0b70fcd90d-JavaScript-IU-242.21829.142\" />\r\n      </set>\r\n    </attachedChunks>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"09bf219a-ddab-407c-b6b8-1beb0e5da310\" name=\"Changes\" comment=\"\" />\r\n      <created>1743606409596</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1743606409596</updated>\r\n      <workItem from=\"1743606410696\" duration=\"4217000\" />\r\n      <workItem from=\"1743611278285\" duration=\"25651000\" />\r\n      <workItem from=\"1743857042526\" duration=\"899000\" />\r\n      <workItem from=\"1743958469626\" duration=\"2990000\" />\r\n      <workItem from=\"1744143511710\" duration=\"18508000\" />\r\n      <workItem from=\"1744165626072\" duration=\"643000\" />\r\n      <workItem from=\"1744236965071\" duration=\"3859000\" />\r\n      <workItem from=\"1744378489267\" duration=\"3660000\" />\r\n      <workItem from=\"1744459826689\" duration=\"3640000\" />\r\n      <workItem from=\"1744999956721\" duration=\"8627000\" />\r\n      <workItem from=\"1745352857218\" duration=\"9088000\" />\r\n      <workItem from=\"1745434134626\" duration=\"19572000\" />\r\n      <workItem from=\"1745526299159\" duration=\"8558000\" />\r\n      <workItem from=\"1746041555053\" duration=\"17126000\" />\r\n      <workItem from=\"1746126326783\" duration=\"25529000\" />\r\n      <workItem from=\"1746641144309\" duration=\"10193000\" />\r\n    </task>\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 006ef1058fd56770be9a3fbaf7aa9c917a5b9b9d)
++++ b/.idea/workspace.xml	(date 1746651713587)
+@@ -5,9 +5,10 @@
+   </component>
+   <component name="ChangeListManager">
+     <list default="true" id="09bf219a-ddab-407c-b6b8-1beb0e5da310" name="Changes" comment="">
+-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/RoomDetail.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/RoomDetail.jsx" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/dto/DeviceDTO.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/dto/DeviceDTO.kt" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/service/DeviceService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/service/DeviceService.kt" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/service/RoomService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/service/RoomService.kt" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/neohub/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/resources/application.properties" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/neohub/src/test/kotlin/ar/unq/ttip/neohub/service/DeviceServiceTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/test/kotlin/ar/unq/ttip/neohub/service/DeviceServiceTest.kt" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -41,37 +42,37 @@
+     <option name="hideEmptyMiddlePackages" value="true" />
+     <option name="showLibraryContents" value="true" />
+   </component>
+-  <component name="PropertiesComponent">{
+-  &quot;keyToString&quot;: {
+-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+-    &quot;Spring Boot.NeohubApplication.executor&quot;: &quot;Run&quot;,
+-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+-    &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;22.14.0&quot;,
+-    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;22.13.17&quot;,
+-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Peque/IdeaProjects/UNQ-epers&quot;,
+-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+-    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
+-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+-    &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\IntelliJ IDEA 2024.2.1\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external&quot;,
+-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
++  <component name="PropertiesComponent"><![CDATA[{
++  "keyToString": {
++    "RequestMappingsPanelOrder0": "0",
++    "RequestMappingsPanelOrder1": "1",
++    "RequestMappingsPanelWidth0": "75",
++    "RequestMappingsPanelWidth1": "75",
++    "RunOnceActivity.ShowReadmeOnStart": "true",
++    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
++    "Spring Boot.NeohubApplication.executor": "Run",
++    "git-widget-placeholder": "Merging main",
++    "javascript.nodejs.core.library.configured.version": "22.14.0",
++    "javascript.nodejs.core.library.typings.version": "22.13.17",
++    "kotlin-language-version-configured": "true",
++    "last_opened_file_path": "C:/Users/Peque/IdeaProjects/UNQ-epers",
++    "node.js.detected.package.eslint": "true",
++    "node.js.detected.package.tslint": "true",
++    "node.js.selected.package.eslint": "(autodetect)",
++    "node.js.selected.package.tslint": "(autodetect)",
++    "nodejs_package_manager_path": "npm",
++    "project.structure.last.edited": "Libraries",
++    "project.structure.proportion": "0.15",
++    "project.structure.side.proportion": "0.2",
++    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\IntelliJ IDEA 2024.2.1\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
++    "vue.rearranger.settings.migration": "true"
+   },
+-  &quot;keyToStringList&quot;: {
+-    &quot;DatabaseDriversLRU&quot;: [
+-      &quot;mysql&quot;
++  "keyToStringList": {
++    "DatabaseDriversLRU": [
++      "mysql"
+     ]
+   }
+-}</component>
++}]]></component>
+   <component name="RecentsManager">
+     <key name="CopyFile.RECENT_KEYS">
+       <recent name="C:\Users\Peque\IdeaProjects\tip_grupo3_s12025\frontend\src\assets" />
+@@ -129,7 +130,7 @@
+       <workItem from="1745526299159" duration="8558000" />
+       <workItem from="1746041555053" duration="17126000" />
+       <workItem from="1746126326783" duration="25529000" />
+-      <workItem from="1746641144309" duration="10193000" />
++      <workItem from="1746641144309" duration="10561000" />
+     </task>
+     <servers />
+   </component>
+Index: neohub/src/test/kotlin/ar/unq/ttip/neohub/service/DeviceServiceTest.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ar.unq.ttip.neohub.service\r\nimport ar.unq.ttip.neohub.dto.DeviceDTO\r\nimport ar.unq.ttip.neohub.dto.toDTO\r\nimport ar.unq.ttip.neohub.model.Home\r\nimport ar.unq.ttip.neohub.model.Room\r\nimport ar.unq.ttip.neohub.model.User\r\nimport ar.unq.ttip.neohub.model.devices.DeviceFactory\r\nimport ar.unq.ttip.neohub.model.devices.SmartOutlet\r\nimport ar.unq.ttip.neohub.repository.DeviceRepository\r\nimport org.junit.jupiter.api.Assertions.assertEquals\r\nimport org.junit.jupiter.api.Test\r\nimport org.mockito.Mockito.*\r\nimport org.springframework.beans.factory.annotation.Autowired\r\nimport org.springframework.boot.test.context.SpringBootTest\r\nimport org.springframework.context.ApplicationEventPublisher\r\nimport org.springframework.test.context.ActiveProfiles\r\nimport java.util.*\r\n\r\n@ActiveProfiles(\"test\")\r\n@SpringBootTest\r\nclass DeviceServiceTest {\r\n    private val mqttServiceMock = mock(MqttService::class.java)\r\n    private val repositoryMock = mock(DeviceRepository::class.java)\r\n    private val factoryMock = mock(DeviceFactory::class.java)\r\n\r\n    @Autowired\r\n    private lateinit var applicationEventPublisher: ApplicationEventPublisher\r\n\r\n    @Autowired\r\n    lateinit var deviceFactory: DeviceFactory\r\n\r\n    private val user = User(21, \"carlos\", \"sdasdada\")\r\n    private val home = Home(1, user)\r\n    private var deviceService = DeviceService(mqttServiceMock, repositoryMock, factoryMock)\r\n\r\n    @Test\r\n    fun `registrar un dispositivo debería delegar al MqttService`() {\r\n        // Arrange\r\n        val deviceDTO = DeviceDTO(id = 12, name = \"Lamp\", type = \"smartOutlet\", roomId = 3, topic = \"neohub/unconfigured\")\r\n        val device = SmartOutlet(name = \"Lamp\")\r\n\r\n        `when`(factoryMock.createDevice(deviceDTO.name, deviceDTO.type)).thenReturn(device)\r\n        `when`(repositoryMock.save(device)).thenReturn(device)\r\n\r\n        // Act\r\n        val result = deviceService.registerDevice(deviceDTO)\r\n\r\n        // Assert\r\n        verify(mqttServiceMock).registerDevice(device)\r\n        verify(repositoryMock).save(device)\r\n        assertEquals(device.toDTO(), result)\r\n    }\r\n\r\n    @Test\r\n    fun `desregistrar un dispositivo debería delegar al MqttService`() {\r\n        // Arrange\r\n        val deviceDTO = DeviceDTO(id = 1, name = \"Lamp\", type = \"smartOutlet\", roomId = null, topic = \"neohub/unconfigured\")\r\n        val device = SmartOutlet(name = \"Lamp\")\r\n\r\n        `when`(repositoryMock.findById(deviceDTO.id)).thenReturn(Optional.of(device))\r\n\r\n        // Act\r\n        deviceService.unregisterDevice(deviceDTO.id)\r\n\r\n        // Assert\r\n        verify(mqttServiceMock).unregisterDevice(device)\r\n    }\r\n\r\n    @Test\r\n    fun `publicar un mensaje a un dispositivo debería delegar al MqttService y configurar correctamente el tópico`() {\r\n        // Arrange\r\n        val deviceDTO = DeviceDTO(id = 1, name = \"Lamp\", type = \"smartOutlet\", roomId = 2, topic = \"neohub/unconfigured\")\r\n        val room = Room(home = home, name = \"LivingRoom\")\r\n        val device = SmartOutlet(name = \"Lamp\")\r\n        room.deviceList.add(device)\r\n        device.room = room\r\n        device.configureTopic()\r\n\r\n        val expectedTopic = \"neohub/LivingRoom/smartOutlet/Lamp\"\r\n        val message = \"Turn On\"\r\n\r\n        `when`(repositoryMock.findById(deviceDTO.id)).thenReturn(Optional.of(device))\r\n\r\n        // Act\r\n        deviceService.publishToDevice(deviceDTO.id, message)\r\n\r\n        // Assert\r\n        assertEquals(expectedTopic, device.topic)\r\n        verify(mqttServiceMock).publish(expectedTopic, message)\r\n    }\r\n}\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/neohub/src/test/kotlin/ar/unq/ttip/neohub/service/DeviceServiceTest.kt b/neohub/src/test/kotlin/ar/unq/ttip/neohub/service/DeviceServiceTest.kt
+--- a/neohub/src/test/kotlin/ar/unq/ttip/neohub/service/DeviceServiceTest.kt	(revision 006ef1058fd56770be9a3fbaf7aa9c917a5b9b9d)
++++ b/neohub/src/test/kotlin/ar/unq/ttip/neohub/service/DeviceServiceTest.kt	(date 1746651593645)
+@@ -1,6 +1,7 @@
+ package ar.unq.ttip.neohub.service
+ import ar.unq.ttip.neohub.dto.DeviceDTO
+ import ar.unq.ttip.neohub.dto.toDTO
++import ar.unq.ttip.neohub.dto.toEntity
+ import ar.unq.ttip.neohub.model.Home
+ import ar.unq.ttip.neohub.model.Room
+ import ar.unq.ttip.neohub.model.User
+@@ -43,7 +44,7 @@
+         `when`(repositoryMock.save(device)).thenReturn(device)
+ 
+         // Act
+-        val result = deviceService.registerDevice(deviceDTO)
++        val result = deviceService.registerDeviceOnMqtt(deviceDTO.toEntity(deviceFactory))
+ 
+         // Assert
+         verify(mqttServiceMock).registerDevice(device)

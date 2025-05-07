@@ -3,6 +3,10 @@ let reconnectAttempts = 0;
 const maxReconnectAttempts = 5;
 
 const connectWebSocket = (onMessageReceived) => {
+    if (socket) {
+        disconnectWebSocket();
+    }
+
     if (socket && socket.readyState === WebSocket.OPEN) {
         return;
     }
@@ -12,7 +16,15 @@ const connectWebSocket = (onMessageReceived) => {
 
     socket = new WebSocket(wsUrl);
 
+    const connectionTimeout = setTimeout(() => {
+        if (socket.readyState !== WebSocket.OPEN) {
+            console.error('Timeout de conexión WebSocket');
+            socket.close();
+        }
+    }, 5000);
+
     socket.onopen = () => {
+        clearTimeout(connectionTimeout);
         console.log('Conexión WebSocket establecida');
         reconnectAttempts = 0;
     };
@@ -44,9 +56,15 @@ const connectWebSocket = (onMessageReceived) => {
 
 const disconnectWebSocket = () => {
     if (socket) {
-        socket.onclose = null;
-        socket.close();
-        socket = null;
+        if (socket.readyState === WebSocket.OPEN || socket.readyState === WebSocket.CONNECTING) {
+            socket.onclose = () => {
+                console.log('WebSocket cerrado limpiamente');
+                socket = null;
+            };
+            socket.close();
+        } else {
+            socket = null;
+        }
     }
 };
 
