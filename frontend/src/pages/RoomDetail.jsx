@@ -203,12 +203,14 @@ const RoomDetail = () => {
                                     {devices.length > 0 ? (
                                         devices.map((device, index) => {
                                             return (
-                                                <div
-                                                    key={index}
-                                                    className="room-button"
-                                                >
+                                                <div key={index} className="room-button">
                                                     <div className="device-icon">{getDeviceIcon(device.type)}</div>
                                                     <span>{device.name}</span>
+                                                    {device.type === "temperatureSensor" && device.temperature !== null && (
+                                                        <div className="device-info">
+                                                            <small>{device.temperature}°C</small>
+                                                        </div>
+                                                    )}
                                                 </div>
                                             );
                                         })
