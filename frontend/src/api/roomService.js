@@ -16,12 +16,12 @@ export const getRoomDetails = async (roomId, token) => {
     }
 };
 
-export const addDeviceToRoom = async (roomId, device, token) => {
+export const addDeviceToRoom = async (roomId, deviceId, token) => {
     try {
-        const response = await axios.post(`${API_URL}/${roomId}/devices`,
+        const response = await axios.post(`${API_URL}/${roomId}/addDevice/${deviceId}`,
             {
-                name: device.name,
-                type: device.type
+                roomId: roomId,
+                deviceId: deviceId
             },
             {
                 headers: {
