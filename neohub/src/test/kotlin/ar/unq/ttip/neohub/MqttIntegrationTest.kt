@@ -50,7 +50,7 @@ class MqttIntegrationTest @Autowired constructor(
     fun `smart outlet maneja correctamente mensajes MQTT reales`() {
         // Arrange
         val newHome = homeService.newHome(home)
-        //val roomDTO = roomService.addNewRoom(RoomDTO(12, "LivingRoom", newHome.id, mutableListOf()))
+
         val roomDTO = roomService.addNewRoom(home.id, Room(home = newHome, name = "LivingRoom").toDTO())
 
         val smartOutletDTO = DeviceDTO(
