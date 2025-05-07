@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import {
     FiSun, FiThermometer, FiShield, FiVideo, FiLock, FiEdit, FiPlus
@@ -11,7 +11,9 @@ import {
     deleteDevice
 } from "../api/roomService";
 import './roomDetail.css';
-import { getUnconfiguredDevices } from "../api/deviceService.js"
+import { getUnconfiguredDevices } from "../api/deviceService.js";
+import { connectWebSocket, disconnectWebSocket } from "../websocket.js";
+import { controlLight } from "../api/homeService.js";
 
 const RoomDetail = () => {
     const { id } = useParams();
@@ -37,6 +39,46 @@ const RoomDetail = () => {
     };
 
     const getDeviceIcon = (type) => deviceTypeIcons[type] || <FiSun size={24} />;
+
+    const handleWebSocketMessage = useCallback((data) => {
+        if (data.type === "ALARM_TRIGGERED") {
+            setDevices(prev => {
+                const updated = prev.map(device =>
+                    device.type === 'alarm' ? { ...device, isActive: true } : device
+                );
+
+                const lightDevice = updated.find(d => d.type === 'light');
+                if (lightDevice && !lightDevice.isOn) {
+                    controlLight(true).then(() => {
+                        setDevices(updated.map(device =>
+                            device.type === 'light' ? { ...device, isOn: true } : device
+                        ));
+                    });
+                }
+
+                return updated;
+            });
+        }
+    }, []);
+
+    useEffect(() => {
+        connectWebSocket(handleWebSocketMessage);
+
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === 'visible') {
+                connectWebSocket(handleWebSocketMessage);
+            } else {
+                disconnectWebSocket();
+            }
+        };
+
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+
+        return () => {
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+            disconnectWebSocket();
+        };
+    }, [handleWebSocketMessage]);
 
     useEffect(() => {
         const fetchRoom = async () => {
@@ -111,7 +153,7 @@ const RoomDetail = () => {
             <div className="main-container">
                 <div className="header-wrapper">
                     <div className="header">
-                        <BackOrCloseButton type="arrow" onClick={() => setAddMode(false)}/>
+                        <BackOrCloseButton type="arrow" onClick={() => setAddMode(false)} />
                         <h2>Agregar Dispositivos</h2>
                     </div>
                 </div>
@@ -136,32 +178,30 @@ const RoomDetail = () => {
             <div className="main-container">
                 <div className="header-wrapper">
                     <div className="header">
-                        <BackOrCloseButton type="arrow" onClick={() => setEditMode(false)}/>
+                        <BackOrCloseButton type="arrow" onClick={() => setEditMode(false)} />
                         <h2>Editar Dispositivos</h2>
                     </div>
                 </div>
                 <div className="room-grid">
-                    {devices.map((device, index) => {
-                        return (
-                            <div
-                                key={index}
-                                className="room-editable-container"
-                                onClick={() => {
-                                    setDeviceToDelete(device);
-                                    setShowDeletePopup(true);
-                                }}
-                            >
-                                <div className="room-button edit-mode">
-                                    <div className="device-icon">{getDeviceIcon(device.type)}</div>
-                                    <span>{device.name}</span>
-                                    <div className="delete-icon-full">🗑️</div>
-                                </div>
+                    {devices.map((device, index) => (
+                        <div
+                            key={index}
+                            className="room-editable-container"
+                            onClick={() => {
+                                setDeviceToDelete(device);
+                                setShowDeletePopup(true);
+                            }}
+                        >
+                            <div className="room-button edit-mode">
+                                <div className="device-icon">{getDeviceIcon(device.type)}</div>
+                                <span>{device.name}</span>
+                                <div className="delete-icon-full">🗑️</div>
                             </div>
-                        );
-                    })}
+                        </div>
+                    ))}
                     <div className="add-device-icon">
                         <button onClick={handleAddClick}>
-                            <FiPlus size={24} className="icon"/>
+                            <FiPlus size={24} className="icon" />
                         </button>
                     </div>
                 </div>
@@ -185,46 +225,44 @@ const RoomDetail = () => {
         <div className="main-container">
             <div className="header-wrapper">
                 <div className="header">
-                    <BackOrCloseButton/>
+                    <BackOrCloseButton />
                     <h2>{roomName}</h2>
                 </div>
             </div>
-                    {devices.length > 0 && (
-                        <div className="edit-container">
-                            <div className="edit-button">
-                                <button onClick={() => setEditMode(true)}>
-                                    <FiEdit size={24}/>
-                                </button>
-                            </div>
-                        </div>
-                                )}
+            {devices.length > 0 && (
+                <div className="edit-container">
+                    <div className="edit-button">
+                        <button onClick={() => setEditMode(true)}>
+                            <FiEdit size={24} />
+                        </button>
+                    </div>
+                </div>
+            )}
 
-                                <div className="room-grid">
-                                    {devices.length > 0 ? (
-                                        devices.map((device, index) => {
-                                            return (
-                                                <div key={index} className="room-button">
-                                                    <div className="device-icon">{getDeviceIcon(device.type)}</div>
-                                                    <span>{device.name}</span>
-                                                    {device.type === "temperatureSensor" && device.temperature !== null && (
-                                                        <div className="device-info">
-                                                            <small>{device.temperature}°C</small>
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            );
-                                        })
-                                    ) : (
-                                        <div className="no-devices">
-                                            <p>Aún no tenés dispositivos...</p>
-                                            <button onClick={handleAddClick}>
-                                                <FiPlus/> Agregar dispositivo
-                                            </button>
-                                        </div>
-                                    )}
+            <div className="room-grid">
+                {devices.length > 0 ? (
+                    devices.map((device, index) => (
+                        <div key={index} className="room-button">
+                            <div className="device-icon">{getDeviceIcon(device.type)}</div>
+                            <span>{device.name}</span>
+                            {device.type === "temperatureSensor" && device.temperature !== null && (
+                                <div className="device-info">
+                                    <small>{device.temperature}°C</small>
                                 </div>
-                            </div>
-                            );
-                            };
+                            )}
+                        </div>
+                    ))
+                ) : (
+                    <div className="no-devices">
+                        <p>Aún no tenés dispositivos...</p>
+                        <button onClick={handleAddClick}>
+                            <FiPlus /> Agregar dispositivo
+                        </button>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+};
 
-                            export default RoomDetail;
+export default RoomDetail;
