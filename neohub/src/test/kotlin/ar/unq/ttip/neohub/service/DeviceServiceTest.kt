@@ -1,4 +1,6 @@
 package ar.unq.ttip.neohub.service
+import ar.unq.ttip.neohub.dto.DeviceDTO
+import ar.unq.ttip.neohub.dto.toDTO
 import ar.unq.ttip.neohub.model.Home
 import ar.unq.ttip.neohub.model.Room
 import ar.unq.ttip.neohub.model.User
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.test.context.ActiveProfiles
+import java.util.*
 
 @ActiveProfiles("test")
 @SpringBootTest
@@ -19,62 +22,71 @@ class DeviceServiceTest {
     private val mqttServiceMock = mock(MqttService::class.java)
     private val repositoryMock = mock(DeviceRepository::class.java)
     private val factoryMock = mock(DeviceFactory::class.java)
+
     @Autowired
     private lateinit var applicationEventPublisher: ApplicationEventPublisher
 
     @Autowired
     lateinit var deviceFactory: DeviceFactory
 
-    //tengo que inyectar yo esto poerque sino no anda.. vale la pena testear esto ?
-    private val user = User(21,"carlos","sdasdada")
-    private val home = Home(1,user)
-    private var deviceService = DeviceService(mqttServiceMock,repositoryMock, factoryMock)
+    private val user = User(21, "carlos", "sdasdada")
+    private val home = Home(1, user)
+    private var deviceService = DeviceService(mqttServiceMock, repositoryMock, factoryMock)
 
     @Test
     fun `registrar un dispositivo debería delegar al MqttService`() {
         // Arrange
+        val deviceDTO = DeviceDTO(id = 12, name = "Lamp", type = "smartOutlet", roomId = 3, topic = "neohub/unconfigured")
         val device = SmartOutlet(name = "Lamp")
 
-        // Configura el mock para que repository.save(device) devuelva el dispositivo
+        `when`(factoryMock.createDevice(deviceDTO.name, deviceDTO.type)).thenReturn(device)
         `when`(repositoryMock.save(device)).thenReturn(device)
 
         // Act
-        val result = deviceService.registerDevice(device)
+        val result = deviceService.registerDevice(deviceDTO)
 
         // Assert
-        verify(mqttServiceMock).registerDevice(device) // Verifica que se llamó a mqttService
-        verify(repositoryMock).save(device) // Verifica que se guardó en el repositorio
-        assertEquals(device, result) // Asegúrate de que se devolvió el dispositivo esperado
+        verify(mqttServiceMock).registerDevice(device)
+        verify(repositoryMock).save(device)
+        assertEquals(device.toDTO(), result)
     }
-
 
     @Test
     fun `desregistrar un dispositivo debería delegar al MqttService`() {
+        // Arrange
+        val deviceDTO = DeviceDTO(id = 1, name = "Lamp", type = "smartOutlet", roomId = null, topic = "neohub/unconfigured")
         val device = SmartOutlet(name = "Lamp")
 
-        deviceService.unregisterDevice(device)
+        `when`(repositoryMock.findById(deviceDTO.id)).thenReturn(Optional.of(device))
 
+        // Act
+        deviceService.unregisterDevice(deviceDTO.id)
+
+        // Assert
         verify(mqttServiceMock).unregisterDevice(device)
     }
 
     @Test
     fun `publicar un mensaje a un dispositivo debería delegar al MqttService y configurar correctamente el tópico`() {
         // Arrange
+        val deviceDTO = DeviceDTO(id = 1, name = "Lamp", type = "smartOutlet", roomId = 2, topic = "neohub/unconfigured")
+        val room = Room(home = home, name = "LivingRoom")
         val device = SmartOutlet(name = "Lamp")
-        val room = Room(home=home, name = "LivingRoom")
-        room.deviceList.add(device) // Agregamos el dispositivo al cuarto
+        room.deviceList.add(device)
         device.room = room
-        device.configureTopic() // Configuramos el tópico basado en el cuarto y el dispositivo
+        device.configureTopic()
 
         val expectedTopic = "neohub/LivingRoom/smartOutlet/Lamp"
         val message = "Turn On"
 
+        `when`(repositoryMock.findById(deviceDTO.id)).thenReturn(Optional.of(device))
+
         // Act
-        deviceService.publishToDevice(device, message)
+        deviceService.publishToDevice(deviceDTO.id, message)
 
         // Assert
-        assert(device.topic == expectedTopic) // Verificamos que el tópico sea el esperado
-        verify(mqttServiceMock).publish(expectedTopic, message) // Verificamos que se publique al tópico correcto
+        assertEquals(expectedTopic, device.topic)
+        verify(mqttServiceMock).publish(expectedTopic, message)
     }
-
 }
+

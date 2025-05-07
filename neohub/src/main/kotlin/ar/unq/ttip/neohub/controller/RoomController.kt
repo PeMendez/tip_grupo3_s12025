@@ -3,7 +3,6 @@ package ar.unq.ttip.neohub.controller
 import ar.unq.ttip.neohub.dto.DeviceDTO
 import ar.unq.ttip.neohub.dto.RoomDTO
 import ar.unq.ttip.neohub.dto.toDTO
-import ar.unq.ttip.neohub.model.Device
 import ar.unq.ttip.neohub.service.RoomService
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -22,13 +21,13 @@ class RoomController(private val roomService: RoomService) {
         return ResponseEntity.ok(room.toDTO())
     }
 
-    @PostMapping("/{roomId}/addDevice")
+    @PostMapping("/{roomId}/addDevice/{deviceId}")
     fun addDeviceToRoom(
         @AuthenticationPrincipal userDetails: UserDetails,
         @PathVariable roomId: Long,
-        @RequestBody deviceDto: DeviceDTO
+        @PathVariable deviceId: Long // PARA AGREGARLO A UN ROOM, YA TIENE QUE EXISTIR.
     ): ResponseEntity<RoomDTO> {
-        val room = roomService.addDeviceToRoom(roomId, deviceDto)
+        val room = roomService.addDeviceToRoom(roomId, deviceId)
         return ResponseEntity.ok(room.toDTO())
     }
 }

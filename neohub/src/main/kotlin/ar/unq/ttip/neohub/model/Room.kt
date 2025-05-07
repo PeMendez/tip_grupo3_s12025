@@ -11,7 +11,7 @@ data class Room(
     @ManyToOne
     @JoinColumn(name = "home_id")
     @JsonBackReference
-    val home: Home,
+    var home: Home?,
 
     @OneToMany(mappedBy = "room", cascade = [CascadeType.ALL], orphanRemoval = true)
     val deviceList: MutableList<Device> = mutableListOf()
@@ -19,5 +19,9 @@ data class Room(
     fun addDevice(device: Device){
         deviceList.add(device)
         device.room=this
+        device.configureTopic()
+    }
+    override fun toString(): String {
+        return "Room(id=$id, name=$name, devices=$deviceList)"
     }
 }

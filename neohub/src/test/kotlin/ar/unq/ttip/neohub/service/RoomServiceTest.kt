@@ -1,11 +1,10 @@
 package ar.unq.ttip.neohub.service
 
+import ar.unq.ttip.neohub.dto.DeviceDTO
 import ar.unq.ttip.neohub.dto.RegisterRequest
-import ar.unq.ttip.neohub.dto.toDTO
+import ar.unq.ttip.neohub.dto.RoomDTO
 import ar.unq.ttip.neohub.model.Home
-import ar.unq.ttip.neohub.model.Room
 import ar.unq.ttip.neohub.model.User
-import ar.unq.ttip.neohub.model.devices.SmartOutlet
 import jakarta.transaction.Transactional
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
@@ -40,28 +39,38 @@ class RoomServiceTest {
         )
         home = homeService.newHome(Home(user=user))
     }
+
     @Transactional
     @Test
     fun `add device to room, remove it and check it no longer exists`() {
-        val room =roomService.addNewRoom(Room(home = home, name = "Living Room"))
-        val devicePre = SmartOutlet(name = "Smart Outlet")
-        // Verificar que el dispositivo no está en ninguna sala inicialmente
-        assertNull(devicePre.room)
+        // Crear un nuevo room asociado al home
+        val roomDTO = RoomDTO(id = 11, homeId = home.id, name = "Living Room", deviceList = emptyList())
+        val savedRoom = roomService.addNewRoom(home.id, roomDTO)
+
+        // Crear un dispositivo inicial
+        val deviceDTO = DeviceDTO(id = 22, name = "Smart Outlet", type = "smartOutlet", roomId = null, topic = "neohub/unconfigured")
+
+        // Verificar que el dispositivo no está asociado a ninguna sala inicialmente
+        assertNull(deviceDTO.roomId)
 
         // Agregar el dispositivo a la sala
-        roomService.addDeviceToRoom(room.id,devicePre.toDTO())
-        val device = room.deviceList.first() //de nuevo no se como obtenerlo sino, o no me anda
+        roomService.addDeviceToRoom(savedRoom.id, deviceDTO.id)
+        val updatedRoom = roomService.getRoomDetails(savedRoom.id)
 
         // Verificar que el dispositivo está en la sala
-        assertTrue(room.deviceList.contains(device))
-        assertEquals(room, device.room)
+        val addedDevice = updatedRoom.deviceList.first { it.name == deviceDTO.name }
+        assertTrue(updatedRoom.deviceList.contains(addedDevice))
+        assertEquals(savedRoom.id, addedDevice.room!!.id)
 
         // Eliminar el dispositivo de la sala
-        roomService.removeDeviceFromRoom(device,room)
-        // Verificar que el dispositivo ya no está en la sala
-        assertFalse(room.deviceList.contains(device))
-        // Verificar que el dispositivo no está asociado a ninguna sala
-        assertNull(device.room)
-    }
+        roomService.removeDeviceFromRoom(addedDevice.id, savedRoom.id)
+        val updatedRoomAfterRemoval = roomService.getRoomDetails(savedRoom.id)
 
+        // Verificar que el dispositivo ya no está en la sala
+        assertFalse(updatedRoomAfterRemoval.deviceList.any { it.id == addedDevice.id })
+
+        // Verificar que el dispositivo no está asociado a ninguna sala
+        val detachedDevice = deviceService.getDeviceById(addedDevice.id)
+        assertNull(detachedDevice.roomId)
+    }
 }

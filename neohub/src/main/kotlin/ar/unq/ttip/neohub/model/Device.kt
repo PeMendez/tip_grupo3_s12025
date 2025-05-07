@@ -24,5 +24,9 @@ abstract class Device(
         }
     }
 
+    override fun toString(): String {
+        return "Device(id=$id, name='$name', type='$type', topic='$topic')"
+    }
+
     abstract fun handleIncomingMessage(message: String)
 }

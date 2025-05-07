@@ -13,10 +13,14 @@ data class Home(
 
     @OneToMany(mappedBy = "home", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonManagedReference
-    val rooms: List<Room> = mutableListOf()
+    val rooms: MutableList<Room> = mutableListOf()
 )
 {
     override fun toString(): String {
         return "Home(id=$id, user=$user, rooms=$rooms)"
+    }
+    fun addRoom(room: Room) {
+        rooms.add(room)
+        room.home = this
     }
 }

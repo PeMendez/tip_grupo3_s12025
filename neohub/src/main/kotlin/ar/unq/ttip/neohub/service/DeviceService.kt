@@ -1,5 +1,8 @@
 package ar.unq.ttip.neohub.service
 
+import ar.unq.ttip.neohub.dto.DeviceDTO
+import ar.unq.ttip.neohub.dto.toDTO
+import ar.unq.ttip.neohub.dto.toEntity
 import ar.unq.ttip.neohub.model.Device
 import ar.unq.ttip.neohub.model.devices.DeviceFactory
 import ar.unq.ttip.neohub.repository.DeviceRepository
@@ -31,24 +34,32 @@ class DeviceService(
         saveDevice(newDevice)
     }
 
-    fun registerDevice(device: Device): Device {
+    fun registerDevice(deviceDTO: DeviceDTO): DeviceDTO {
+        val device = deviceDTO.toEntity(factory)
         device.configureTopic() // Configura el topic basado en la room.
         mqttService.registerDevice(device) // Delega el registro al MqttService.
-        val savedDevice= repository.save(device)
-        return savedDevice
+        val savedDevice = repository.save(device)
+        return savedDevice.toDTO()
     }
 
-    fun unregisterDevice(device: Device) {
-        mqttService.unregisterDevice(device) //Delega a MqttService
+    fun unregisterDevice(deviceId: Long) {
+        val device = repository.findById(deviceId).orElseThrow {
+            IllegalArgumentException("Device with ID $deviceId not found.")
+        }
+        mqttService.unregisterDevice(device)
     }
 
-    fun publishToDevice(device: Device, message: String) {
-        mqttService.publish(device.topic, message) // Publica un mensaje al tópico del dispositivo.
+    fun publishToDevice(deviceId: Long, message: String) {
+        val device = repository.findById(deviceId).orElseThrow {
+            IllegalArgumentException("Device with ID $deviceId not found.")
+        }
+        mqttService.publish(device.topic, message)
     }
 
     @Transactional
-    fun saveDevice(device: Device): Device {
-        return repository.save(device)
+    fun saveDevice(device: Device): DeviceDTO {
+        val savedDevice = repository.save(device)
+        return savedDevice.toDTO()
     }
 
     @Transactional
@@ -56,12 +67,15 @@ class DeviceService(
         repository.deleteById(deviceId)
     }
 
-    fun getDeviceById(id: Long): Device? {
-        return repository.findById(id).orElse(null)
+    fun getDeviceById(id: Long): DeviceDTO {
+        val device = repository.findById(id).orElseThrow {
+            IllegalArgumentException("Device with ID $id not found.")
+        }
+        return device.toDTO()
     }
 
-    fun getUnconfiguredDevices(): List<Device> {
-        return repository.findByRoomIsNull()
+    fun getUnconfiguredDevices(): List<DeviceDTO> {
+        return repository.findByRoomIsNull().map { it.toDTO() }
     }
 }
 
