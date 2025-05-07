@@ -1,6 +1,8 @@
 package ar.unq.ttip.neohub.service
 
+import ar.unq.ttip.neohub.handler.MqttWebSocketHandler
 import ar.unq.ttip.neohub.model.Device
+import ar.unq.ttip.neohub.model.devices.TemperatureSensor
 import org.eclipse.paho.client.mqttv3.MqttClient
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions
 import org.eclipse.paho.client.mqttv3.MqttException
@@ -12,7 +14,8 @@ import java.util.*
 
 @Service
 class MqttService(
-    private val applicationEventPublisher: ApplicationEventPublisher
+    private val applicationEventPublisher: ApplicationEventPublisher,
+    private val webSocketHandler: MqttWebSocketHandler
 ) {
     private val brokerUrl = "tcp://test.mosquitto.org:1883"
     private val clientId = "NeoHub-API-" + UUID.randomUUID().toString().substring(0, 8)
@@ -30,7 +33,7 @@ class MqttService(
 
             mqttClient.connect(options)
             println("Conectado exitosamente al broker MQTT.")
-            subscribe(unconfiguredTopic)
+            this.subscribe(unconfiguredTopic)
 
         } catch (e: MqttException) {
             throw RuntimeException("Error al conectar con el broker.", e)
@@ -96,14 +99,27 @@ class MqttService(
         if(topic.startsWith(unconfiguredTopic)) {
             handleUnconfiguredDevice(message)
         }else {
-            topicDeviceMap[topic]?.handleIncomingMessage(message)
-                ?: println("ERROR: No se encontró ningún dispositivo para el tópico: $topic")
+            val device = topicDeviceMap[topic]
+            if(device != null) {
+                device.handleIncomingMessage(message)
+                when (device){
+                    is TemperatureSensor -> {handleTemperatureUpdate(device, message)}
+                }
+                //aca falta algo
+            }else {
+                println("ERROR: No se encontró ningún dispositivo para el tópico: $topic")
+            }
         }
     }
 
     fun handleUnconfiguredDevice(message: String) {
         println("Received unconfigured device: $message")
         applicationEventPublisher.publishEvent(UnconfiguredDeviceEvent(message))
+    }
+
+    fun handleTemperatureUpdate(sensor: TemperatureSensor, newTemp: String) {
+        println("Enviando update de temperatura...")
+        webSocketHandler.sendTemperatureUpdate(newTemp,sensor.id)
     }
 }
 

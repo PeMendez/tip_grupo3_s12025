@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service
 class DeviceService(
     private val mqttService: MqttService,
     private val repository: DeviceRepository,
-    private val factory: DeviceFactory,
+    private val factory: DeviceFactory
 ) {
 
     @EventListener
