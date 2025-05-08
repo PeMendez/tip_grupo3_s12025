@@ -41,6 +41,8 @@ const RoomDetail = () => {
     const getDeviceIcon = (type) => deviceTypeIcons[type] || <FiSun size={24} />;
 
     const handleWebSocketMessage = useCallback((data) => {
+        console.log(devices)
+        console.log(data)
         if (data.type === "ALARM_TRIGGERED") {
             setDevices(prev => {
                 const updated = prev.map(device =>
@@ -57,6 +59,18 @@ const RoomDetail = () => {
                 }
 
                 return updated;
+            });
+        }
+        if (data.type === "TEMP_UPDATE") {
+            const deviceId = data.id;
+            const temperature = parseFloat(data.temp);
+            setDevices(prev => {
+                return prev.map(device => {
+                    if (String(device.id) === String(deviceId)) {
+                        return { ...device, temperature };
+                    }
+                    return device;
+                });
             });
         }
     }, []);
