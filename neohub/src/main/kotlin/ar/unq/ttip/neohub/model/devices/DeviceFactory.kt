@@ -12,6 +12,7 @@ class DeviceFactory {
         return when (type) {
             "smartOutlet" -> SmartOutlet(name=name, room=room)
             "temperatureSensor" -> TemperatureSensor(name=name, room=room)
+            "openingSensor" -> OpeningSensor(name=name, room=room)
             // ... otros tipos...
             else -> throw IllegalArgumentException("Tipo de dispositivo desconocido: $type")
         }

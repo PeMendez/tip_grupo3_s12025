@@ -2,6 +2,7 @@ package ar.unq.ttip.neohub.service
 
 import ar.unq.ttip.neohub.handler.MqttWebSocketHandler
 import ar.unq.ttip.neohub.model.Device
+import ar.unq.ttip.neohub.model.devices.OpeningSensor
 import ar.unq.ttip.neohub.model.devices.TemperatureSensor
 import org.eclipse.paho.client.mqttv3.MqttClient
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions
@@ -104,6 +105,7 @@ class MqttService(
                 device.handleIncomingMessage(message)
                 when (device){
                     is TemperatureSensor -> {handleTemperatureUpdate(device, message)}
+                    is OpeningSensor -> {handleOpeningUpdate(device,message)}
                 }
                 //aca falta algo
             }else {
@@ -120,6 +122,11 @@ class MqttService(
     fun handleTemperatureUpdate(sensor: TemperatureSensor, newTemp: String) {
         println("Enviando update de temperatura...")
         webSocketHandler.sendTemperatureUpdate(newTemp,sensor.id)
+    }
+
+    fun handleOpeningUpdate(sensor: OpeningSensor, newStatus: String) {
+        println("Enviando update de apertura de ${sensor.name}")
+        webSocketHandler.sendOpeningUpdate(newStatus, sensor.id)
     }
 }
 

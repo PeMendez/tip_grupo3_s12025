@@ -63,22 +63,16 @@ class MqttWebSocketHandler : TextWebSocketHandler()
         broadcastJson(tempMessage)
     }
 
-    fun sendLedStatusUpdate(status: String) {
-        val ledMessage = buildJsonMessage(
+    fun sendOpeningUpdate(status: String, deviceId: Long) {
+        val statusMessage = buildJsonMessage(
             mapOf(
-                "type" to "LED",
+                "type" to "OPENING_UPDATE",
+                "id" to deviceId,
                 "status" to status
             )
         )
-        broadcastJson(ledMessage)
-
-        println("Enviando alerta a ${sessions.size} clientes conectados")
-        val alertMessage = """
-        {
-            "type": "ALARM_TRIGGERED",
-            "message": "Se abrió la puerta sin autorización",
-            "timestamp": ${System.currentTimeMillis()}
-        """
+        println("Enviando update de status: $statusMessage")
+        broadcastJson(statusMessage)
     }
 
     fun buildJsonMessage(data: Map<String, Any>): String {
