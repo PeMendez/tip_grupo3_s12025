@@ -12,7 +12,7 @@ class DeviceTopicSubscriber (
     fun subscribeToDeviceTopics() {
         val devices = deviceRepository.findAll()
         devices.forEach { device ->
-            mqttService.subscribe(device.topic)
+            mqttService.registerDevice(device)
         }
     }
 }
