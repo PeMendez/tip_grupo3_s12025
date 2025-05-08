@@ -120,12 +120,12 @@ class MqttService(
     }
 
     fun handleTemperatureUpdate(sensor: TemperatureSensor, newTemp: String) {
-        println("Enviando update de temperatura...")
+        println("Se pescó una update de temperatura...")
         webSocketHandler.sendTemperatureUpdate(newTemp,sensor.id)
     }
 
     fun handleOpeningUpdate(sensor: OpeningSensor, newStatus: String) {
-        println("Enviando update de apertura de ${sensor.name}")
+        println("Se pescó una update de puerta/ventana...")
         webSocketHandler.sendOpeningUpdate(newStatus, sensor.id)
     }
 }

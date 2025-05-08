@@ -2,7 +2,9 @@ package ar.unq.ttip.neohub.model.devices
 
 import ar.unq.ttip.neohub.model.Device
 import ar.unq.ttip.neohub.model.Room
+import jakarta.persistence.Entity
 
+@Entity
 class OpeningSensor(
                     name: String,
                     room: Room? = null
@@ -12,14 +14,12 @@ class OpeningSensor(
 
     fun updateStatus(newStatus: Boolean) {
         isOpen = newStatus
-        val status  = if (isOpen) "abierto" else "cerrado"
-        println("$name ahora está $status")
+        println("$name ahora está ${if (isOpen) "abierto" else "cerrado"}")
     }
 
     override fun handleIncomingMessage(message: String) {
-        val status = message.toBooleanStrictOrNull()
-        if (status != null){
-            updateStatus(status)
+        if (message != ""){
+            updateStatus(message=="open")
         } else {
             println("Mensaje no válido para $name")
         }
