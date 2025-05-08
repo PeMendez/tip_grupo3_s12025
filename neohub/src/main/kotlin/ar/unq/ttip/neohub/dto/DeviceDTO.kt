@@ -1,10 +1,7 @@
 package ar.unq.ttip.neohub.dto
 
 import ar.unq.ttip.neohub.model.Device
-import ar.unq.ttip.neohub.model.devices.DeviceFactory
-import ar.unq.ttip.neohub.model.devices.OpeningSensor
-import ar.unq.ttip.neohub.model.devices.SmartOutlet
-import ar.unq.ttip.neohub.model.devices.TemperatureSensor
+import ar.unq.ttip.neohub.model.devices.*
 
 data class DeviceDTO(
     val id: Long,
@@ -13,7 +10,8 @@ data class DeviceDTO(
     val topic : String,
     val roomId : Long?,
     val temperature: Double? = null,
-    val status: Boolean? = null
+    val status: Boolean? = null,
+    val brightness: Int? = null
 )
 
 fun Device.toDTO(): DeviceDTO {
@@ -43,6 +41,15 @@ fun Device.toDTO(): DeviceDTO {
             roomId = this.room?.id,
             temperature = null,
             status = this.isOn
+        )
+        is Dimmer -> return DeviceDTO(
+            id = this.id,
+            name = this.name,
+            type = this.type,
+            topic = this.topic,
+            roomId = this.room?.id,
+            temperature = null,
+            brightness = this.brightness
         )
         else -> {
             println("Unknown device type ${this.type}")

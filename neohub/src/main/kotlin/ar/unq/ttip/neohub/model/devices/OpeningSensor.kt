@@ -18,10 +18,10 @@ class OpeningSensor(
     }
 
     override fun handleIncomingMessage(message: String) {
-        if (message != ""){
-            updateStatus(message=="open")
-        } else {
-            println("Mensaje no válido para $name")
+        when(message){
+            "opened"-> updateStatus(true)
+            "closed"-> updateStatus(false)
+            else -> println("Mensaje no válido para $name")
         }
     }
 }
