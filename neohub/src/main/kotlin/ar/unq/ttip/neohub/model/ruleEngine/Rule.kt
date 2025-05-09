@@ -15,6 +15,13 @@ data class Rule(
     @OneToMany(mappedBy = "rule", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     val actions: List<Action> = mutableListOf()
 ){
+    fun evaluate(): Boolean {
+        val failedConditions = conditions.filterNot { it.evaluate() }
+        val conditionsMet = failedConditions.isEmpty() // para que en un futuro pueda depurarse a ver lo que falló.
+        if(conditionsMet) { actions.forEach{it.execute()}}
+        return conditionsMet
+    }
+
     override fun toString(): String {
         return name
     }
