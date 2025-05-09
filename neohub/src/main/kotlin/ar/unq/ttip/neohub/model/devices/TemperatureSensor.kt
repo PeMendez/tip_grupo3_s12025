@@ -26,4 +26,15 @@ class TemperatureSensor(
             println("Mensaje inválido para TemperatureSensor '$name': $message")
         }
     }
+
+    override fun getAttribute(attribute: String): String {
+        return when (attribute) {
+            "temperature" -> "temperature"
+            else -> throw IllegalArgumentException("Atributo no soportado para $type: '$attribute'")
+        }
+    }
+
+    override fun executeAction(actionType: String, parameters: String) {
+        throw UnsupportedOperationException("$type no soporta acciones.")
+    }
 }

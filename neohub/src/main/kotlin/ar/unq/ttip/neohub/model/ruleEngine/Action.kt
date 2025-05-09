@@ -14,4 +14,8 @@ data class Action(
 
     val actionType: String,  // Ejemplo: "turn_on", "set_state"
     val parameters: String   // Parámetros opcionales para la acción
-)
+){
+    fun execute(){
+        device.executeAction(actionType, parameters)
+    }
+}

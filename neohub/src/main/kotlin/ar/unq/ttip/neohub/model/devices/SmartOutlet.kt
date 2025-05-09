@@ -37,4 +37,14 @@ class SmartOutlet(
             else -> println("Mensaje desconocido para SmartOutlet '$name': $message")
         }
     }
+
+    override fun getAttribute(attribute: String): String {
+        //Se podría hacer que te de su estado como un atributo, por ahora no.
+        throw UnsupportedOperationException("$type no soporta atributos para consultar.")
+    }
+
+    override fun executeAction(actionType: String, parameters: String) {
+        println("$name ejecutando $actionType...")
+        handleIncomingMessage(actionType)
+    }
 }

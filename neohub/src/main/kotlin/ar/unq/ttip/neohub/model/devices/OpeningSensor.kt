@@ -24,4 +24,15 @@ class OpeningSensor(
             else -> println("Mensaje no válido para $name")
         }
     }
+
+    override fun getAttribute(attribute: String): String {
+        return when (attribute) {
+            "isOpen" -> isOpen.toString()
+            else -> throw IllegalArgumentException("Atributo no soportado para $type: $attribute")
+        }
+    }
+
+    override fun executeAction(actionType: String, parameters: String) {
+        throw UnsupportedOperationException("$type no soporta acciones.")
+    }
 }

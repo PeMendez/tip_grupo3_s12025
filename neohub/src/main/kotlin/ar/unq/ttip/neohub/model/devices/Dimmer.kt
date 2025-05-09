@@ -26,4 +26,12 @@ class Dimmer( name: String,
         }
     }
 
+    override fun getAttribute(attribute: String): String {
+        throw(UnsupportedOperationException("$type no soporta atributos para consultar."))
+    }
+
+    override fun executeAction(actionType: String, parameters: String) {
+        println("$name ejecutando accion $actionType")
+        handleIncomingMessage(actionType)
+    }
 }
