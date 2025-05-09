@@ -9,11 +9,11 @@ data class Rule(
 
     // Condiciones asociadas a la regla
     @OneToMany(mappedBy = "rule", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
-    val conditions: List<Condition> = mutableListOf(),
+    val conditions: MutableList<Condition> = mutableListOf(),
 
     // Acciones asociadas a la regla
     @OneToMany(mappedBy = "rule", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
-    val actions: List<Action> = mutableListOf()
+    val actions: MutableList<Action> = mutableListOf()
 ){
     fun evaluate(): Boolean {
         val failedConditions = conditions.filterNot { it.evaluate() }

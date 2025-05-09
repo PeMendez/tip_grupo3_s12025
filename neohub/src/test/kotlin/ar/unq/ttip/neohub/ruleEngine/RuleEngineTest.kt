@@ -45,8 +45,8 @@ class RuleEngineTest {
         val rule = Rule(
             id = 1,
             name = "Temperature Control",
-            conditions = listOf(condition),
-            actions = listOf(action)
+            conditions = mutableListOf(condition),
+            actions = mutableListOf(action)
         )
         condition.rule = rule
         action.rule = rule
@@ -93,8 +93,8 @@ class RuleEngineTest {
         val rule = Rule(
             id = 1,
             name = "Temperature Control",
-            conditions = listOf(condition),
-            actions = listOf(action)
+            conditions = mutableListOf(condition),
+            actions = mutableListOf(action)
         )
         condition.rule = rule
         action.rule = rule
