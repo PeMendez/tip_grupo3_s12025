@@ -1,9 +1,10 @@
-import { useState, useEffect, useCallback } from "react";
+import {useState, useEffect, useCallback, useRef} from "react";
 import { useParams } from "react-router-dom";
 import {
     FiSun, FiThermometer, FiShield, FiVideo, FiLock, FiEdit, FiPlus
 } from 'react-icons/fi';
 import { LuAirVent } from "react-icons/lu";
+import warning from '../assets/warning.png'
 import BackOrCloseButton from "../components/BackOrCloseButton.jsx";
 import {
     getRoomDetails,
@@ -14,6 +15,7 @@ import './roomDetail.css';
 import { getUnconfiguredDevices } from "../api/deviceService.js";
 import { connectWebSocket, disconnectWebSocket } from "../websocket.js";
 import { controlLight } from "../api/homeService.js";
+import Toast from '../Toast.jsx'
 
 const RoomDetail = () => {
     const { id } = useParams();
@@ -28,11 +30,23 @@ const RoomDetail = () => {
     const [addMode, setAddMode] = useState(false);
     const [showDeletePopup, setShowDeletePopup] = useState(false);
     const [deviceToDelete, setDeviceToDelete] = useState(null);
+    const [toast, setToast] = useState(null);
+    const audioContextRef = useRef(null);
+    const [audioEnabled, setAudioEnabled] = useState(false);
+
+    const initAudio = () => {
+        if (!audioContextRef.current) {
+            audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
+            setAudioEnabled(true);
+        }
+    };
+
+    //const isAlarmActive = devices.find(device => device.type === 'alarm')?.isActive || false;
 
     const deviceTypeIcons = {
         LIGHT: <FiSun size={24} />,
         temperatureSensor: <FiThermometer size={24} />,
-        ALARM: <FiShield size={24} />,
+        openingSensor: <FiShield size={24} />,
         AIR_CONDITIONER: <LuAirVent size={24} />,
         TV_CONTROL: <FiVideo size={24} />,
         smartOutlet: <FiLock size={24} />
@@ -40,9 +54,79 @@ const RoomDetail = () => {
 
     const getDeviceIcon = (type) => deviceTypeIcons[type] || <FiSun size={24} />;
 
+    useEffect(() => {
+        const handleFirstClick = () => {
+            initAudio();
+            document.removeEventListener('click', handleFirstClick);
+        };
+
+        document.addEventListener('click', handleFirstClick);
+
+        return () => {
+            document.removeEventListener('click', handleFirstClick);
+        };
+    }, []);
+
+    const playAlarmSound = useCallback(() => {
+        if (!audioEnabled || !audioContextRef.current) return;
+
+        try {
+            const audioContext = audioContextRef.current;
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+
+            oscillator.type = "sine";
+            oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            gainNode.gain.exponentialRampToValueAtTime(0.3, audioContext.currentTime + 0.1);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.2);
+
+            oscillator.start();
+
+            setTimeout(() => {
+                oscillator.stop();
+            }, 5000);
+
+        } catch (e) {
+            console.error("Error al crear audio:", e);
+        }
+    }, [audioEnabled]);
+
+    const showNotification = (title, message, options = {}) => {
+        const {
+            icon = "https://cdn-icons-png.flaticon.com/512/619/619153.png",
+            duration = 3000,
+            toastClass = ''
+        } = options;
+
+        if (Notification.permission === "granted") {
+            new Notification(title, {
+                body: message,
+                icon: icon
+            });
+        } else if (Notification.permission !== "denied") {
+            Notification.requestPermission().then(permission => {
+                if (permission === "granted") {
+                    new Notification(title, {
+                        body: message,
+                        icon: icon
+                    });
+                }
+            });
+        }
+
+        setToast({
+            message: message,
+            key: Date.now(),
+            duration: duration,
+            toastClass: toastClass
+        });
+    };
     const handleWebSocketMessage = useCallback((data) => {
-        console.log(devices)
-        console.log(data)
         if (data.type === "ALARM_TRIGGERED") {
             setDevices(prev => {
                 const updated = prev.map(device =>
@@ -73,6 +157,32 @@ const RoomDetail = () => {
                 });
             });
         }
+        if (data.type === "OPENING_UPDATE") {
+            const deviceId = data.id;
+            const status = data.status;
+            setDevices(prev => {
+                return prev.map(device => {
+                    if (String(device.id) === String(deviceId)) {
+                        return { ...device, status };
+                    }
+                    return device;
+                });
+            });
+            showNotification(
+                "🚨 ¡Alarma activada!",
+                data.message || "Se abrió una puerta sin autorización.",
+                {
+                    icon: warning,
+                    duration: 5000,
+                    toastClass: 'alarm-toast',
+
+                }
+            );
+
+            playAlarmSound();
+        }
+
+
     }, []);
 
     useEffect(() => {
@@ -275,6 +385,14 @@ const RoomDetail = () => {
                     </div>
                 )}
             </div>
+            {toast && (
+                <Toast
+                    key={toast.key}
+                    message={toast.message}
+                    duration={3000}
+                    onClose={() => setToast(null)}
+                />
+            )}
         </div>
     );
 };
