@@ -1,6 +1,5 @@
 package ar.unq.ttip.neohub.dto
 
-import ar.unq.ttip.neohub.model.Home
 import ar.unq.ttip.neohub.model.Room
 
 data class RoomDTO(
