@@ -29,7 +29,7 @@ class TemperatureSensor(
 
     override fun getAttribute(attribute: String): String {
         return when (attribute) {
-            "temperature" -> "temperature"
+            "temperature" -> temperature.toString()
             else -> throw IllegalArgumentException("Atributo no soportado para $type: '$attribute'")
         }
     }

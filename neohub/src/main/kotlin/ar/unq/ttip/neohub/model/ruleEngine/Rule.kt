@@ -14,4 +14,8 @@ data class Rule(
     // Acciones asociadas a la regla
     @OneToMany(mappedBy = "rule", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     val actions: List<Action> = mutableListOf()
-)
+){
+    override fun toString(): String {
+        return name
+    }
+}

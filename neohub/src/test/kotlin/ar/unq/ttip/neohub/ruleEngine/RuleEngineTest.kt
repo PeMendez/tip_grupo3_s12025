@@ -12,14 +12,16 @@ import org.springframework.test.context.ActiveProfiles
 @SpringBootTest
 @ActiveProfiles("test")
 class RuleEngineTest {
+
     @Test
     fun `cuando la temperatura excede el umbral de la regla, la regla da verdadero y se ejecuta la accion`() {
         // Configurar dispositivos
         val temperatureSensor = TemperatureSensor(name = "Temperature Sensor")
         val airConditioner = SmartOutlet(name = "Air Conditioner")
 
-        temperatureSensor.temperature=30.0
-        airConditioner.isOn=false
+        // Inicializar estado inicial
+        temperatureSensor.updateTemperature(30.0) // Usamos el método para actualizar la temperatura
+        airConditioner.isOn = false
 
         // Configurar condición asociada al sensor
         val condition = Condition(
@@ -56,16 +58,17 @@ class RuleEngineTest {
 
         // Verificar que la regla se evalúa y la acción se ejecuta
         assertTrue(result, "La regla debería evaluarse como verdadera.")
-        assertTrue(airConditioner.isOn, "El aire acondicionado debería estar encendido.") // Esto depende de implementar un estado en `SmartOutlet`
+        assertTrue(airConditioner.isOn, "El aire acondicionado debería estar encendido.")
     }
 
+
     @Test
-    fun `la temperatura no excede el umbral, así que la regla no se activa`() {
+    fun `la temperatura no excede el umbral, asi que la regla no se activa`() {
         // Configurar dispositivos
         val temperatureSensor = TemperatureSensor(name = "Temperature Sensor")
         val airConditioner = SmartOutlet(name = "Air Conditioner")
 
-        temperatureSensor.temperature=24.0
+        temperatureSensor.updateTemperature(24.0)
         airConditioner.isOn=false
 
         // Configurar condición asociada al sensor
@@ -98,7 +101,7 @@ class RuleEngineTest {
         action.rule = rule
 
         // Simular evaluación de regla
-        val ruleEngine = RuleEngine() // Clase que evaluará las reglas (a implementar)
+        val ruleEngine = RuleEngine() // Clase que evaluará las reglas
         val result = ruleEngine.evaluate(rule)
 
         // Verificar que la regla se evalúa y la acción se ejecuta
