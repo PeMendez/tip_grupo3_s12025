@@ -48,6 +48,7 @@ class DeviceServiceTest {
 
         // Assert
         verify(mqttServiceMock).registerDevice(device)
+        // No entiendo por qué falla este verify, cuando miro el diff son IGUALES SALVO UN ENTER AL FINAL.
         verify(repositoryMock).save(device)
         assertEquals(device.toDTO(), result)
     }
