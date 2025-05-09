@@ -25,9 +25,6 @@ class DeviceServiceTest {
     private val factoryMock = mock(DeviceFactory::class.java)
 
     @Autowired
-    private lateinit var applicationEventPublisher: ApplicationEventPublisher
-
-    @Autowired
     lateinit var deviceFactory: DeviceFactory
 
     private val user = User(21, "carlos", "sdasdada")
@@ -35,7 +32,7 @@ class DeviceServiceTest {
     private var deviceService = DeviceService(mqttServiceMock, repositoryMock, factoryMock)
 
     @Test
-    fun `registrar un dispositivo debería delegar al MqttService`() {
+    fun `registrar un dispositivo deberia delegar al MqttService`() {
         // Arrange
         val deviceDTO = DeviceDTO(id = 12, name = "Lamp", type = "smartOutlet", roomId = 3, topic = "neohub/unconfigured")
         val device = SmartOutlet(name = "Lamp")
@@ -54,7 +51,7 @@ class DeviceServiceTest {
     }
 
     @Test
-    fun `desregistrar un dispositivo debería delegar al MqttService`() {
+    fun `desregistrar un dispositivo deberia delegar al MqttService`() {
         // Arrange
         val deviceDTO = DeviceDTO(id = 1, name = "Lamp", type = "smartOutlet", roomId = null, topic = "neohub/unconfigured")
         val device = SmartOutlet(name = "Lamp")
@@ -69,7 +66,7 @@ class DeviceServiceTest {
     }
 
     @Test
-    fun `publicar un mensaje a un dispositivo debería delegar al MqttService y configurar correctamente el tópico`() {
+    fun `publicar un mensaje a un dispositivo deberia delegar al MqttService y configurar correctamente el topico`() {
         // Arrange
         val deviceDTO = DeviceDTO(id = 1, name = "Lamp", type = "smartOutlet", roomId = 2, topic = "neohub/unconfigured")
         val room = Room(home = home, name = "LivingRoom")
