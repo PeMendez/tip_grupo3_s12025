@@ -26,4 +26,9 @@ class DeviceController(private val deviceService: DeviceService) {
     fun deleteDevice(@PathVariable deviceId: Long) {
         deviceService.deleteDevice(deviceId)
     }
+
+    @PostMapping("/manual")
+    fun createManualDevice(@RequestBody message: String) {
+        return deviceService.handleNewDevice(message)
+    }
 }
