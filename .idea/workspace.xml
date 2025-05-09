@@ -5,9 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="09bf219a-ddab-407c-b6b8-1beb0e5da310" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/frontend/src/api/ruleService.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/RuleComponent.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/pages/DeviceRules.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/dto/ActionRequest.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/dto/ConditionRequest.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/dto/CreateRuleRequest.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/api/deviceService.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/api/deviceService.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/loginPopup.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/loginPopup.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/pages/RoomDetail.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/RoomDetail.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/controller/DeviceController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/controller/DeviceController.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/controller/RuleController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/controller/RuleController.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/dto/ActionDTO.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/dto/ActionDTO.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/dto/ConditionDTO.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/dto/ConditionDTO.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/handler/MqttWebSocketHandler.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/handler/MqttWebSocketHandler.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/model/ruleEngine/Rule.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/model/ruleEngine/Rule.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,9 +31,9 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Class" />
-        <option value="Kotlin Class" />
         <option value="Kotlin Interface" />
         <option value="JavaScript File" />
+        <option value="Kotlin Class" />
       </list>
     </option>
   </component>
@@ -130,7 +143,8 @@
       <workItem from="1746041555053" duration="17126000" />
       <workItem from="1746126326783" duration="25529000" />
       <workItem from="1746641144309" duration="10193000" />
-      <workItem from="1746736077180" duration="6360000" />
+      <workItem from="1746736077180" duration="6750000" />
+      <workItem from="1746800045239" duration="14739000" />
     </task>
     <servers />
   </component>

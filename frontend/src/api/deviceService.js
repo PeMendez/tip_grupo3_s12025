@@ -15,3 +15,17 @@ export const getUnconfiguredDevices = async (token) => {
         throw error;
     }
 };
+
+export const getDevice = async (deviceId, token) => {
+    try {
+        const response = await axios.get(`${API_URL}/${deviceId}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error al obtener los dispositivos desconfigurados:', error);
+        throw error;
+    }
+};

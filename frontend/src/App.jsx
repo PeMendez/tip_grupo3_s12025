@@ -4,6 +4,7 @@ import MainPage from './pages/MainPage'
 import fondo from './assets/fondo.png';
 import './App.css'
 import RoomDetail from "./pages/RoomDetail.jsx";
+import DeviceRules from './pages/DeviceRules.jsx'
 
 function App() {
     return (
@@ -21,6 +22,8 @@ function App() {
                     <Route path="/" element={<LoginPage/>}/>
                     <Route path="/home" element={<MainPage/>}/>
                     <Route path="/room/:id" element={<RoomDetail />} />
+                    <Route path="/rule/:id" element={<DeviceRules />} />
+
                 </Routes>
             </Router>
         </div>

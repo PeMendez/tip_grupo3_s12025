@@ -1,5 +1,5 @@
 import {useState, useEffect, useCallback, useRef} from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import {
     FiSun, FiThermometer, FiShield, FiVideo, FiLock, FiEdit, FiPlus
 } from 'react-icons/fi';
@@ -33,6 +33,11 @@ const RoomDetail = () => {
     const [toast, setToast] = useState(null);
     const audioContextRef = useRef(null);
     const [audioEnabled, setAudioEnabled] = useState(false);
+    const navigate = useNavigate();
+
+    const handleDeviceClick = (device) => {
+        navigate(`/rule/${device.id}`);
+    };
 
     const initAudio = () => {
         if (!audioContextRef.current) {
@@ -170,7 +175,7 @@ const RoomDetail = () => {
             });
             showNotification(
                 "🚨 ¡Alarma activada!",
-                data.message || "Se abrió una puerta sin autorización.",
+                "Se abrió una puerta sin autorización.",
                 {
                     icon: warning,
                     duration: 5000,
@@ -366,7 +371,9 @@ const RoomDetail = () => {
             <div className="room-grid">
                 {devices.length > 0 ? (
                     devices.map((device, index) => (
-                        <div key={index} className="room-button">
+                        <div key={index}
+                             className="room-button"
+                             onClick={() => handleDeviceClick(device)}>
                             <div className="device-icon">{getDeviceIcon(device.type)}</div>
                             <span>{device.name}</span>
                             {device.type === "temperatureSensor" && device.temperature !== null && (

@@ -98,6 +98,7 @@ class MqttWebSocketHandler : TextWebSocketHandler()
     }
 
     private fun broadcastJson(json: String) {
+        println("Cantidad de sesiones abiertas: ${sessions.size}")
         sessions.forEach { session ->
             if (session.isOpen) {
                 try {
