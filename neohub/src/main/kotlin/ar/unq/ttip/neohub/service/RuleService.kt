@@ -10,7 +10,6 @@ import ar.unq.ttip.neohub.repository.DeviceRepository
 import ar.unq.ttip.neohub.repository.RuleRepository
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
-import kotlin.random.Random
 
 @Service
 class RuleService(
