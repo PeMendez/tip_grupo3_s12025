@@ -1,9 +1,11 @@
 package ar.unq.ttip.neohub.service
 
+import ar.unq.ttip.neohub.dto.toEntity
 import ar.unq.ttip.neohub.handler.MqttWebSocketHandler
 import ar.unq.ttip.neohub.model.Device
 import ar.unq.ttip.neohub.model.devices.OpeningSensor
 import ar.unq.ttip.neohub.model.devices.TemperatureSensor
+import ar.unq.ttip.neohub.repository.DeviceRepository
 import org.eclipse.paho.client.mqttv3.MqttClient
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions
 import org.eclipse.paho.client.mqttv3.MqttException
@@ -16,7 +18,9 @@ import java.util.*
 @Service
 class MqttService(
     private val applicationEventPublisher: ApplicationEventPublisher,
-    private val webSocketHandler: MqttWebSocketHandler
+    private val webSocketHandler: MqttWebSocketHandler,
+    private val ruleService: RuleService,
+    private val deviceRepository: DeviceRepository
 ) {
     private val brokerUrl = "tcp://test.mosquitto.org:1883"
     private val clientId = "NeoHub-API-" + UUID.randomUUID().toString().substring(0, 8)
@@ -97,19 +101,45 @@ class MqttService(
 
     fun handleMqttMessage(topic: String, message: String) {
         println("Received message on topic $topic: $message")
-        if(topic.startsWith(unconfiguredTopic)) {
+        if (topic.startsWith(unconfiguredTopic)) {
             handleUnconfiguredDevice(message)
-        }else {
+        } else {
             val device = topicDeviceMap[topic]
-            if(device != null) {
+            if (device != null) {
                 device.handleIncomingMessage(message)
-                when (device){
-                    is TemperatureSensor -> {handleTemperatureUpdate(device, message)}
-                    is OpeningSensor -> {handleOpeningUpdate(device,message)}
+
+                try{
+                    deviceRepository.save(device)
+                    println("Se actualizó correctamente ${device.name}")
+                } catch (e: Exception) {
+                    println("ERROR: No se pudo guardar ${device.name} en la BDD.")
                 }
-                //aca falta algo
-            }else {
+
+                // Lógica adicional basada en el tipo de dispositivo
+                when (device) {
+                    is TemperatureSensor -> handleTemperatureUpdate(device, message)
+                    is OpeningSensor -> handleOpeningUpdate(device, message)
+                }
+
+                // Evaluar reglas asociadas al dispositivo
+                evaluateRulesForDevice(device)
+            } else {
                 println("ERROR: No se encontró ningún dispositivo para el tópico: $topic")
+            }
+        }
+    }
+
+    private fun evaluateRulesForDevice(device: Device) {
+        // Obtener las reglas asociadas al dispositivo
+        val rulesDTOs = ruleService.getRulesForDevice(device.id) // Debes llamar al service, no al repo directamente
+        val rules = rulesDTOs.map { it.toEntity(deviceRepository) } // Conversión de DTO a entidad, asegúrate de implementar toEntity()
+
+        // Evaluar cada regla
+        rules.forEach { rule ->
+            if (rule.evaluate()) {
+                println("Rule '${rule.name}' triggered and actions executed.")
+            } else {
+                println("Rule '${rule.name}' not triggered.")
             }
         }
     }
@@ -119,12 +149,12 @@ class MqttService(
         applicationEventPublisher.publishEvent(UnconfiguredDeviceEvent(message))
     }
 
-    fun handleTemperatureUpdate(sensor: TemperatureSensor, newTemp: String) {
+    private fun handleTemperatureUpdate(sensor: TemperatureSensor, newTemp: String) {
         println("Se pescó una update de temperatura...")
         webSocketHandler.sendTemperatureUpdate(newTemp,sensor.id)
     }
 
-    fun handleOpeningUpdate(sensor: OpeningSensor, newStatus: String) {
+    private fun handleOpeningUpdate(sensor: OpeningSensor, newStatus: String) {
         println("Se pescó una update de puerta/ventana...")
         webSocketHandler.sendOpeningUpdate(newStatus, sensor.id)
     }

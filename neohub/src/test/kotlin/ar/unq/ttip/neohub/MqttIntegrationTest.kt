@@ -6,6 +6,7 @@ import ar.unq.ttip.neohub.model.Room
 import ar.unq.ttip.neohub.model.User
 import ar.unq.ttip.neohub.model.devices.DeviceFactory
 import ar.unq.ttip.neohub.model.devices.SmartOutlet
+import ar.unq.ttip.neohub.repository.DeviceRepository
 import ar.unq.ttip.neohub.service.*
 import jakarta.transaction.Transactional
 import org.junit.jupiter.api.Test
@@ -28,6 +29,12 @@ class MqttIntegrationTest @Autowired constructor(
     private val mqttWebSocketHandler: MqttWebSocketHandler
 ) {
     @Autowired
+    private lateinit var deviceRepository: DeviceRepository
+
+    @Autowired
+    private lateinit var ruleService: RuleService
+
+    @Autowired
     private lateinit var deviceFactory: DeviceFactory
     private val applicationEventPublisher = mock(ApplicationEventPublisher::class.java)
     private val user = User(21,"carlos","sdasdada")
@@ -35,7 +42,7 @@ class MqttIntegrationTest @Autowired constructor(
 
     @Test
     fun `when handleUnconfiguredDevice is called, should publish UnconfiguredDeviceEvent`() {
-        val mqttServiceMock = MqttService(applicationEventPublisher, mqttWebSocketHandler)
+        val mqttServiceMock = MqttService(applicationEventPublisher, mqttWebSocketHandler, ruleService, deviceRepository)
         val testMessage = "test_device_message"
         //tengo que inyectarle el mock a mano porque sino usa el bean real.
         //pero veia por consola que andaba, asi que yo ya sabia que estaba andando
