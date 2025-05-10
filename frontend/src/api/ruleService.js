@@ -18,17 +18,15 @@ export const getRuleForDevice = async (deviceId, token) => {
 
 export const createRule = async (newRule, token) => {
     try {
-        const response = await axios.post(`${API_URL}`, {
-            request: newRule
-            },
-            {
+        const response = await axios.post(API_URL, newRule, {
             headers: {
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
             }
         });
         return response.data;
     } catch (error) {
-        console.error('Error al obtener las reglas del dispositivo:', error);
+        console.error('Error al crear la regla:', error);
         throw error;
     }
 };
@@ -42,7 +40,7 @@ export const deleteRule = async (ruleId, token) => {
         });
         return response.data;
     } catch (error) {
-        console.error('Error al obtener las reglas del dispositivo:', error);
+        console.error('Error al eliminar la regla:', error);
         throw error;
     }
 };

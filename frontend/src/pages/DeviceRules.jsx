@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
-import { getRuleForDevice, createRule } from '../api/ruleService.js';
+import {getRuleForDevice, createRule, deleteRule} from '../api/ruleService.js';
 import {useParams} from "react-router-dom";
 import BackOrCloseButton from "../components/BackOrCloseButton.jsx";
 import RuleFormPopup from "../components/RuleComponent.jsx";
 import {getDevice} from "../api/deviceService.js";
+import {FiEdit, FiPlus} from "react-icons/fi";
+import './rules.css'
 
 const DeviceRules =  () => {
 
@@ -14,6 +16,11 @@ const DeviceRules =  () => {
     const [error, setError] = useState(null);
     const [showPopup, setShowPopup] = useState(false);
     const [device, setDevice] = useState(null)
+    const [editMode, setEditMode] = useState(false);
+    const [showDeletePopup, setShowDeletePopup] = useState(false);
+    const [ruleToDelete, setRuleToDelete] = useState(null);
+    const [expandedRuleId, setExpandedRuleId] = useState(null);
+
 
     const fetchRules = async () => {
         try {
@@ -42,9 +49,69 @@ const DeviceRules =  () => {
             console.error('Error al crear regla:', err);
         }
     };
+    const handleConfirmDelete = async () => {
+        if (!ruleToDelete) return;
+        try {
+            await deleteRule(ruleToDelete.id, token);
+            fetchRules();
+            setShowDeletePopup(false);
+            setRuleToDelete(null);
+        } catch (err) {
+            console.error("Error al eliminar dispositivo", err);
+        }
+    };
+
+    const toggleRuleExpand = (ruleId) => {
+        setExpandedRuleId(prevId => (prevId === ruleId ? null : ruleId));
+    };
+
 
     if (loading) return <p>Cargando reglas...</p>;
     if (error) return <p>{error}</p>;
+
+
+    if (editMode) {
+        return (
+            <div className="main-container">
+                <div className="header-wrapper">
+                    <div className="header">
+                        <BackOrCloseButton type="arrow" onClick={() => setEditMode(false)} />
+                        <h2>Editar Reglas</h2>
+                    </div>
+                </div>
+                <div className="room-grid">
+                    {rules.map((rule) =>  (
+                        <div
+                            key={rule.id}
+                            className="room-editable-container"
+                            onClick={() => {
+                                setRuleToDelete(rule);
+                                setShowDeletePopup(true);
+                            }}
+                        >
+                            <div className="room-button">
+                                <span>{rule.name}</span>
+                                <div className="delete-icon-full">🗑️</div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                {showDeletePopup && (
+                    <div className="modal-backdrop" onClick={() => setShowDeletePopup(false)}>
+                        <div className="modal" onClick={(e) => e.stopPropagation()}>
+                            <p>¿Eliminar "{ruleToDelete?.name}"?</p>
+                            <div className="modal-actions">
+                                <button onClick={handleConfirmDelete}>Confirmar</button>
+                                <button onClick={() => setShowDeletePopup(false)}>Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </div>
+        );
+
+    }
 
     return (
         <div className="main-container">
@@ -61,27 +128,49 @@ const DeviceRules =  () => {
                 </>
             ) : (
                 <>
-                    {rules.map((rule) => (
-                        <div key={rule.id} className="rule-card">
-                            <h3>{rule.name}</h3>
-                            <p><strong>Condiciones:</strong></p>
-                            <ul>
-                                {rule.conditions.map((cond, index) => (
-                                    <li key={index}>
-                                        {cond.attribute} {cond.operator} {cond.value}
-                                    </li>
-                                ))}
-                            </ul>
-                            <p><strong>Acciones:</strong></p>
-                            <ul>
-                                {rule.actions.map((act, index) => (
-                                    <li key={index}>
-                                        {act.actionType} ({act.parameters})
-                                    </li>
-                                ))}
-                            </ul>
+                    <div className="edit-container">
+                        <div className="edit-button">
+                            <button onClick={() => setEditMode(true)}>
+                                <FiEdit size={24}/>
+                            </button>
                         </div>
-                    ))}
+                    </div>
+                    <div className="rule-grid">
+                        {rules.map((rule) => (
+                            <div
+                                key={rule.id}
+                                className={`rule-button ${expandedRuleId === rule.id ? 'expanded' : ''}`}
+                                onClick={() => toggleRuleExpand(rule.id)}
+                            >
+                                <h3>{rule.name}</h3>
+                                {expandedRuleId === rule.id && (
+                                    <div className="rule-details">
+                                        <p><strong>Condiciones:</strong></p>
+                                        <ul>
+                                            {rule.conditions?.map((cond, index) => (
+                                                <li key={index}>
+                                                    {cond.attribute} {cond.operator} {cond.value}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                        <p><strong>Acciones:</strong></p>
+                                        <ul>
+                                            {rule.actions?.map((act, index) => (
+                                                <li key={index}>
+                                                    {act.actionType} ({act.parameters})
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                        <div className="add-device-icon">
+                            <button onClick={() => setShowPopup(true)}>
+                                <FiPlus size={24} className="icon"/>
+                            </button>
+                        </div>
+                    </div>
                 </>
             )}
             {showPopup && (
@@ -92,8 +181,7 @@ const DeviceRules =  () => {
                 />
             )}
         </div>
-    );
+            );
 };
-
 
 export default DeviceRules;
