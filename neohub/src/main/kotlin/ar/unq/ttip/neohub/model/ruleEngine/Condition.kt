@@ -5,7 +5,7 @@ import jakarta.persistence.*
 import kotlin.jvm.Transient
 
 @Entity
-@Table(name="rule_condition")
+@Table(name="rule_condition") //condition es palabra reservada
 data class Condition(
     @Id @GeneratedValue val id: Long = 0,
     @ManyToOne @JoinColumn(name = "rule_id")
@@ -16,6 +16,7 @@ data class Condition(
 
     val attribute: String,  // Ejemplo: "temperature"
     val operator: String,   // Ejemplo: ">"
+    @Column(name="condition_value") //value es palabra reservada
     val value: String,       // Ejemplo: "25"
 ){
     @Transient

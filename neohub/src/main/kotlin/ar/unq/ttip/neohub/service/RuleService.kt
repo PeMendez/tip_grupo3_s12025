@@ -20,11 +20,22 @@ class RuleService(
     fun createRule(request: CreateRuleRequest): RuleDTO {
         //Crear objeto regla
         val rule = Rule(name= request.name)
-        //Crear las condiciones por cada condicion con su device
-        val conditions = request.conditions.map {
-            val device = deviceRepository.findById(it.deviceId).orElseThrow{
-                IllegalArgumentException("Device with id ${it.deviceId} not found")
+        println("Creado el objeto regla")
+
+        // Obtener todos los IDs de dispositivos (de condiciones y acciones)
+        val allDeviceIds = (request.conditions.map { it.deviceId } + request.actions.map { it.deviceId })
+            .distinct() // Eliminamos duplicados
+
+        // Crear un mapa de dispositivos
+        val deviceMap = allDeviceIds.associateWith { id ->
+            deviceRepository.findById(id).orElseThrow {
+                IllegalArgumentException("No se encontró un dispositivo con ID: $id")
             }
+        }
+
+        println("Obtenidos los dispositivos")
+        val conditions = request.conditions.map {
+            val device = deviceMap[it.deviceId]!!
             Condition(
                 rule = rule,
                 device = device,
@@ -33,19 +44,19 @@ class RuleService(
                 value = it.value
             )
         }
-        //Crear las acciones
+        println("Mapeadas las condiciones")
         val actions = request.actions.map {
-            val device = deviceRepository.findById(it.deviceId).orElseThrow{
-                IllegalArgumentException("Device with id ${it.deviceId} not found")
-            }
+            val device = deviceMap[it.deviceId]!!
+            println("mapeando para ${device.name}")
             Action(
                 rule = rule,
                 device = device,
                 actionType = it.actionType,
                 parameters = it.parameters
             )
+
         }
-        //guardar la regla con sus acciones y condiciones
+        println("Mapeadas las acciones")
         rule.conditions.addAll(conditions)
         rule.actions.addAll(actions)
         val savedRule = ruleRepository.save(rule)
