@@ -72,9 +72,9 @@ const RoomDetail = () => {
     }, []);
 
     const playAlarmSound = useCallback(() => {
-        if (!audioEnabled || !audioContextRef.current) return;
+        /*if (!audioEnabled || !audioContextRef.current) return;
 
-        try {
+        try {*/
             const audioContext = audioContextRef.current;
             const oscillator = audioContext.createOscillator();
             const gainNode = audioContext.createGain();
@@ -95,9 +95,9 @@ const RoomDetail = () => {
                 oscillator.stop();
             }, 5000);
 
-        } catch (e) {
+        /*} catch (e) {
             console.error("Error al crear audio:", e);
-        }
+        }*/
     }, [audioEnabled]);
 
     const toggleLight = async (device) => {
@@ -202,6 +202,7 @@ const RoomDetail = () => {
             });
         }
         if (data.type === "OPENING_UPDATE") {
+            console.log("audio esta en", audioEnabled)
             const deviceId = data.id;
             const status = data.status;
             setDevices(prev => {

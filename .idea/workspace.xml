@@ -6,9 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="09bf219a-ddab-407c-b6b8-1beb0e5da310" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/api/deviceService.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/api/deviceService.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/pages/RoomDetail.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/RoomDetail.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/service/MqttService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/service/MqttService.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/handler/MqttWebSocketHandler.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/handler/MqttWebSocketHandler.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -136,7 +135,7 @@
       <workItem from="1746829731032" duration="9983000" />
       <workItem from="1746883584385" duration="2244000" />
       <workItem from="1747088396273" duration="11465000" />
-      <workItem from="1747160026474" duration="4664000" />
+      <workItem from="1747160026474" duration="6426000" />
     </task>
     <servers />
   </component>

@@ -17,8 +17,20 @@ class MqttWebSocketHandler : TextWebSocketHandler()
     private val sessions = CopyOnWriteArrayList<WebSocketSession>()
 
     override fun afterConnectionEstablished(session: WebSocketSession) {
-        sessions.add(session)
         println("Cliente WebSocket conectado: ${session.id}")
+        sessions.forEach {
+            try {
+                if (it.isOpen) {
+                    println("Cerrando sesión anterior: ${it.id}")
+                    it.close(CloseStatus.NORMAL)
+                }
+            } catch (e: Exception) {
+                println("Error cerrando sesión anterior: ${e.message}")
+            }
+        }
+
+        sessions.clear()
+        sessions.add(session)
     }
 
     override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) {
