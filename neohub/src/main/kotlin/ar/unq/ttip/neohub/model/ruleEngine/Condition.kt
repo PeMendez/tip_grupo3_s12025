@@ -29,7 +29,7 @@ data class Condition(
     fun evaluate(): Boolean {
         val attributeValue = getAttributeValue(device, attribute)
         return operators[operator]?.invoke(attributeValue, value)
-            ?: throw IllegalArgumentException("Operador no soportado: ${operator}")
+            ?: throw IllegalArgumentException("Operador no soportado: $operator")
     }
 
     private fun getAttributeValue(device: Device, attribute: String): String {
