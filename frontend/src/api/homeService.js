@@ -5,6 +5,7 @@ export const controlLight = async (device, forceState) => {
 
     try {
         const response = await axios.post(`${apiUrl}/api/mqtt/send`,
+            //No usemos mqtt send, usa post: devices/message/{id} 
             new URLSearchParams({
                 topic: device.topic,
                 message: forceState

@@ -32,7 +32,8 @@ class DeviceController(private val deviceService: DeviceService) {
     }
 
     @PostMapping("/message/{deviceId}")
-    fun messageToDevice(@PathVariable deviceId: Long, @RequestBody message: String){ //ver que sea un mensaje mas complejo
+    fun messageToDevice(@PathVariable deviceId: Long, @RequestBody message: String){
+        //ver que sea un mensaje mas complejo
         deviceService.publishToDevice(deviceId, message)
     }
 }

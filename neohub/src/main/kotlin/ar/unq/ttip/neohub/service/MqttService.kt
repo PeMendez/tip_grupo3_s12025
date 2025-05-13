@@ -23,7 +23,7 @@ class MqttService(
     private val ruleService: RuleService,
     private val deviceRepository: DeviceRepository
 ) {
-    private val brokerUrl = "tcp://test.mosquitto.org:1883"
+    private val brokerUrl = "tcp://broker.hivemq.com" // "tcp://test.mosquitto.org:1883"
     private val clientId = "NeoHub-API-" + UUID.randomUUID().toString().substring(0, 8)
     private val mqttClient: MqttClient = MqttClient(brokerUrl, clientId, null)
     private val subscribedTopics = mutableSetOf<String>()
@@ -109,18 +109,19 @@ class MqttService(
             if (device != null) {
                 device.handleIncomingMessage(message)
 
+                // Lógica adicional basada en el tipo de dispositivo
+                when (device) {
+                    is TemperatureSensor -> handleTemperatureUpdate(device, message)
+                    is OpeningSensor -> handleOpeningUpdate(device, message)
+                    //is SmartOutlet -> handleSmartOutletUpdate(device, message)
+                    //Este ahora no iria, porque el mensaje al smart outlet lo publique yo, ya no quiero escucharlo y reaccionar a él
+                }
+
                 try{
                     deviceRepository.save(device)
                     println("Se actualizó correctamente ${device.name}")
                 } catch (e: Exception) {
                     println("ERROR: No se pudo guardar ${device.name} en la BDD.")
-                }
-
-                // Lógica adicional basada en el tipo de dispositivo
-                when (device) {
-                    is TemperatureSensor -> handleTemperatureUpdate(device, message)
-                    is OpeningSensor -> handleOpeningUpdate(device, message)
-                    is SmartOutlet -> handleSmartOutletUpdate(device, message)
                 }
 
                 // Evaluar reglas asociadas al dispositivo
@@ -134,7 +135,7 @@ class MqttService(
     private fun evaluateRulesForDevice(device: Device) {
         // Obtener las reglas asociadas al dispositivo
         val rulesDTOs = ruleService.getRulesForDevice(device.id) // Debes llamar al service, no al repo directamente
-        val rules = rulesDTOs.map { it.toEntity(deviceRepository) } // Conversión de DTO a entidad, asegúrate de implementar toEntity()
+        val rules = rulesDTOs.map { it.toEntity(deviceRepository) } // Conversión de DTO a entidad
 
         // Evaluar cada regla
         rules.forEach { rule ->
