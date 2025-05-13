@@ -155,27 +155,10 @@ const RoomDetail = () => {
         });
     };
     const handleWebSocketMessage = useCallback((data) => {
-        /*if (data.type === "ALARM_TRIGGERED") {
-            setDevices(prev => {
-                const updated = prev.map(device =>
-                    device.type === 'alarm' ? { ...device, isActive: true } : device
-                );
-
-                const lightDevice = updated.find(d => d.type === 'light');
-                if (lightDevice && !lightDevice.isOn) {
-                    controlLight(true).then(() => {
-                        setDevices(updated.map(device =>
-                            device.type === 'light' ? { ...device, isOn: true } : device
-                        ));
-                    });
-                }
-
-                return updated;
-            });
-        }*/
+        console.log(data)
         if (data.type === "SMART_OUTLET") {
             const deviceId = data.id;
-            const newStatus = data.status === 'turn_on' ? true : false
+            const newStatus = data.status === 'turn_on';
             console.log(data)
             console.log(newStatus)
             setDevices(prev => {
@@ -202,9 +185,9 @@ const RoomDetail = () => {
             });
         }
         if (data.type === "OPENING_UPDATE") {
-            console.log("audio esta en", audioEnabled)
+            console.log(data)
             const deviceId = data.id;
-            const status = data.status;
+            const status = data.status === 'opened';
             setDevices(prev => {
                 return prev.map(device => {
                     if (String(device.id) === String(deviceId)) {
@@ -213,6 +196,7 @@ const RoomDetail = () => {
                     return device;
                 });
             });
+        if(status){
             showNotification(
                 "🚨 ¡Alarma activada!",
                 "Se abrió una puerta sin autorización.",
@@ -225,6 +209,8 @@ const RoomDetail = () => {
             );
 
             playAlarmSound();
+        }
+
         }
 
     }, []);
@@ -411,9 +397,13 @@ const RoomDetail = () => {
                 {devices.length > 0 ? (
                     devices.map((device, index) => (
                         <div key={index}
-                             className="room-button"
+                             className={`room-button ${device.status ? 'active' : ''} ${
+                            device.type === 'openingSensor' && device.status ? 'alarm-active' : ''
+                        }`}
                              onClick={() => handleDeviceClick(device)}>
-                            <div className="device-icon">{getDeviceIcon(device.type)}</div>
+                            <div
+                                className={`device-icon ${device.type === 'openingSensor' && device.status ? 'alarm-active' : ''}`}>
+                                {getDeviceIcon(device.type)}</div>
                             <span>{device.name}</span>
                             {device.type === "temperatureSensor" && device.temperature !== null && (
                                 <div className="device-info">
@@ -431,7 +421,10 @@ const RoomDetail = () => {
                                     <span className={`slider round ${device.status ? 'on' : 'off'}`}></span>
                                 </label>
                                 </div>
-                        )}
+                            )}
+                            {device.type === 'openingSensor' && device.status && (
+                                <span className="alarm-status">ACTIVA</span>
+                            )}
                         </div>
                     ))
                 ) : (

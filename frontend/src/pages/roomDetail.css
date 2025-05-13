@@ -262,3 +262,25 @@ input:checked + .slider:before {
 .switch input, .slider {
     pointer-events: none;
 }
+
+.alarm-status {
+    color: #ff4444;
+    font-weight: bold;
+    margin-top: 5px;
+    font-size: 12px;
+}
+
+@keyframes alarm-pulse {
+    from { transform: scale(1); box-shadow: 0 0 5px rgba(255,0,0,0.5); }
+    to { transform: scale(1.02); box-shadow: 0 0 20px rgba(255,0,0,0.8); }
+}
+.room-button.alarm-active {
+    color: #ff4444;
+    background: #fff0f0;
+    border: 2px solid #ff4444;
+    animation: alarm-pulse 0.5s infinite alternate;
+}
+.device-icon.alarm-active{
+    font-size: 36px;
+    color: #ff4444;
+}
