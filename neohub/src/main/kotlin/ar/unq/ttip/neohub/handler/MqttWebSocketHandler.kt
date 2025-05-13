@@ -75,6 +75,18 @@ class MqttWebSocketHandler : TextWebSocketHandler()
         broadcastJson(statusMessage)
     }
 
+    fun sendSmartOutletUpdate(status: String, deviceId: Long) {
+        val statusMessage = buildJsonMessage(
+            mapOf(
+                "type" to "SMART_OUTLET",
+                "id" to deviceId,
+                "status" to status
+            )
+        )
+        println("Enviando update de status: $statusMessage")
+        broadcastJson(statusMessage)
+    }
+
     fun buildJsonMessage(data: Map<String, Any>): String {
         val jsonBuilder = StringBuilder("{")
 

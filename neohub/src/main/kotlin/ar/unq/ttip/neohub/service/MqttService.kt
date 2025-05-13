@@ -5,6 +5,7 @@ import ar.unq.ttip.neohub.handler.MqttWebSocketHandler
 import ar.unq.ttip.neohub.model.Device
 import ar.unq.ttip.neohub.model.devices.OpeningSensor
 import ar.unq.ttip.neohub.model.devices.TemperatureSensor
+import ar.unq.ttip.neohub.model.devices.SmartOutlet
 import ar.unq.ttip.neohub.repository.DeviceRepository
 import org.eclipse.paho.client.mqttv3.MqttClient
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions
@@ -119,6 +120,7 @@ class MqttService(
                 when (device) {
                     is TemperatureSensor -> handleTemperatureUpdate(device, message)
                     is OpeningSensor -> handleOpeningUpdate(device, message)
+                    is SmartOutlet -> handleSmartOutletUpdate(device, message)
                 }
 
                 // Evaluar reglas asociadas al dispositivo
@@ -157,6 +159,11 @@ class MqttService(
     private fun handleOpeningUpdate(sensor: OpeningSensor, newStatus: String) {
         println("Se pescó una update de puerta/ventana...")
         webSocketHandler.sendOpeningUpdate(newStatus, sensor.id)
+    }
+
+    private fun handleSmartOutletUpdate(boton: SmartOutlet, newStatus: String) {
+        println("Se pescó una update de un botón de luz...")
+        webSocketHandler.sendSmartOutletUpdate(newStatus, boton.id)
     }
 }
 

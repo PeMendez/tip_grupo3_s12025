@@ -101,6 +101,32 @@ const RoomDetail = () => {
         }
     }, [audioEnabled]);
 
+    const toggleLight = async (device) => {
+        setError(null);
+        console.log('Estado actual:', device.status);
+        console.log('esto hace:', !device.status)
+        try {
+            const newState = !device.status;
+            console.log('Nuevo estado a enviar:', newState);
+
+            await controlLight(device, newState);
+            console.log('Backend respondió OK, actualizando estado local');
+            setDevices(prevDevices => {
+                const updated = prevDevices.map(d =>
+                    d.id === device.id ? { ...d, status: newState } : d
+                );
+                console.log('Dispositivos actualizados:', updated);
+                return updated;
+            });
+        } catch (err) {
+            setError('Error al controlar las luces');
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
     const showNotification = (title, message, options = {}) => {
         const {
             icon = "https://cdn-icons-png.flaticon.com/512/619/619153.png",
@@ -132,7 +158,7 @@ const RoomDetail = () => {
         });
     };
     const handleWebSocketMessage = useCallback((data) => {
-        if (data.type === "ALARM_TRIGGERED") {
+        /*if (data.type === "ALARM_TRIGGERED") {
             setDevices(prev => {
                 const updated = prev.map(device =>
                     device.type === 'alarm' ? { ...device, isActive: true } : device
@@ -149,7 +175,21 @@ const RoomDetail = () => {
 
                 return updated;
             });
+        }*/
+        if (data.type === "SMART_OUTLET") {
+            const deviceId = data.id;
+            const newStatus = data.status;
+            setDevices(prev => {
+                return prev.map(device => {
+                    if (String(device.id) === String(deviceId)) {
+                        return { ...device, status: newStatus };
+                    }
+                    return device;
+                });
+            });
+
         }
+
         if (data.type === "TEMP_UPDATE") {
             const deviceId = data.id;
             const temperature = parseFloat(data.temp);
@@ -186,7 +226,6 @@ const RoomDetail = () => {
 
             playAlarmSound();
         }
-
 
     }, []);
 
@@ -381,6 +420,18 @@ const RoomDetail = () => {
                                     <small>{device.temperature}°C</small>
                                 </div>
                             )}
+                            {device.type === "smartOutlet" && (
+                                <div className="switch-container" onClick={(e) => e.stopPropagation()}>
+                                <label className="switch">
+                                    <input
+                                        type="checkbox"
+                                        checked={!!device.status}
+                                        onChange={() => toggleLight(device)}
+                                    />
+                                    <span className={`slider round ${device.status ? 'on' : 'off'}`}></span>
+                                </label>
+                                </div>
+                        )}
                         </div>
                     ))
                 ) : (

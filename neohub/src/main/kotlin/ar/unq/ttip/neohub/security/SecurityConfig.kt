@@ -34,7 +34,7 @@ class SecurityConfig(
             .cors { cors -> cors.configurationSource(corsConfigurationSource()) }
             .csrf { it.disable() }
             .authorizeHttpRequests { auth ->
-                auth.requestMatchers("/auth/**","ws/mqtt").permitAll()
+                auth.requestMatchers("/auth/**","ws/mqtt","/api/mqtt/send").permitAll()
                     .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
                     .anyRequest().authenticated()
             }
