@@ -12,9 +12,8 @@ import {
     deleteDevice
 } from "../api/roomService";
 import './roomDetail.css';
-import { getUnconfiguredDevices } from "../api/deviceService.js";
+import { getUnconfiguredDevices, controlLight } from "../api/deviceService.js";
 import { connectWebSocket, disconnectWebSocket } from "../websocket.js";
-import { controlLight } from "../api/homeService.js";
 import Toast from '../Toast.jsx'
 
 const RoomDetail = () => {
@@ -102,14 +101,13 @@ const RoomDetail = () => {
     }, [audioEnabled]);
 
     const toggleLight = async (device) => {
-        setError(null);
         console.log('Estado actual:', device.status);
         console.log('esto hace:', !device.status)
         try {
             const newState = !device.status;
             console.log('Nuevo estado a enviar:', newState);
 
-            await controlLight(device, newState);
+            await controlLight(device, newState, token);
             console.log('Backend respondió OK, actualizando estado local');
             setDevices(prevDevices => {
                 const updated = prevDevices.map(d =>
@@ -119,7 +117,6 @@ const RoomDetail = () => {
                 return updated;
             });
         } catch (err) {
-            setError('Error al controlar las luces');
             console.error(err);
         } finally {
             setLoading(false);
@@ -178,7 +175,9 @@ const RoomDetail = () => {
         }*/
         if (data.type === "SMART_OUTLET") {
             const deviceId = data.id;
-            const newStatus = data.status;
+            const newStatus = data.status === 'turn_on' ? true : false
+            console.log(data)
+            console.log(newStatus)
             setDevices(prev => {
                 return prev.map(device => {
                     if (String(device.id) === String(deviceId)) {

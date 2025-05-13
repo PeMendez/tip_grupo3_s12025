@@ -113,7 +113,7 @@ class MqttService(
                 when (device) {
                     is TemperatureSensor -> handleTemperatureUpdate(device, message)
                     is OpeningSensor -> handleOpeningUpdate(device, message)
-                    //is SmartOutlet -> handleSmartOutletUpdate(device, message)
+                    is SmartOutlet -> handleSmartOutletUpdate(device, message)
                     //Este ahora no iria, porque el mensaje al smart outlet lo publique yo, ya no quiero escucharlo y reaccionar a él
                 }
 
