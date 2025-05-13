@@ -1,7 +1,6 @@
 package ar.unq.ttip.neohub.controller
 
 import ar.unq.ttip.neohub.dto.DeviceDTO
-import ar.unq.ttip.neohub.model.Device
 import ar.unq.ttip.neohub.service.DeviceService
 import org.springframework.web.bind.annotation.*
 
@@ -30,5 +29,10 @@ class DeviceController(private val deviceService: DeviceService) {
     @PostMapping("/manual")
     fun createManualDevice(@RequestBody message: String) {
         return deviceService.handleNewDevice(message)
+    }
+
+    @PostMapping("/message/{deviceId}")
+    fun messageToDevice(@PathVariable deviceId: Long, @RequestBody message: String){ //ver que sea un mensaje mas complejo
+        deviceService.publishToDevice(deviceId, message)
     }
 }

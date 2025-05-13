@@ -30,7 +30,7 @@ class DeviceService(
         val type = deviceData.type
         val name = deviceData.name
         val newDevice = factory.createDevice(name, type)
-        saveDevice(newDevice)
+        repository.save(newDevice)
     }
 
     fun registerDeviceOnMqtt(device: Device) {
@@ -50,6 +50,7 @@ class DeviceService(
         }
         println("publishToDevice: publicando al device ID: $deviceId, mensaje: $message")
         mqttService.publish(device.topic, message)
+        repository.save(device) //probar si esto es necesario.
     }
 
     @Transactional
