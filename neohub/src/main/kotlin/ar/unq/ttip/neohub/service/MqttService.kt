@@ -108,7 +108,7 @@ class MqttService(
             if (device != null) {
                 device.handleIncomingMessage(message)
                 // Lógica adicional basada en el tipo de dispositivo
-                handleDeviceUpdate(device,message)
+                handleDeviceUpdate(device)
                 try{
                     deviceRepository.save(device)
                     println("Se actualizó correctamente ${device.name}")
@@ -144,7 +144,7 @@ class MqttService(
         applicationEventPublisher.publishEvent(UnconfiguredDeviceEvent(message))
     }
 
-    private fun handleDeviceUpdate(device: Device, newValue: String) {
+    private fun handleDeviceUpdate(device: Device) {
         println("Se pescó una actualización para el dispositivo de tipo ${device.type}...")
         when (device.type) {
             DeviceType.TEMPERATURE_SENSOR -> webSocketHandler.sendTemperatureUpdate(device.getValorAtributo(Atributo.TEMPERATURA), device.id)
