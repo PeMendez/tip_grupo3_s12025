@@ -4,6 +4,8 @@ import {
     FiSun, FiThermometer, FiShield, FiVideo, FiLock, FiEdit, FiPlus
 } from 'react-icons/fi';
 import { LuAirVent } from "react-icons/lu";
+import { TiLightbulb } from "react-icons/ti";
+import { MdOutlineBrightness4 } from "react-icons/md";
 import warning from '../assets/warning.png'
 import BackOrCloseButton from "../components/BackOrCloseButton.jsx";
 import {
@@ -48,12 +50,13 @@ const RoomDetail = () => {
     //const isAlarmActive = devices.find(device => device.type === 'alarm')?.isActive || false;
 
     const deviceTypeIcons = {
-        LIGHT: <FiSun size={24} />,
-        temperatureSensor: <FiThermometer size={24} />,
-        openingSensor: <FiShield size={24} />,
+        smart_outlet: <TiLightbulb size={24} />,
+        temperature_sensor: <FiThermometer size={24} />,
+        opening_sensor: <FiShield size={24} />,
         AIR_CONDITIONER: <LuAirVent size={24} />,
         TV_CONTROL: <FiVideo size={24} />,
-        smartOutlet: <FiLock size={24} />
+        smartOutlet: <FiLock size={24} />,
+        dimmer: <MdOutlineBrightness4 size={24} />
     };
 
     const getDeviceIcon = (type) => deviceTypeIcons[type] || <FiSun size={24} />;
@@ -398,19 +401,19 @@ const RoomDetail = () => {
                     devices.map((device, index) => (
                         <div key={index}
                              className={`room-button ${device.status ? 'active' : ''} ${
-                            device.type === 'openingSensor' && device.status ? 'alarm-active' : ''
+                            device.type === 'opening_sensor' && device.status ? 'alarm-active' : ''
                         }`}
                              onClick={() => handleDeviceClick(device)}>
                             <div
-                                className={`device-icon ${device.type === 'openingSensor' && device.status ? 'alarm-active' : ''}`}>
+                                className={`device-icon ${device.type === 'opening_sensor' && device.status ? 'alarm-active' : ''}`}>
                                 {getDeviceIcon(device.type)}</div>
                             <span>{device.name}</span>
-                            {device.type === "temperatureSensor" && device.temperature !== null && (
+                            {device.type === "temperature_sensor" && device.temperature !== null && (
                                 <div className="device-info">
                                     <small>{device.temperature}°C</small>
                                 </div>
                             )}
-                            {device.type === "smartOutlet" && (
+                            {device.type === "smart_outlet" && (
                                 <div className="switch-container" onClick={(e) => e.stopPropagation()}>
                                 <label className="switch">
                                     <input
@@ -422,7 +425,7 @@ const RoomDetail = () => {
                                 </label>
                                 </div>
                             )}
-                            {device.type === 'openingSensor' && device.status && (
+                            {device.type === 'opening_sensor' && device.status && (
                                 <span className="alarm-status">ACTIVA</span>
                             )}
                         </div>
