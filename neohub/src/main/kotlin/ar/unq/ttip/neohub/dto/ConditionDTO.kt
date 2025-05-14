@@ -1,5 +1,6 @@
 package ar.unq.ttip.neohub.dto
 
+import ar.unq.ttip.neohub.model.Atributo
 import ar.unq.ttip.neohub.model.Device
 import ar.unq.ttip.neohub.model.ruleEngine.Condition
 import ar.unq.ttip.neohub.model.ruleEngine.Rule
@@ -16,7 +17,7 @@ fun Condition.toDTO(): ConditionDTO {
     return ConditionDTO(
         id = this.id,
         deviceId = this.device.id,
-        attribute = this.attribute,
+        attribute = this.attribute.toString(),
         operator = this.operator,
         value = this.value
     )
@@ -27,7 +28,7 @@ fun ConditionDTO.toEntity(rule: Rule, device: Device): Condition {
         id = this.id,
         rule = rule,
         device = device,
-        attribute = this.attribute,
+        attribute = Atributo.fromString(this.attribute),
         operator = this.operator,
         value = this.value
     )

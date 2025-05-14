@@ -3,6 +3,7 @@ package ar.unq.ttip.neohub.service
 import ar.unq.ttip.neohub.dto.CreateRuleRequest
 import ar.unq.ttip.neohub.dto.RuleDTO
 import ar.unq.ttip.neohub.dto.toDTO
+import ar.unq.ttip.neohub.model.Atributo
 import ar.unq.ttip.neohub.model.ruleEngine.Action
 import ar.unq.ttip.neohub.model.ruleEngine.Condition
 import ar.unq.ttip.neohub.model.ruleEngine.Rule
@@ -39,7 +40,7 @@ class RuleService(
             Condition(
                 rule = rule,
                 device = device,
-                attribute = it.attribute,
+                attribute = Atributo.fromString(it.attribute),
                 operator = it.operator,
                 value = it.value
             )

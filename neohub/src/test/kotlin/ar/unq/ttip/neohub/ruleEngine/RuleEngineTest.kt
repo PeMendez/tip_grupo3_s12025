@@ -1,4 +1,5 @@
 package ar.unq.ttip.neohub.ruleEngine
+import ar.unq.ttip.neohub.model.Atributo
 import ar.unq.ttip.neohub.model.devices.SmartOutlet
 import ar.unq.ttip.neohub.model.devices.TemperatureSensor
 import ar.unq.ttip.neohub.model.ruleEngine.Action
@@ -27,7 +28,7 @@ class RuleEngineTest {
             id = 1,
             rule = null, // Asociado a la regla después
             device = temperatureSensor,
-            attribute = "temperature",
+            attribute = Atributo.TEMPERATURA,
             operator = ">",
             value = "25"
         )
@@ -75,7 +76,7 @@ class RuleEngineTest {
             id = 1,
             rule = null, // Asociado a la regla después
             device = temperatureSensor,
-            attribute = "temperature",
+            attribute = Atributo.TEMPERATURA,
             operator = ">",
             value = "25"
         )

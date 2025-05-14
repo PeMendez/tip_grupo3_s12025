@@ -4,9 +4,6 @@ import ar.unq.ttip.neohub.dto.toEntity
 import ar.unq.ttip.neohub.handler.MqttWebSocketHandler
 import ar.unq.ttip.neohub.model.Device
 import ar.unq.ttip.neohub.model.devices.DeviceType
-import ar.unq.ttip.neohub.model.devices.OpeningSensor
-import ar.unq.ttip.neohub.model.devices.TemperatureSensor
-import ar.unq.ttip.neohub.model.devices.SmartOutlet
 import ar.unq.ttip.neohub.repository.DeviceRepository
 import org.eclipse.paho.client.mqttv3.MqttClient
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions
@@ -24,7 +21,7 @@ class MqttService(
     private val ruleService: RuleService,
     private val deviceRepository: DeviceRepository
 ) {
-    private val brokerUrl = "tcp://broker.hivemq.com" // "tcp://test.mosquitto.org:1883"
+    private val brokerUrl = "tcp://broker.hivemq.com:1883" // "tcp://test.mosquitto.org:1883"
     private val clientId = "NeoHub-API-" + UUID.randomUUID().toString().substring(0, 8)
     private val mqttClient: MqttClient = MqttClient(brokerUrl, clientId, null)
     private val subscribedTopics = mutableSetOf<String>()
