@@ -2,6 +2,7 @@ package ar.unq.ttip.neohub.service
 
 import ar.unq.ttip.neohub.dto.toEntity
 import ar.unq.ttip.neohub.handler.MqttWebSocketHandler
+import ar.unq.ttip.neohub.model.Atributo
 import ar.unq.ttip.neohub.model.Device
 import ar.unq.ttip.neohub.model.devices.DeviceType
 import ar.unq.ttip.neohub.repository.DeviceRepository
@@ -106,10 +107,8 @@ class MqttService(
             val device = topicDeviceMap[topic]
             if (device != null) {
                 device.handleIncomingMessage(message)
-
                 // Lógica adicional basada en el tipo de dispositivo
                 handleDeviceUpdate(device,message)
-
                 try{
                     deviceRepository.save(device)
                     println("Se actualizó correctamente ${device.name}")
@@ -148,9 +147,9 @@ class MqttService(
     private fun handleDeviceUpdate(device: Device, newValue: String) {
         println("Se pescó una actualización para el dispositivo de tipo ${device.type}...")
         when (device.type) {
-            DeviceType.TEMPERATURE_SENSOR -> webSocketHandler.sendTemperatureUpdate(newValue, device.id)
-            DeviceType.OPENING_SENSOR -> webSocketHandler.sendOpeningUpdate(newValue, device.id)
-            DeviceType.SMART_OUTLET -> webSocketHandler.sendSmartOutletUpdate(newValue, device.id)
+            DeviceType.TEMPERATURE_SENSOR -> webSocketHandler.sendTemperatureUpdate(device.getValorAtributo(Atributo.TEMPERATURA), device.id)
+            DeviceType.OPENING_SENSOR -> webSocketHandler.sendOpeningUpdate(device.getValorAtributo(Atributo.IS_OPEN), device.id)
+            DeviceType.SMART_OUTLET -> println("No hago nada con $newValue")//webSocketHandler.sendSmartOutletUpdate(device.getValorAtributo(Atributo.IS_ON), device.id)
             else -> println("Tipo de dispositivo no manejado: ${device.type}")
         }
     }

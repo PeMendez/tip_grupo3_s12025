@@ -1,6 +1,7 @@
 package ar.unq.ttip.neohub.controller
 
 import ar.unq.ttip.neohub.dto.DeviceDTO
+import ar.unq.ttip.neohub.service.DeviceMessageRequest
 import ar.unq.ttip.neohub.service.DeviceService
 import org.springframework.web.bind.annotation.*
 
@@ -32,8 +33,11 @@ class DeviceController(private val deviceService: DeviceService) {
     }
 
     @PostMapping("/message/{deviceId}")
-    fun messageToDevice(@PathVariable deviceId: Long, @RequestBody message: String){
-        //ver que sea un mensaje mas complejo
-        deviceService.publishToDevice(deviceId, message)
+    fun messageToDevice(
+        @PathVariable deviceId: Long,
+        @RequestBody messageRequest: DeviceMessageRequest
+    ):DeviceDTO{
+        //editar la clase DeviceMessageRequest si necesitamos que mande mas cosas
+        return deviceService.publishToDevice(deviceId, messageRequest.message)
     }
 }

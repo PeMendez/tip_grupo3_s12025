@@ -63,7 +63,7 @@ class MqttWebSocketHandler : TextWebSocketHandler()
     }
 
 
-    fun sendTemperatureUpdate(temperature: String, deviceId: Long) {
+    fun sendTemperatureUpdate(temperature: Any, deviceId: Long) {
         val tempMessage = buildJsonMessage(
             mapOf(
                 "type" to "TEMP_UPDATE",
@@ -75,7 +75,7 @@ class MqttWebSocketHandler : TextWebSocketHandler()
         broadcastJson(tempMessage)
     }
 
-    fun sendOpeningUpdate(status: String, deviceId: Long) {
+    fun sendOpeningUpdate(status: Any, deviceId: Long) {
         val statusMessage = buildJsonMessage(
             mapOf(
                 "type" to "OPENING_UPDATE",
@@ -87,7 +87,7 @@ class MqttWebSocketHandler : TextWebSocketHandler()
         broadcastJson(statusMessage)
     }
 
-    fun sendSmartOutletUpdate(status: String, deviceId: Long) {
+    fun sendSmartOutletUpdate(status: Any, deviceId: Long) {
         val statusMessage = buildJsonMessage(
             mapOf(
                 "type" to "SMART_OUTLET",

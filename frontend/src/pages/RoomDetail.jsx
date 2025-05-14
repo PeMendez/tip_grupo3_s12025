@@ -74,6 +74,12 @@ const RoomDetail = () => {
         };
     }, []);
 
+    useEffect(() => {
+        if (!loading) {
+            console.log('Estado final de ', devices[0].name, ': ', devices[0].status);
+        }
+    }, [devices, loading]);
+
     const playAlarmSound = useCallback(() => {
         /*if (!audioEnabled || !audioContextRef.current) return;
 
@@ -104,19 +110,19 @@ const RoomDetail = () => {
     }, [audioEnabled]);
 
     const toggleLight = async (device) => {
-        console.log('Estado actual:', device.status);
-        console.log('esto hace:', !device.status)
+        if (loading) return;
+        setLoading(true)
         try {
-            const newState = !device.status;
-            console.log('Nuevo estado a enviar:', newState);
+            //console.log('Estado Antes: ', device.status)
+            const response = await controlLight(device, !device.status, token);
+            //console.log('Respuesta del backend:', response);
 
-            await controlLight(device, newState, token);
-            console.log('Backend respondió OK, actualizando estado local');
+            console.log('Seteando a ', response.status , ' porque tocaste el botoncito ... ')
             setDevices(prevDevices => {
                 const updated = prevDevices.map(d =>
-                    d.id === device.id ? { ...d, status: newState } : d
+                    d.id === device.id ? { ...d, status: response.status } : d
                 );
-                console.log('Dispositivos actualizados:', updated);
+                console.log('Dispositivos actualizados: ',updated[0].name, ': ', updated[0].status);
                 return updated;
             });
         } catch (err) {
@@ -125,6 +131,7 @@ const RoomDetail = () => {
             setLoading(false);
         }
     };
+
 
 
     const showNotification = (title, message, options = {}) => {
@@ -157,13 +164,13 @@ const RoomDetail = () => {
             toastClass: toastClass
         });
     };
+
     const handleWebSocketMessage = useCallback((data) => {
-        console.log(data)
+        //console.log('Llego mensaje ws: ', data)
         if (data.type === "SMART_OUTLET") {
             const deviceId = data.id;
-            const newStatus = data.status === 'turn_on';
-            console.log(data)
-            console.log(newStatus)
+            const newStatus = !!data.status;
+            console.log('Seteando a', newStatus, 'porque llego una actualizacion ws del dispositivo:', deviceId);
             setDevices(prev => {
                 return prev.map(device => {
                     if (String(device.id) === String(deviceId)) {
@@ -175,9 +182,10 @@ const RoomDetail = () => {
 
         }
 
-        if (data.type === "TEMP_UPDATE") {
+        else if (data.type === "TEMP_UPDATE") {
             const deviceId = data.id;
             const temperature = parseFloat(data.temp);
+            console.log('Seteando ', temperature, 'porque llego un mensaje mqtt del dispositivo:', deviceId);
             setDevices(prev => {
                 return prev.map(device => {
                     if (String(device.id) === String(deviceId)) {
@@ -187,10 +195,10 @@ const RoomDetail = () => {
                 });
             });
         }
-        if (data.type === "OPENING_UPDATE") {
-            console.log(data)
+        else if (data.type === "OPENING_UPDATE") {
             const deviceId = data.id;
             const status = data.status === 'opened';
+            console.log('Seteando a', status, 'porque llego un mensaje mqtt del dispositivo:', deviceId);
             setDevices(prev => {
                 return prev.map(device => {
                     if (String(device.id) === String(deviceId)) {
@@ -242,8 +250,11 @@ const RoomDetail = () => {
             try {
                 setLoading(true);
                 const room = await getRoomDetails(id, token);
+                console.log('Rta backend: ', room.deviceList[0].name,': ', room.deviceList[0].status)
+
                 setRoomName(room.name || "Habitación sin nombre");
                 setDevices(room.deviceList || []);
+                console.log('Seteo inicial de dispositivos');
             } catch (err) {
                 console.error(err);
                 setError("Error al cargar detalles de la habitación");
@@ -293,7 +304,7 @@ const RoomDetail = () => {
         }
     };
 
-    if (loading) return <div className="room-detail-container">Cargando...</div>;
+    if (loading || devices.length ===0) return <div className="room-detail-container">Cargando...</div>;
 
     if (error) {
         return (

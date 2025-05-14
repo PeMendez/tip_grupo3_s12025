@@ -35,12 +35,12 @@ export const controlLight = async (device, forceState, token) => {
     try {
         const response = await axios.post(`${API_URL}/message/${device.id}`,
             {
-                message: forceState
+                message: "toggle"//forceState
             },
             {
                 headers: {
                     'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Content-Type': 'application/json',
                 }
             }
         );
