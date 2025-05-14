@@ -3,6 +3,7 @@ package ar.unq.ttip.neohub.service
 import ar.unq.ttip.neohub.dto.toEntity
 import ar.unq.ttip.neohub.handler.MqttWebSocketHandler
 import ar.unq.ttip.neohub.model.Device
+import ar.unq.ttip.neohub.model.devices.DeviceType
 import ar.unq.ttip.neohub.model.devices.OpeningSensor
 import ar.unq.ttip.neohub.model.devices.TemperatureSensor
 import ar.unq.ttip.neohub.model.devices.SmartOutlet
@@ -110,12 +111,7 @@ class MqttService(
                 device.handleIncomingMessage(message)
 
                 // Lógica adicional basada en el tipo de dispositivo
-                when (device) {
-                    is TemperatureSensor -> handleTemperatureUpdate(device, message)
-                    is OpeningSensor -> handleOpeningUpdate(device, message)
-                    is SmartOutlet -> handleSmartOutletUpdate(device, message)
-                    //Este ahora no iria, porque el mensaje al smart outlet lo publique yo, ya no quiero escucharlo y reaccionar a él
-                }
+                handleDeviceUpdate(device,message)
 
                 try{
                     deviceRepository.save(device)
@@ -152,20 +148,16 @@ class MqttService(
         applicationEventPublisher.publishEvent(UnconfiguredDeviceEvent(message))
     }
 
-    private fun handleTemperatureUpdate(sensor: TemperatureSensor, newTemp: String) {
-        println("Se pescó una update de temperatura...")
-        webSocketHandler.sendTemperatureUpdate(newTemp,sensor.id)
+    private fun handleDeviceUpdate(device: Device, newValue: String) {
+        println("Se pescó una actualización para el dispositivo de tipo ${device.type}...")
+        when (device.type) {
+            DeviceType.TEMPERATURE_SENSOR -> webSocketHandler.sendTemperatureUpdate(newValue, device.id)
+            DeviceType.OPENING_SENSOR -> webSocketHandler.sendOpeningUpdate(newValue, device.id)
+            DeviceType.SMART_OUTLET -> webSocketHandler.sendSmartOutletUpdate(newValue, device.id)
+            else -> println("Tipo de dispositivo no manejado: ${device.type}")
+        }
     }
 
-    private fun handleOpeningUpdate(sensor: OpeningSensor, newStatus: String) {
-        println("Se pescó una update de puerta/ventana...")
-        webSocketHandler.sendOpeningUpdate(newStatus, sensor.id)
-    }
-
-    private fun handleSmartOutletUpdate(boton: SmartOutlet, newStatus: String) {
-        println("Se pescó una update de un botón de luz...")
-        webSocketHandler.sendSmartOutletUpdate(newStatus, boton.id)
-    }
 }
 
 class UnconfiguredDeviceEvent(val message: String): ApplicationEvent(message)

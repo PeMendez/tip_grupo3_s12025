@@ -1,5 +1,7 @@
 package ar.unq.ttip.neohub.model
 
+import ar.unq.ttip.neohub.dto.DeviceDTO
+import ar.unq.ttip.neohub.model.devices.DeviceType
 import jakarta.persistence.*
 
 @Entity
@@ -7,7 +9,8 @@ import jakarta.persistence.*
 abstract class Device(
     @Id @GeneratedValue val id: Long = 0,
     val name: String,
-    val type: String,
+    @Enumerated(EnumType.STRING)
+    val type: DeviceType,
     var topic: String = "neohub/unconfigured", //al instanciarse aun no esta configurado.
 
     @ManyToOne
@@ -23,11 +26,24 @@ abstract class Device(
         }
     }
 
+    fun toDTO(): DeviceDTO{
+        return DeviceDTO(
+            id = id,
+            name = name,
+            type = type.toString(),
+            topic = topic,
+            roomId = room?.id,
+        )
+    }
+
     override fun toString(): String {
-        return "Device(id=$id, name='$name', type='$type', topic='$topic')"
+        return "Device(id=$id, name='$name', type='${type}', topic='$topic')"
     }
 
     abstract fun handleIncomingMessage(message: String)
-    abstract fun getAttribute(attribute: String): String
+    //abstract fun getAttribute(attribute: String): String
     abstract fun executeAction(actionType: String, parameters: String)
+    abstract fun getAtributo(): Atributo
+    abstract fun getValorAtributo(atributo: Atributo): Any
+    abstract fun setValorAtributo(valor: String)
 }

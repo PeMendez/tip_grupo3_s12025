@@ -1,5 +1,7 @@
 package ar.unq.ttip.neohub.model.devices
 
+import ar.unq.ttip.neohub.dto.DeviceDTO
+import ar.unq.ttip.neohub.model.Atributo
 import ar.unq.ttip.neohub.model.Device
 import ar.unq.ttip.neohub.model.Room
 import jakarta.persistence.Entity
@@ -8,7 +10,7 @@ import jakarta.persistence.Entity
 class SmartOutlet(
     name: String,
     room: Room?= null
-): Device(name=name, type = "smartOutlet", room = room){
+): Device(name=name, type = DeviceType.SMART_OUTLET, room = room){
     var isOn: Boolean = false
 
     fun turnOn(){
@@ -30,21 +32,40 @@ class SmartOutlet(
     }
 
     override fun handleIncomingMessage(message: String) {
-        when (message.lowercase()) {
+        /*when (message.lowercase()) {
             "turn_on" -> turnOn()
             "turn_off" -> turnOff()
             "toggle" -> toggle()
             else -> println("Mensaje desconocido para SmartOutlet '$name': $message")
-        }
-    }
-
-    override fun getAttribute(attribute: String): String {
-        //Se podría hacer que te de su estado como un atributo, por ahora no.
-        throw UnsupportedOperationException("$type no soporta atributos para consultar.")
+        }*/
+        setValorAtributo(message)
     }
 
     override fun executeAction(actionType: String, parameters: String) {
         println("$name ejecutando $actionType...")
         handleIncomingMessage(actionType)
+    }
+
+
+    override fun getAtributo(): Atributo {
+        return Atributo.IS_ON
+    }
+
+    override fun getValorAtributo(atributo: Atributo): Any {
+        return isOn
+    }
+
+    override fun setValorAtributo(valor: String) {
+        when (valor) {
+            "turn_on" -> turnOn()
+            "turn_off" -> turnOff()
+            "toggle" -> toggle()
+            else -> println("Mensaje desconocido para SmartOutlet '$name': $valor")
+        }
+    }
+
+
+    override fun toDTO(): DeviceDTO {
+        return super.toDTO().copy(status = isOn)
     }
 }

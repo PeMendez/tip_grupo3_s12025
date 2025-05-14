@@ -1,5 +1,6 @@
 package ar.unq.ttip.neohub.model.ruleEngine
 
+import ar.unq.ttip.neohub.model.Atributo
 import ar.unq.ttip.neohub.model.Device
 import jakarta.persistence.*
 import kotlin.jvm.Transient
@@ -14,7 +15,7 @@ data class Condition(
     @ManyToOne @JoinColumn(name = "device_id")
     val device: Device,
 
-    val attribute: String,  // Ejemplo: "temperature"
+    val attribute: Atributo,  // Ejemplo: "temperature"
     val operator: String,   // Ejemplo: ">"
     @Column(name="condition_value") //value es palabra reservada
     val value: String,       // Ejemplo: "25"
@@ -27,12 +28,12 @@ data class Condition(
     )
 
     fun evaluate(): Boolean {
-        val attributeValue = getAttributeValue(device, attribute)
-        return operators[operator]?.invoke(attributeValue, value)
+        val attributeValue = getAttributeValue(device)
+        return operators[operator]?.invoke(attributeValue.toString(), value)
             ?: throw IllegalArgumentException("Operador no soportado: $operator")
     }
 
-    private fun getAttributeValue(device: Device, attribute: String): String {
-        return device.getAttribute(attribute)
+    private fun getAttributeValue(device: Device): Atributo {
+        return device.getAtributo()
     }
 }

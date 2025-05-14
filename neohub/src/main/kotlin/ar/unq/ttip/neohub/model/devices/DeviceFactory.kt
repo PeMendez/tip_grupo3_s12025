@@ -6,15 +6,14 @@ import org.springframework.stereotype.Component
 
 @Component
 class DeviceFactory {
-    fun createDevice(name: String, type: String, room: Room? =null): Device {
-        println("Creating $type: $name")
+    fun createDevice(name: String, type: DeviceType, room: Room? = null): Device {
+        println("Creating ${type.name.lowercase()}: $name")
         return when (type) {
-            "smartOutlet" -> SmartOutlet(name=name, room=room)
-            "temperatureSensor" -> TemperatureSensor(name=name, room=room)
-            "openingSensor" -> OpeningSensor(name=name, room=room)
-            "dimmer" -> Dimmer(name=name, room=room)
-            // ... otros tipos...
-            else -> throw IllegalArgumentException("Tipo de dispositivo desconocido: $type")
+            DeviceType.SMART_OUTLET -> SmartOutlet(name = name, room = room)
+            DeviceType.TEMPERATURE_SENSOR -> TemperatureSensor(name = name, room = room)
+            DeviceType.OPENING_SENSOR -> OpeningSensor(name = name, room = room)
+            DeviceType.DIMMER -> Dimmer(name = name, room = room)
         }
     }
 }
+

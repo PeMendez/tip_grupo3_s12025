@@ -4,6 +4,7 @@ import ar.unq.ttip.neohub.dto.DeviceDTO
 import ar.unq.ttip.neohub.dto.toDTO
 import ar.unq.ttip.neohub.model.Device
 import ar.unq.ttip.neohub.model.devices.DeviceFactory
+import ar.unq.ttip.neohub.model.devices.DeviceType
 import ar.unq.ttip.neohub.repository.DeviceRepository
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import jakarta.transaction.Transactional
@@ -27,7 +28,7 @@ class DeviceService(
         val mapper = jacksonObjectMapper()
 
         val deviceData : DeviceData = mapper.readValue(message, DeviceData::class.java)
-        val type = deviceData.type
+        val type = DeviceType.fromString(deviceData.type)
         val name = deviceData.name
         val newDevice = factory.createDevice(name, type)
         repository.save(newDevice)
