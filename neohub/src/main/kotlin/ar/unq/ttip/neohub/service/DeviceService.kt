@@ -45,14 +45,12 @@ class DeviceService(
         mqttService.unregisterDevice(device)
     }
 
-    fun publishToDevice(deviceId: Long, message: String) : DeviceDTO{
+    fun publishToDevice(deviceId: Long, message: String) {
         val device = repository.findById(deviceId).orElseThrow {
             IllegalArgumentException("Device with ID $deviceId not found.")
         }
         println("publishToDevice: publicando al device ID: $deviceId, mensaje: $message")
         mqttService.publish(device.topic, message)
-        //repository.save(device) //probar si esto es necesario.
-        return device.toDTO()
     }
 
     @Transactional

@@ -31,11 +31,12 @@ export const getDevice = async (deviceId, token) => {
 };
 
 export const controlLight = async (device, forceState, token) => {
-
+    const message = forceState? "turn_on" : "turn_off"
+    console.log("Enviando un ", message)
     try {
         const response = await axios.post(`${API_URL}/message/${device.id}`,
             {
-                message: "toggle"//forceState
+                message: message
             },
             {
                 headers: {

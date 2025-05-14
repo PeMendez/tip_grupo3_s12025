@@ -149,7 +149,7 @@ class MqttService(
         when (device.type) {
             DeviceType.TEMPERATURE_SENSOR -> webSocketHandler.sendTemperatureUpdate(device.getValorAtributo(Atributo.TEMPERATURA), device.id)
             DeviceType.OPENING_SENSOR -> webSocketHandler.sendOpeningUpdate(device.getValorAtributo(Atributo.IS_OPEN), device.id)
-            DeviceType.SMART_OUTLET -> println("No hago nada con $newValue")//webSocketHandler.sendSmartOutletUpdate(device.getValorAtributo(Atributo.IS_ON), device.id)
+            DeviceType.SMART_OUTLET -> webSocketHandler.sendSmartOutletUpdate(device.getValorAtributo(Atributo.IS_ON), device.id)
             else -> println("Tipo de dispositivo no manejado: ${device.type}")
         }
     }

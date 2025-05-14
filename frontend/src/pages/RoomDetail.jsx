@@ -74,12 +74,6 @@ const RoomDetail = () => {
         };
     }, []);
 
-    useEffect(() => {
-        if (!loading) {
-            console.log('Estado final de ', devices[0].name, ': ', devices[0].status);
-        }
-    }, [devices, loading]);
-
     const playAlarmSound = useCallback(() => {
         /*if (!audioEnabled || !audioContextRef.current) return;
 
@@ -113,18 +107,9 @@ const RoomDetail = () => {
         if (loading) return;
         setLoading(true)
         try {
-            //console.log('Estado Antes: ', device.status)
-            const response = await controlLight(device, !device.status, token);
-            //console.log('Respuesta del backend:', response);
-
-            console.log('Seteando a ', response.status , ' porque tocaste el botoncito ... ')
-            setDevices(prevDevices => {
-                const updated = prevDevices.map(d =>
-                    d.id === device.id ? { ...d, status: response.status } : d
-                );
-                console.log('Dispositivos actualizados: ',updated[0].name, ': ', updated[0].status);
-                return updated;
-            });
+            console.log('Enviando comando para cambiar estado: ', !device.status);
+            await controlLight(device, !device.status, token);
+            console.log('Esperando websocket...');
         } catch (err) {
             console.error(err);
         } finally {

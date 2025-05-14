@@ -3,6 +3,7 @@ package ar.unq.ttip.neohub.controller
 import ar.unq.ttip.neohub.dto.DeviceDTO
 import ar.unq.ttip.neohub.service.DeviceMessageRequest
 import ar.unq.ttip.neohub.service.DeviceService
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -36,8 +37,10 @@ class DeviceController(private val deviceService: DeviceService) {
     fun messageToDevice(
         @PathVariable deviceId: Long,
         @RequestBody messageRequest: DeviceMessageRequest
-    ):DeviceDTO{
+    ): ResponseEntity<Void>{
         //editar la clase DeviceMessageRequest si necesitamos que mande mas cosas
-        return deviceService.publishToDevice(deviceId, messageRequest.message)
+        deviceService.publishToDevice(deviceId, messageRequest.message)
+        println("Respondiendo la request")
+        return ResponseEntity.ok().build()
     }
 }
