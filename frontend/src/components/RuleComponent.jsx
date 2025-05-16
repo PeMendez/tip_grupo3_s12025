@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
 import './loginPopup.css';
+import {getActions, getAttributes, getOperators} from '../api/ruleService.js'
 
 const RuleFormPopup = ({ onClose, onCreate, device }) => {
     const [name, setName] = useState('');
-
-    const operadores = ['>', '<', '==', '!=', '>=', '<='];
-    const accionesDisponibles = ['Encender', 'Apagar', 'Notificar', 'Ajustar'];
+    const token = localStorage.getItem('token');
+    const [atributo, setAtributo] = useState('');
+    const [error, setError] = useState('');
+    const [operadores, setOperadores] = useState([]);
+    const [acciones, setAcciones] = useState([]);
 
     const [cond, setCond] = useState({
         deviceId: device?.id || '',
@@ -20,31 +23,28 @@ const RuleFormPopup = ({ onClose, onCreate, device }) => {
         parameters: ''
     });
 
-    useEffect(() => {
-        if (device) {
-            const excludeKeys = ['id', 'name', 'type', 'topic', 'roomId', 'status'];
-            const posiblesAtributos = Object.keys(device).filter(
-                key => !excludeKeys.includes(key) && device[key] !== null && typeof device[key] !== 'object'
-            );
-
-            const atributoDetectado = posiblesAtributos.length > 0 ? posiblesAtributos[0] : '';
-
-            setCond(prev => ({
-                ...prev,
-                deviceId: device.id,
-                attribute: atributoDetectado
-            }));
-
-            setAct(prev => ({
-                ...prev,
-                deviceId: device.id,
-                actionType: prev.actionType,
-                parameters: prev.parameters
-            }));
+    const fetchAttributes = async () => {
+        try {
+            const data = await getAttributes(device.type, token);
+            setAtributo(data);
+            setCond(prevState => ({...prevState,attribute: data.toString()}));
+            const op = await getOperators(data.toString(), token);
+            setOperadores(op || [])
+            const acc = await getActions(device.type, token);
+            setAcciones(acc);
+        } catch (err) {
+            setError(err + ' No se pudieron obtener los atributos.');
         }
-    }, [device]);
+    };
+
+    useEffect(() => {
+        fetchAttributes()
+    }, []);
+
+
 
     const handleSubmit = () => {
+        console.log(cond, act)
         const newRule = {
             name,
             conditions: [cond],
@@ -69,7 +69,7 @@ const RuleFormPopup = ({ onClose, onCreate, device }) => {
                 <h4>Condición</h4>
                 <div>
                     <label>Atributo</label>
-                    <input value={cond.attribute} disabled />
+                    <input value={atributo.toString()} disabled />
                 </div>
                 <div>
                     <label>Operador:</label>
@@ -90,7 +90,7 @@ const RuleFormPopup = ({ onClose, onCreate, device }) => {
                     <label>Tipo de acción:</label>
                     <select value={act.actionType} onChange={e => setAct({ ...act, actionType: e.target.value })}>
                         <option value="">Seleccionar</option>
-                        {accionesDisponibles.map(act => (
+                        {acciones.map(act => (
                             <option key={act} value={act}>{act}</option>
                         ))}
                     </select>

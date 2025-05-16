@@ -2,6 +2,7 @@ package ar.unq.ttip.neohub.controller
 
 import ar.unq.ttip.neohub.dto.CreateRuleRequest
 import ar.unq.ttip.neohub.dto.RuleDTO
+import ar.unq.ttip.neohub.model.ActionType
 import ar.unq.ttip.neohub.model.Attribute
 import ar.unq.ttip.neohub.model.Operator
 import ar.unq.ttip.neohub.model.devices.DeviceType
@@ -47,5 +48,11 @@ class RuleController(
     fun getSupportedOperators(@PathVariable attributeType: String) : List <Operator>{
         val attribute = Attribute.fromString(attributeType)
         return Attribute.getSupportedOperators(attribute)
+    }
+
+    @GetMapping("/{deviceType}/actions")
+    fun getSupportedActions(@PathVariable deviceType: String) : List<ActionType>{
+        val type = DeviceType.fromString(deviceType)
+        return DeviceType.getSupportedActions(type)
     }
 }

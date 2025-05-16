@@ -104,8 +104,6 @@ const RoomDetail = () => {
     }, [audioEnabled]);
 
     const toggleLight = async (device) => {
-        if (loading) return;
-        setLoading(true)
         try {
             console.log('Enviando comando para cambiar estado: ', !device.status);
             await controlLight(device, !device.status, token);

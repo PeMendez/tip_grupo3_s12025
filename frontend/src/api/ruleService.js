@@ -44,3 +44,45 @@ export const deleteRule = async (ruleId, token) => {
         throw error;
     }
 };
+
+export const getAttributes = async (deviceType, token) =>{
+    try {
+        const response = await axios.get(`${API_URL}/${deviceType}/attributes`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        return response.data;
+    } catch (e) {
+        console.log('Error al obtener los atributos:', e);
+        throw e;
+    }
+};
+
+export const getOperators = async (attributeType, token) => {
+    try {
+        const response = await axios.get(`${API_URL}/${attributeType}/operators`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        return response.data;
+    } catch (e) {
+        console.log('Error al obtener los operadores', e)
+        throw e;
+    }
+};
+
+export const getActions = async (deviceType, token) => {
+    try {
+        const response = await axios.get(`${API_URL}/${deviceType}/actions`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        return response.data;
+    } catch (e) {
+        console.log('Error al obtener las acciones disponibles', e)
+        throw e;
+    }
+};

@@ -5,28 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="09bf219a-ddab-407c-b6b8-1beb0e5da310" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/model/Accion.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/model/Atributo.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/model/devices/DeviceType.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/model/Device.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/model/Device.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/model/devices/Dimmer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/model/devices/Dimmer.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/model/devices/OpeningSensor.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/model/devices/OpeningSensor.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/model/devices/SmartOutlet.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/model/devices/SmartOutlet.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/model/devices/TemperatureSensor.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/model/devices/TemperatureSensor.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/api/ruleService.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/api/ruleService.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/RuleComponent.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/RuleComponent.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/RoomDetail.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/RoomDetail.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/rules.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/rules.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/controller/RuleController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/controller/RuleController.kt" afterDir="false" />
     </list>
-    <list id="c93fa67c-d594-4956-a819-2b86e3ca1c3c" name="Changes by Martin" comment="">
-      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/dto/DeviceDTO.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/dto/DeviceDTO.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/model/Device.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/model/Device.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/model/devices/DeviceFactory.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/model/devices/DeviceFactory.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/model/devices/Dimmer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/model/devices/Dimmer.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/model/devices/OpeningSensor.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/model/devices/OpeningSensor.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/model/devices/SmartOutlet.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/model/devices/SmartOutlet.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/model/devices/TemperatureSensor.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/model/devices/TemperatureSensor.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/service/DeviceService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/service/DeviceService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/service/MqttService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/service/MqttService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/neohub/src/test/kotlin/ar/unq/ttip/neohub/service/DeviceServiceTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/test/kotlin/ar/unq/ttip/neohub/service/DeviceServiceTest.kt" afterDir="false" />
-    </list>
+    <list id="c93fa67c-d594-4956-a819-2b86e3ca1c3c" name="Changes by Martin" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -45,58 +31,6 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-  </component>
-  <component name="LineStatusTrackerManager">
-    <file path="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/model/devices/SmartOutlet.kt">
-      <ranges>
-        <range start1="2" end1="2" start2="2" end2="4" changelist="09bf219a-ddab-407c-b6b8-1beb0e5da310" />
-        <range start1="10" end1="11" start2="12" end2="13" changelist="c93fa67c-d594-4956-a819-2b86e3ca1c3c" />
-        <range start1="32" end1="33" start2="34" end2="35" changelist="09bf219a-ddab-407c-b6b8-1beb0e5da310" />
-        <range start1="37" end1="38" start2="39" end2="41" changelist="09bf219a-ddab-407c-b6b8-1beb0e5da310" />
-        <range start1="39" end1="44" start2="42" end2="42" changelist="09bf219a-ddab-407c-b6b8-1beb0e5da310" />
-        <range start1="49" end1="49" start2="47" end2="70" changelist="09bf219a-ddab-407c-b6b8-1beb0e5da310" />
-      </ranges>
-    </file>
-    <file path="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/model/Device.kt">
-      <ranges>
-        <range start1="2" end1="2" start2="2" end2="4" changelist="c93fa67c-d594-4956-a819-2b86e3ca1c3c" />
-        <range start1="9" end1="10" start2="11" end2="13" changelist="c93fa67c-d594-4956-a819-2b86e3ca1c3c" />
-        <range start1="25" end1="25" start2="28" end2="38" changelist="09bf219a-ddab-407c-b6b8-1beb0e5da310" />
-        <range start1="26" end1="27" start2="39" end2="40" changelist="c93fa67c-d594-4956-a819-2b86e3ca1c3c" />
-        <range start1="30" end1="31" start2="43" end2="44" changelist="09bf219a-ddab-407c-b6b8-1beb0e5da310" />
-        <range start1="32" end1="32" start2="45" end2="48" changelist="09bf219a-ddab-407c-b6b8-1beb0e5da310" />
-      </ranges>
-    </file>
-    <file path="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/model/devices/Dimmer.kt">
-      <ranges>
-        <range start1="2" end1="2" start2="2" end2="4" changelist="09bf219a-ddab-407c-b6b8-1beb0e5da310" />
-        <range start1="9" end1="10" start2="11" end2="12" changelist="c93fa67c-d594-4956-a819-2b86e3ca1c3c" />
-        <range start1="20" end1="21" start2="22" end2="23" changelist="09bf219a-ddab-407c-b6b8-1beb0e5da310" />
-        <range start1="25" end1="25" start2="27" end2="33" changelist="09bf219a-ddab-407c-b6b8-1beb0e5da310" />
-        <range start1="27" end1="31" start2="35" end2="35" changelist="09bf219a-ddab-407c-b6b8-1beb0e5da310" />
-        <range start1="36" end1="36" start2="40" end2="60" changelist="09bf219a-ddab-407c-b6b8-1beb0e5da310" />
-      </ranges>
-    </file>
-    <file path="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/model/devices/TemperatureSensor.kt">
-      <ranges>
-        <range start1="2" end1="2" start2="2" end2="4" changelist="09bf219a-ddab-407c-b6b8-1beb0e5da310" />
-        <range start1="10" end1="11" start2="12" end2="13" changelist="c93fa67c-d594-4956-a819-2b86e3ca1c3c" />
-        <range start1="21" end1="22" start2="23" end2="24" changelist="09bf219a-ddab-407c-b6b8-1beb0e5da310" />
-        <range start1="26" end1="26" start2="28" end2="35" changelist="09bf219a-ddab-407c-b6b8-1beb0e5da310" />
-        <range start1="29" end1="35" start2="38" end2="39" changelist="09bf219a-ddab-407c-b6b8-1beb0e5da310" />
-        <range start1="39" end1="39" start2="43" end2="61" changelist="09bf219a-ddab-407c-b6b8-1beb0e5da310" />
-      </ranges>
-    </file>
-    <file path="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/model/devices/OpeningSensor.kt">
-      <ranges>
-        <range start1="2" end1="2" start2="2" end2="4" changelist="09bf219a-ddab-407c-b6b8-1beb0e5da310" />
-        <range start1="10" end1="11" start2="12" end2="13" changelist="c93fa67c-d594-4956-a819-2b86e3ca1c3c" />
-        <range start1="21" end1="23" start2="23" end2="25" changelist="09bf219a-ddab-407c-b6b8-1beb0e5da310" />
-        <range start1="27" end1="28" start2="29" end2="30" changelist="09bf219a-ddab-407c-b6b8-1beb0e5da310" />
-        <range start1="32" end1="33" start2="34" end2="35" changelist="09bf219a-ddab-407c-b6b8-1beb0e5da310" />
-        <range start1="37" end1="37" start2="39" end2="56" changelist="09bf219a-ddab-407c-b6b8-1beb0e5da310" />
-      </ranges>
-    </file>
   </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
@@ -209,7 +143,9 @@
       <workItem from="1746829731032" duration="9983000" />
       <workItem from="1746883584385" duration="2244000" />
       <workItem from="1747088396273" duration="11465000" />
-      <workItem from="1747160026474" duration="16966000" />
+      <workItem from="1747160026474" duration="20598000" />
+      <workItem from="1747275092771" duration="1352000" />
+      <workItem from="1747409161282" duration="4331000" />
     </task>
     <servers />
   </component>

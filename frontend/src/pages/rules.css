@@ -1,5 +1,4 @@
 .rule-grid {
-    display: flex;
     overflow: auto;
     max-width: 490px;
     flex-wrap: wrap;
@@ -9,9 +8,9 @@
 .rule-button {
     position: relative;
     border-radius: 12px;
-    margin: 5px;
+    margin-bottom: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    width: 120px;
+    width: 200px;
     text-align: center;
     background-color: #7397ba;
     color: white;
