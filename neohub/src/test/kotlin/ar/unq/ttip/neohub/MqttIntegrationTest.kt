@@ -73,7 +73,7 @@ class MqttIntegrationTest @Autowired constructor(
         //val registeredDeviceDTO = deviceService.registerDevice(smartOutletDTO)
         val newDevice = deviceService.saveDevice(smartOutletDTO.toEntity(deviceFactory))
         // Agregar el dispositivo al cuarto
-        val room = roomService.addDeviceToRoom(roomDTO.id, newDevice.id)
+        roomService.addDeviceToRoom(roomDTO.id, newDevice.id)
 
         // Recuperar el dispositivo registrado desde el cuarto
         val roomWithDevice = roomService.getRoomDetails(roomDTO.id)
