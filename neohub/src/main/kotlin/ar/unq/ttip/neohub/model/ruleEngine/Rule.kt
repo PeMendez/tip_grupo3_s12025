@@ -30,4 +30,8 @@ data class Rule(
     override fun toString(): String {
         return name
     }
+
+    fun validateActions() {
+        actions.forEach { it.validate() }
+    }
 }

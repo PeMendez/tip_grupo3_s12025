@@ -1,6 +1,7 @@
 package ar.unq.ttip.neohub.model.devices
 
 import ar.unq.ttip.neohub.dto.DeviceDTO
+import ar.unq.ttip.neohub.model.ActionType
 import ar.unq.ttip.neohub.model.Attribute
 import ar.unq.ttip.neohub.model.Device
 import ar.unq.ttip.neohub.model.Room
@@ -34,9 +35,23 @@ class Dimmer( name: String,
         }
     }
 
-    override fun executeAction(actionType: String, parameters: String) {
-        println("$name ejecutando accion $actionType")
-        handleIncomingMessage(actionType)
+    override fun executeAction(actionType: ActionType, parameters: String) {
+        println("$name ejecutando acción $actionType con parámetros $parameters")
+
+        when (actionType) {
+            ActionType.SET_BRIGHTNESS -> {
+                // Valida que el parámetro sea un valor numérico válido antes de procesarlo
+                val brightnessValue = parameters.toIntOrNull()
+                    ?: throw IllegalArgumentException("Parámetro inválido para SET_BRIGHTNESS: $parameters")
+
+                // Enviar el mensaje de actualización al dimmer
+                handleIncomingMessage(brightnessValue.toString())
+            }
+            else -> {
+                println("Acción no soportada: $actionType")
+                throw UnsupportedOperationException("El Dimmer no soporta la acción: $actionType")
+            }
+        }
     }
 
     override fun getAttributeValue(attribute: Attribute): Any {
@@ -49,7 +64,6 @@ class Dimmer( name: String,
         else if (percentage>=100) 100
         else percentage
     }
-
 
     override fun toDTO(): DeviceDTO {
         return super.toDTO().copy(brightness = brightness)

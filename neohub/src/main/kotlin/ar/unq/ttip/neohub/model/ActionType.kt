@@ -1,7 +1,7 @@
 package ar.unq.ttip.neohub.model
 
 enum class ActionType {
-    ENCENDER, APAGAR, NOTIFICAR, SET_INTENSIDAD;
+    TURN_ON, TURN_OFF, NOTIFY, SET_BRIGHTNESS;
 
     companion object {
         fun fromString(value: String): ActionType {
@@ -13,5 +13,4 @@ enum class ActionType {
     override fun toString(): String {
         return name.lowercase()
     }
-
 }

@@ -3,6 +3,7 @@ package ar.unq.ttip.neohub.service
 import ar.unq.ttip.neohub.dto.CreateRuleRequest
 import ar.unq.ttip.neohub.dto.RuleDTO
 import ar.unq.ttip.neohub.dto.toDTO
+import ar.unq.ttip.neohub.model.ActionType
 import ar.unq.ttip.neohub.model.Attribute
 import ar.unq.ttip.neohub.model.Operator
 import ar.unq.ttip.neohub.model.ruleEngine.Action
@@ -53,7 +54,7 @@ class RuleService(
             Action(
                 rule = rule,
                 device = device,
-                actionType = it.actionType,
+                actionType = ActionType.fromString(it.actionType),
                 parameters = it.parameters
             )
 

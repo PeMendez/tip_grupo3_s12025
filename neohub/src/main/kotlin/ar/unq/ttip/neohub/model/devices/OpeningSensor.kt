@@ -1,6 +1,7 @@
 package ar.unq.ttip.neohub.model.devices
 
 import ar.unq.ttip.neohub.dto.DeviceDTO
+import ar.unq.ttip.neohub.model.ActionType
 import ar.unq.ttip.neohub.model.Attribute
 import ar.unq.ttip.neohub.model.Device
 import ar.unq.ttip.neohub.model.Room
@@ -34,7 +35,7 @@ class OpeningSensor(
         }
     }*/
 
-    override fun executeAction(actionType: String, parameters: String) {
+    override fun executeAction(actionType: ActionType, parameters: String) {
         throw UnsupportedOperationException("$type no soporta acciones.")
     }
 

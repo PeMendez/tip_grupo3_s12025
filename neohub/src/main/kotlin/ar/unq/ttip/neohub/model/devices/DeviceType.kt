@@ -16,10 +16,10 @@ enum class DeviceType {
         }
 
         private val supportedAttributes: Map<DeviceType, List<Attribute>> = mapOf(
-            TEMPERATURE_SENSOR to listOf(Attribute.TEMPERATURA),
+            TEMPERATURE_SENSOR to listOf(Attribute.TEMPERATURE),
             SMART_OUTLET to listOf(Attribute.IS_ON),
             OPENING_SENSOR to listOf(Attribute.IS_OPEN),
-            DIMMER to listOf(Attribute.INTENSIDAD)
+            DIMMER to listOf(Attribute.BRIGHTNESS)
         )
 
         fun getSupportedAttributes(type: DeviceType): List<Attribute> {
@@ -27,8 +27,8 @@ enum class DeviceType {
         }
 
         private val supportedActions: Map<DeviceType, List<ActionType>> = mapOf(
-            SMART_OUTLET to listOf(ActionType.ENCENDER, ActionType.APAGAR),
-            DIMMER to listOf(ActionType.SET_INTENSIDAD),
+            SMART_OUTLET to listOf(ActionType.TURN_ON, ActionType.TURN_OFF),
+            DIMMER to listOf(ActionType.SET_BRIGHTNESS),
         )
 
         fun getSupportedActions(type: DeviceType): List<ActionType> {

@@ -147,7 +147,7 @@ class MqttService(
     private fun handleDeviceUpdate(device: Device) {
         println("Se pescó una actualización para el dispositivo de tipo ${device.type}...")
         when (device.type) {
-            DeviceType.TEMPERATURE_SENSOR -> webSocketHandler.sendTemperatureUpdate(device.getAttributeValue(Attribute.TEMPERATURA), device.id)
+            DeviceType.TEMPERATURE_SENSOR -> webSocketHandler.sendTemperatureUpdate(device.getAttributeValue(Attribute.TEMPERATURE), device.id)
             DeviceType.OPENING_SENSOR -> webSocketHandler.sendOpeningUpdate(device.getAttributeValue(Attribute.IS_OPEN), device.id)
             DeviceType.SMART_OUTLET -> webSocketHandler.sendSmartOutletUpdate(device.getAttributeValue(Attribute.IS_ON), device.id)
             else -> println("Tipo de dispositivo no manejado: ${device.type}")
