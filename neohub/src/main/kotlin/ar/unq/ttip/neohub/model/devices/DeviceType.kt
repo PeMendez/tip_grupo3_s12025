@@ -1,5 +1,6 @@
 package ar.unq.ttip.neohub.model.devices
 
+import ar.unq.ttip.neohub.model.ActionType
 import ar.unq.ttip.neohub.model.Attribute
 
 enum class DeviceType {
@@ -23,6 +24,15 @@ enum class DeviceType {
 
         fun getSupportedAttributes(type: DeviceType): List<Attribute> {
             return supportedAttributes[type] ?: emptyList()
+        }
+
+        private val supportedActions: Map<DeviceType, List<ActionType>> = mapOf(
+            SMART_OUTLET to listOf(ActionType.ENCENDER, ActionType.APAGAR),
+            DIMMER to listOf(ActionType.SET_INTENSIDAD),
+        )
+
+        fun getSupportedActions(type: DeviceType): List<ActionType> {
+            return supportedActions[type] ?: emptyList()
         }
     }
 

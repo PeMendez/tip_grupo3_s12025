@@ -1,4 +1,5 @@
 package ar.unq.ttip.neohub.ruleEngine
+import ar.unq.ttip.neohub.model.ActionType
 import ar.unq.ttip.neohub.model.Attribute
 import ar.unq.ttip.neohub.model.Operator
 import ar.unq.ttip.neohub.model.devices.SmartOutlet
@@ -18,11 +19,11 @@ class RuleEngineTest {
     fun `cuando la temperatura excede el umbral de la regla, la regla da verdadero y se ejecuta la accion`() {
         // Configurar dispositivos
         val temperatureSensor = TemperatureSensor(name = "Temperature Sensor")
-        val airConditioner = SmartOutlet(name = "Air Conditioner")
+        val fan = SmartOutlet(name = "Ventilador")
 
         // Inicializar estado inicial
         temperatureSensor.updateTemperature(30.0) // Usamos el método para actualizar la temperatura
-        airConditioner.isOn = false
+        fan.isOn = false
 
         // Configurar condición asociada al sensor
         val condition = Condition(
@@ -38,8 +39,8 @@ class RuleEngineTest {
         val action = Action(
             id = 1,
             rule = null, // Asociado a la regla después
-            device = airConditioner,
-            actionType = "turn_on",
+            device = fan,
+            actionType = ActionType.ENCENDER.toString(),
             parameters = ""
         )
 
@@ -59,7 +60,7 @@ class RuleEngineTest {
 
         // Verificar que la regla se evalúa y la acción se ejecuta
         assertTrue(result, "La regla debería evaluarse como verdadera.")
-        assertTrue(airConditioner.isOn, "El aire acondicionado debería estar encendido.")
+        assertTrue(fan.isOn, "El aire acondicionado debería estar encendido.")
     }
 
 
@@ -67,10 +68,10 @@ class RuleEngineTest {
     fun `la temperatura no excede el umbral, asi que la regla no se activa`() {
         // Configurar dispositivos
         val temperatureSensor = TemperatureSensor(name = "Temperature Sensor")
-        val airConditioner = SmartOutlet(name = "Air Conditioner")
+        val fan = SmartOutlet(name = "Ventilador")
 
         temperatureSensor.updateTemperature(24.0)
-        airConditioner.isOn=false
+        fan.isOn=false
 
         // Configurar condición asociada al sensor
         val condition = Condition(
@@ -86,8 +87,8 @@ class RuleEngineTest {
         val action = Action(
             id = 1,
             rule = null, // Asociado a la regla después
-            device = airConditioner,
-            actionType = "turn_on",
+            device = fan,
+            actionType = ActionType.ENCENDER.toString(),
             parameters = ""
         )
 
@@ -107,6 +108,6 @@ class RuleEngineTest {
 
         // Verificar que la regla se evalúa y la acción se ejecuta
         assertFalse(result, "La regla debería evaluarse como falsa.")
-        assertFalse(airConditioner.isOn, "El aire acondicionado debería estar encendido.") // Esto depende de implementar un estado en `SmartOutlet`
+        assertFalse(fan.isOn, "El aire acondicionado debería estar encendido.") // Esto depende de implementar un estado en `SmartOutlet`
     }
 }

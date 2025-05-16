@@ -14,12 +14,17 @@ data class Rule(
     // Acciones asociadas a la regla
     @OneToMany(mappedBy = "rule", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     val actions: MutableList<Action> = mutableListOf()
-){
+) {
     fun evaluateAndExecute(): Boolean {
+        validateConditions() //Esto tiene que arrojar una excepcion si falla.
         val failedConditions = conditions.filterNot { it.evaluate() }
         val conditionsMet = failedConditions.isEmpty() // para que en un futuro pueda depurarse a ver lo que falló.
         if(conditionsMet) { actions.forEach{it.execute()}}
         return conditionsMet
+    }
+
+    fun validateConditions(){
+        conditions.forEach { it.validate() }
     }
 
     override fun toString(): String {

@@ -12,7 +12,7 @@ data class Action(
     @ManyToOne @JoinColumn(name = "device_id")
     val device: Device,
 
-    val actionType: String,  // Ejemplo: "turn_on", "set_state"
+    val actionType: String,
     val parameters: String   // Parámetros opcionales para la acción
 ){
     fun execute(){

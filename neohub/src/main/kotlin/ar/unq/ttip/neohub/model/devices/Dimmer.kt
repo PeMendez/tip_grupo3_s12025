@@ -26,8 +26,8 @@ class Dimmer( name: String,
         } else {
             println("Mensaje no válido para $name")
         }*/
-        val newBrightness = message.isBlank()
-        if (!newBrightness) {
+        val isValid = message.isBlank() || message.toIntOrNull() == null
+        if (!isValid) {
             setAttributeValue(message)
         } else {
             println("Mensaje no válido para $name")
