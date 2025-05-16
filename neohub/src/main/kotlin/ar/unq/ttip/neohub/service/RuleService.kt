@@ -35,18 +35,22 @@ class RuleService(
                 IllegalArgumentException("No se encontró un dispositivo con ID: $id")
             }
         }
-
         println("Obtenidos los dispositivos")
+
         val conditions = request.conditions.map {
             val device = deviceMap[it.deviceId]!!
+            val attribute = Attribute.fromString(it.attribute)
+            val operator = Operator.fromString(it.operator)
+
             Condition(
                 rule = rule,
                 device = device,
-                attribute = Attribute.fromString(it.attribute),
-                operator = Operator.fromString(it.operator),
+                attribute = attribute,
+                operator = operator,
                 value = it.value
             )
         }
+        conditions.forEach { it.validate() }
         println("Mapeadas las condiciones")
         val actions = request.actions.map {
             val device = deviceMap[it.deviceId]!!
@@ -57,8 +61,8 @@ class RuleService(
                 actionType = ActionType.fromString(it.actionType),
                 parameters = it.parameters
             )
-
         }
+        actions.forEach { it.validate() }
         println("Mapeadas las acciones")
         rule.conditions.addAll(conditions)
         rule.actions.addAll(actions)
