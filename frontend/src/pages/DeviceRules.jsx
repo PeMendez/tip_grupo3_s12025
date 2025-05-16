@@ -26,6 +26,7 @@ const DeviceRules =  () => {
         try {
             const data = await getRuleForDevice(id, token);
             const device = await getDevice(id, token);
+            console.log(data)
             setRules(data);
             setDevice(device)
         } catch (err) {

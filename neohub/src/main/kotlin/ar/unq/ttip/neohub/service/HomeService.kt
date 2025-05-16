@@ -1,8 +1,11 @@
 package ar.unq.ttip.neohub.service
 
+import ar.unq.ttip.neohub.dto.DeviceDTO
+import ar.unq.ttip.neohub.model.Device
 import ar.unq.ttip.neohub.model.Home
 import ar.unq.ttip.neohub.model.Room
 import ar.unq.ttip.neohub.model.User
+import ar.unq.ttip.neohub.model.devices.DeviceType
 import ar.unq.ttip.neohub.repository.HomeRepository
 import ar.unq.ttip.neohub.repository.RoomRepository
 import jakarta.transaction.Transactional
@@ -22,6 +25,10 @@ class HomeService(
         val home = homeRepository.findByUser(user)
             ?: throw IllegalArgumentException("El usuario no tiene un hogar asignado")
         return home.rooms
+    }
+
+    fun getDevicesByTypesInHome(types: List<DeviceType>, userId: Long): List<DeviceDTO> {
+        return homeRepository.findByUserIdAndTypeIn(userId, types).map { it.toDTO() }
     }
 
     @Transactional
