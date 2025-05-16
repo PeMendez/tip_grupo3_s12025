@@ -40,11 +40,11 @@ class OpeningSensor(
     }
 
     override fun getAttributeValue(attribute: Attribute): Boolean {
-           return isOpen
+        return isOpen
     }
 
     override fun setAttributeValue(valor: String) {
-           isOpen = valor.toBoolean()
+        isOpen = valor.toBoolean()
         println("$name ahora está ${if (isOpen) "abierto" else "cerrado"}")
     }
 
