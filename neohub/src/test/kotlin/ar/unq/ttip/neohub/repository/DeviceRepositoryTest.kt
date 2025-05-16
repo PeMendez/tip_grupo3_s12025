@@ -1,5 +1,6 @@
 package ar.unq.ttip.neohub.repository
 
+import ar.unq.ttip.neohub.model.devices.DeviceType
 import ar.unq.ttip.neohub.model.devices.SmartOutlet
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -25,6 +26,6 @@ class DeviceRepositoryTest {
         val retrievedDevice = deviceRepository.findById(savedDevice.id).orElse(null)
         assertNotNull(retrievedDevice)
         assertEquals("Lamp", retrievedDevice?.name)
-        assertEquals("smartOutlet", retrievedDevice?.type)
+        assertEquals(DeviceType.SMART_OUTLET, retrievedDevice?.type)
     }
 }

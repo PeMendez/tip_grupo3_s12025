@@ -15,7 +15,7 @@ abstract class Device(
 
     @ManyToOne
     @JoinColumn(name = "room_id")
-    var room: Room? = null //al instanciarse un nuevo device, no está en ningún room
+    var room: Room? = null, //al instanciarse un nuevo device, no está en ningún room
 )
 {
     fun configureTopic() {
@@ -41,9 +41,7 @@ abstract class Device(
     }
 
     abstract fun handleIncomingMessage(message: String)
-    //abstract fun getAttribute(attribute: String): String
     abstract fun executeAction(actionType: String, parameters: String)
-    abstract fun getAtributo(): Atributo
-    abstract fun getValorAtributo(atributo: Atributo): Any
-    abstract fun setValorAtributo(valor: String)
+    abstract fun getAttributeValue(attribute: Attribute): Any
+    abstract fun setAttributeValue(valor: String)
 }

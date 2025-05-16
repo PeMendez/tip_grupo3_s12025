@@ -1,7 +1,7 @@
 package ar.unq.ttip.neohub.model.devices
 
 import ar.unq.ttip.neohub.dto.DeviceDTO
-import ar.unq.ttip.neohub.model.Atributo
+import ar.unq.ttip.neohub.model.Attribute
 import ar.unq.ttip.neohub.model.Device
 import ar.unq.ttip.neohub.model.Room
 import jakarta.persistence.Entity
@@ -28,7 +28,7 @@ class Dimmer( name: String,
         }*/
         val newBrightness = message.isBlank()
         if (!newBrightness) {
-            setValorAtributo(message)
+            setAttributeValue(message)
         } else {
             println("Mensaje no válido para $name")
         }
@@ -39,15 +39,11 @@ class Dimmer( name: String,
         handleIncomingMessage(actionType)
     }
 
-    override fun getAtributo(): Atributo {
-        return Atributo.INTENSIDAD
-    }
-
-    override fun getValorAtributo(atributo: Atributo): Any {
+    override fun getAttributeValue(attribute: Attribute): Any {
         return brightness
     }
 
-    override fun setValorAtributo(valor: String) {
+    override fun setAttributeValue(valor: String) {
         val percentage = valor.toInt()
         brightness = if (percentage<=0) 0
         else if (percentage>=100) 100

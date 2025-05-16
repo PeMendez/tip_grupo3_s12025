@@ -1,7 +1,8 @@
 package ar.unq.ttip.neohub.dto
 
 import ar.unq.ttip.neohub.model.Device
-import ar.unq.ttip.neohub.model.devices.*
+import ar.unq.ttip.neohub.model.devices.DeviceFactory
+import ar.unq.ttip.neohub.model.devices.DeviceType
 
 data class DeviceDTO(
     val id: Long,

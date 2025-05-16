@@ -62,7 +62,7 @@ class DeviceTest {
 
         // Configurar el topic del SmartOutlet
         smartOutlet.configureTopic()
-        kotlin.test.assertEquals("neohub/LivingRoom/smartOutlet/Lamp", smartOutlet.topic)
+        kotlin.test.assertEquals("neohub/LivingRoom/smart_outlet/Lamp", smartOutlet.topic)
 
         // Simular mensajes MQTT
         smartOutlet.handleIncomingMessage("turn_on")
@@ -86,7 +86,7 @@ class DeviceTest {
 
         // Configurar el topic del TemperatureSensor
         tempSensor.configureTopic()
-        kotlin.test.assertEquals("neohub/Bedroom/temperatureSensor/Thermometer", tempSensor.topic)
+        kotlin.test.assertEquals("neohub/Bedroom/temperature_sensor/Thermometer", tempSensor.topic)
 
         // Simular mensajes MQTT
         tempSensor.handleIncomingMessage("25.5")
@@ -115,6 +115,6 @@ class DeviceTest {
         val room = Room(home = home, name = "Kitchen")
         tempSensor.room = room
         tempSensor.configureTopic()
-        kotlin.test.assertEquals("neohub/Kitchen/temperatureSensor/Thermometer", tempSensor.topic)
+        kotlin.test.assertEquals("neohub/Kitchen/temperature_sensor/Thermometer", tempSensor.topic)
     }
 }

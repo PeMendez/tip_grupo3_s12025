@@ -1,5 +1,6 @@
 package ar.unq.ttip.neohub.ruleEngine
-import ar.unq.ttip.neohub.model.Atributo
+import ar.unq.ttip.neohub.model.Attribute
+import ar.unq.ttip.neohub.model.Operator
 import ar.unq.ttip.neohub.model.devices.SmartOutlet
 import ar.unq.ttip.neohub.model.devices.TemperatureSensor
 import ar.unq.ttip.neohub.model.ruleEngine.Action
@@ -28,8 +29,8 @@ class RuleEngineTest {
             id = 1,
             rule = null, // Asociado a la regla después
             device = temperatureSensor,
-            attribute = Atributo.TEMPERATURA,
-            operator = ">",
+            attribute = Attribute.TEMPERATURA,
+            operator =  Operator.GREATER_THAN, // ">"
             value = "25"
         )
 
@@ -54,7 +55,7 @@ class RuleEngineTest {
 
         // Simular evaluación de regla
         //val ruleEngine = RuleEngine() // Clase que evaluará las reglas
-        val result = rule.evaluate()
+        val result = rule.evaluateAndExecute()
 
         // Verificar que la regla se evalúa y la acción se ejecuta
         assertTrue(result, "La regla debería evaluarse como verdadera.")
@@ -76,8 +77,8 @@ class RuleEngineTest {
             id = 1,
             rule = null, // Asociado a la regla después
             device = temperatureSensor,
-            attribute = Atributo.TEMPERATURA,
-            operator = ">",
+            attribute = Attribute.TEMPERATURA,
+            operator = Operator.GREATER_THAN,//">"
             value = "25"
         )
 
@@ -102,7 +103,7 @@ class RuleEngineTest {
 
         // Simular evaluación de regla
         //val ruleEngine = RuleEngine() // Clase que evaluará las reglas
-        val result = rule.evaluate()
+        val result = rule.evaluateAndExecute()
 
         // Verificar que la regla se evalúa y la acción se ejecuta
         assertFalse(result, "La regla debería evaluarse como falsa.")

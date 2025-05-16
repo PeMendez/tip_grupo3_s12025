@@ -1,7 +1,7 @@
 package ar.unq.ttip.neohub.model.devices
 
 import ar.unq.ttip.neohub.dto.DeviceDTO
-import ar.unq.ttip.neohub.model.Atributo
+import ar.unq.ttip.neohub.model.Attribute
 import ar.unq.ttip.neohub.model.Device
 import ar.unq.ttip.neohub.model.Room
 import jakarta.persistence.Entity
@@ -28,9 +28,9 @@ class TemperatureSensor(
             println("Mensaje inválido para TemperatureSensor '$name': $message")
         }*/
 
-        val temp = message.isBlank()
+        val temp = message.isBlank() || message.toDoubleOrNull() == null
         if (!temp) {
-            setValorAtributo(message)
+            setAttributeValue(message)
         } else {
             println("Mensaje inválido para TemperatureSensor '$name': $message")
         }
@@ -42,15 +42,11 @@ class TemperatureSensor(
         throw UnsupportedOperationException("$type no soporta acciones.")
     }
 
-    override fun getAtributo(): Atributo {
-        return Atributo.TEMPERATURA
-    }
-
-    override fun getValorAtributo(atributo: Atributo): Any {
+    override fun getAttributeValue(attribute: Attribute): Any {
         return temperature
     }
 
-    override fun setValorAtributo(valor: String) {
+    override fun setAttributeValue(valor: String) {
         temperature = valor.toDouble()
         println("$name temperature updated to $temperature°C")
     }

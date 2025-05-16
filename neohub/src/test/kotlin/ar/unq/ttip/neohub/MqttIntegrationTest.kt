@@ -64,7 +64,7 @@ class MqttIntegrationTest @Autowired constructor(
         val smartOutletDTO = DeviceDTO(
             id = 27,
             name = "Lamp",
-            type = "smartOutlet",
+            type = "smart_outlet",
             roomId = null,
             topic = "neohub/unconfigured"
         )

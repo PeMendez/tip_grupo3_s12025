@@ -4,7 +4,10 @@ import ar.unq.ttip.neohub.dto.LoginRequest
 import ar.unq.ttip.neohub.dto.LoginResponse
 import ar.unq.ttip.neohub.dto.RegisterRequest
 import ar.unq.ttip.neohub.service.AuthService
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/auth")

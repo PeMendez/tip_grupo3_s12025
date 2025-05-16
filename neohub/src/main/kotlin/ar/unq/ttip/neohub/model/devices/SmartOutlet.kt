@@ -1,7 +1,7 @@
 package ar.unq.ttip.neohub.model.devices
 
 import ar.unq.ttip.neohub.dto.DeviceDTO
-import ar.unq.ttip.neohub.model.Atributo
+import ar.unq.ttip.neohub.model.Attribute
 import ar.unq.ttip.neohub.model.Device
 import ar.unq.ttip.neohub.model.Room
 import jakarta.persistence.Entity
@@ -14,19 +14,16 @@ class SmartOutlet(
     var isOn: Boolean = false
 
     fun turnOn(){
-        //Primero debería enviar mensaje ON por MQTT
         isOn = true
         println("$name turned on")
     }
 
     fun turnOff(){
-        //Primero debería enviar mensaje OFF por MQTT
         isOn = false
         println("$name turned off")
     }
 
     fun toggle(){
-        //Primero debería enviar mensaje TOGGLE por MQTT
         isOn = !isOn
         println("$name toggled to ${if (isOn) "ON" else "OFF"}")
     }
@@ -38,7 +35,7 @@ class SmartOutlet(
             "toggle" -> toggle()
             else -> println("Mensaje desconocido para SmartOutlet '$name': $message")
         }*/
-        setValorAtributo(message)
+        setAttributeValue(message)
     }
 
     override fun executeAction(actionType: String, parameters: String) {
@@ -47,15 +44,11 @@ class SmartOutlet(
     }
 
 
-    override fun getAtributo(): Atributo {
-        return Atributo.IS_ON
-    }
-
-    override fun getValorAtributo(atributo: Atributo): Any {
+    override fun getAttributeValue(attribute: Attribute): Any {
         return isOn
     }
 
-    override fun setValorAtributo(valor: String) {
+    override fun setAttributeValue(valor: String) {
         when (valor) {
             "turn_on" -> turnOn()
             "turn_off" -> turnOff()
