@@ -9,6 +9,8 @@ const RuleFormPopup = ({ onClose, onCreate, device }) => {
     const [error, setError] = useState('');
     const [operadores, setOperadores] = useState([]);
     const [acciones, setAcciones] = useState([]);
+    const [formErrors, setFormErrors] = useState({});
+
 
     const [cond, setCond] = useState({
         deviceId: device?.id || '',
@@ -44,16 +46,29 @@ const RuleFormPopup = ({ onClose, onCreate, device }) => {
 
 
     const handleSubmit = () => {
-        console.log(cond, act)
+        const errors = {};
+
+        if (!name.trim()) errors.name = 'El nombre es obligatorio';
+        if (!cond.operator) errors.operator = 'Seleccioná un operador';
+        if (!cond.value.trim()) errors.value = 'El valor no puede estar vacío';
+        if (!act.actionType) errors.actionType = 'Seleccioná una acción';
+        if (!act.parameters.trim()) errors.parameters = 'Ingresá parámetros';
+
+        if (Object.keys(errors).length > 0) {
+            setFormErrors(errors);
+            return;
+        }
+
         const newRule = {
             name,
             conditions: [cond],
             actions: [act]
         };
-        console.log(JSON.stringify(newRule))
+
         onCreate(newRule);
         onClose();
     };
+
 
     return (
         <div className="modal-backdrop">
@@ -65,6 +80,7 @@ const RuleFormPopup = ({ onClose, onCreate, device }) => {
                     value={name}
                     onChange={e => setName(e.target.value)}
                 />
+                {formErrors.name && <span className="error">{formErrors.name}</span>}
 
                 <h4>Condición</h4>
                 <div>
@@ -79,10 +95,12 @@ const RuleFormPopup = ({ onClose, onCreate, device }) => {
                             <option key={op} value={op}>{op}</option>
                         ))}
                     </select>
+                    {formErrors.operator && <span className="error">{formErrors.operator}</span>}
                 </div>
                 <div>
                     <label>Valor:</label>
                     <input type="text" value={cond.value} onChange={e => setCond({ ...cond, value: e.target.value })} />
+                    {formErrors.value && <span className="error">{formErrors.value}</span>}
                 </div>
 
                 <h4>Acción</h4>
@@ -94,10 +112,12 @@ const RuleFormPopup = ({ onClose, onCreate, device }) => {
                             <option key={act} value={act}>{act}</option>
                         ))}
                     </select>
+                    {formErrors.actionType && <span className="error">{formErrors.actionType}</span>}
                 </div>
                 <div>
                     <label>Parámetros:</label>
                     <input type="text" value={act.parameters} onChange={e => setAct({ ...act, parameters: e.target.value })} />
+                    {formErrors.parameters && <span className="error">{formErrors.parameters}</span>}
                 </div>
 
                 <div className="modal-actions">

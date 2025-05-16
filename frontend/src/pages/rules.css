@@ -1,8 +1,10 @@
 .rule-grid {
-    overflow: auto;
+    overflow: scroll;
     max-width: 490px;
-    flex-wrap: wrap;
-    justify-content: center;
+    height: 500px;
+}
+.rule-grid::-webkit-scrollbar {
+    display: none;
 }
 
 .rule-button {
@@ -10,7 +12,7 @@
     border-radius: 12px;
     margin-bottom: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    width: 200px;
+    width: 300px;
     text-align: center;
     background-color: #7397ba;
     color: white;
@@ -38,4 +40,11 @@ padding: 0;
 .rule-button.expanded {
     background-color: #5f76aa;
     padding-bottom: 20px;
+}
+
+.error {
+    color: red;
+    font-size: 0.8rem;
+    margin-top: 4px;
+    display: block;
 }
