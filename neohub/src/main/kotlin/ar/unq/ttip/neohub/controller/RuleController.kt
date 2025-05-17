@@ -46,6 +46,7 @@ class RuleController(
     fun handleIllegalArgument(ex: IllegalArgumentException): String {
         return ex.message ?: "Solicitud inválida"
     }
+
     @GetMapping("/{deviceType}/attributes")
     fun getSupportedAtrributes(@PathVariable deviceType: String) : List <Attribute>{
         val type = DeviceType.fromString(deviceType)
