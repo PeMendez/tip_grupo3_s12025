@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react';
 import {getRuleForDevice, createRule, deleteRule} from '../api/ruleService.js';
 import {useParams} from "react-router-dom";
 import BackOrCloseButton from "../components/BackOrCloseButton.jsx";
-import RuleFormPopup from "../components/RuleComponent.jsx";
 import {getDevice} from "../api/deviceService.js";
 import {FiEdit, FiPlus} from "react-icons/fi";
 import './rules.css'
+import RuleFormPopupBis from "../components/RuleComponentBis.jsx";
 
 const DeviceRules =  () => {
 
@@ -175,7 +175,7 @@ const DeviceRules =  () => {
                 </>
             )}
             {showPopup && (
-                <RuleFormPopup
+                <RuleFormPopupBis
                     onClose={() => setShowPopup(false)}
                     onCreate={handleCreateRule}
                     device={device}
