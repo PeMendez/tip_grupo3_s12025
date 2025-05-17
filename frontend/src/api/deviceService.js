@@ -51,3 +51,17 @@ export const controlLight = async (device, forceState, token) => {
         throw error;
     }
 };
+
+export const getAllDevices = async (token) => {
+    try {
+        const response = await axios.get(`${API_URL}/devices`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error al obtener los dispositivos:', error);
+        throw new Error('No se pudieron obtener los dispositivos.');
+    }
+};

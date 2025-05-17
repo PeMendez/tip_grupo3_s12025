@@ -70,6 +70,11 @@ class DeviceService(
         return device.toDTO()
     }
 
+    fun getAllDevices(): List<DeviceDTO> {
+        val devices = repository.findAll()
+        return devices.map { it.toDTO() }
+    }
+
     fun getUnconfiguredDevices(): List<DeviceDTO> {
         return repository.findByRoomIsNull().map { it.toDTO() }
     }

@@ -16,6 +16,11 @@ class DeviceController(private val deviceService: DeviceService) {
         return deviceService.getDeviceById(deviceId)
     }
 
+    @GetMapping("/devices")
+    fun getAllDevices(): List<DeviceDTO> {
+        return deviceService.getAllDevices()
+    }
+
     // Endpoint para obtener dispositivos desconfigurados
     @GetMapping("/unconfigured")
     fun getUnconfiguredDevices(): List<DeviceDTO> {
