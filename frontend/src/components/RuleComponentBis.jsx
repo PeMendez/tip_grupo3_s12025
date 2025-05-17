@@ -3,8 +3,6 @@ import './loginPopup.css';
 import {
     getActions,
     getAttributes,
-    getDevicesForAction,
-    getDevicestypeForAction,
     getOperators
 } from '../api/ruleService.js'
 import { getAllDevices } from '../api/deviceService.js'; // Nuevo endpoint para obtener todos los dispositivos
