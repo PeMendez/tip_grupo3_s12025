@@ -119,3 +119,17 @@ export const getDevicesForAction = async (deviceTypes, token) => {
         throw e;
     }
 };
+
+export const getActionableDevices = async (deviceType, token) => {
+    try {
+        const response = await axios.get(`${API_URL}/${deviceType}/devices`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        return response.data;
+    } catch (e) {
+        console.log('Error al obtner los dispositivos', e)
+        throw e;
+    }
+}

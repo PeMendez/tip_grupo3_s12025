@@ -58,17 +58,23 @@ class RuleController(
         return Attribute.getSupportedOperators(attribute)
     }
 
+    @GetMapping("/{deviceType}/devices")
+    fun getSupportedDevices(@PathVariable deviceType: String) : List<DeviceType>{
+        val type = DeviceType.fromString(deviceType)
+        return DeviceType.getActionableDevices(type)
+    }
+
     @GetMapping("/{deviceType}/actions")
     fun getSupportedActions(@PathVariable deviceType: String) : List<ActionType>{
         val type = DeviceType.fromString(deviceType)
         return DeviceType.getSupportedActions(type)
     }
 
-    @GetMapping("/{actionType}/devices")
+    /*@GetMapping("/{actionType}/devices")
     fun getSupportedDevices(@PathVariable actionType: String) : List<DeviceType>{
         val type = ActionType.fromString(actionType)
         return ActionType.getSupportedDevicesFor(type)
-    }
+    }*/
 
     @GetMapping("/device-options")
     fun getDevicesByTypesInHome(

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import './loginPopup.css';
 import {
+    getActionableDevices,
     getActions,
     getAttributes,
     getDevicesForAction,
@@ -17,6 +18,7 @@ const RuleFormPopup = ({ onClose, onCreate, device }) => {
     const [acciones, setAcciones] = useState([]);
     const [formErrors, setFormErrors] = useState({});
     const [param, setParam] = useState([]);
+    const [disp, setDisp] = useState([]);
 
 
     const [cond, setCond] = useState({
@@ -28,6 +30,7 @@ const RuleFormPopup = ({ onClose, onCreate, device }) => {
 
     const [act, setAct] = useState({
         deviceId: device?.id || '',
+        deviceType: '',
         actionType: '',
         parameters: ''
     });
@@ -42,8 +45,11 @@ const RuleFormPopup = ({ onClose, onCreate, device }) => {
                 const op = await getOperators(data.toString(), token);
                 setOperadores(op || []);
 
-                const acc = await getActions(device.type, token);
-                setAcciones(acc);
+                const types = await getActionableDevices(device.type, token);
+                const result = await getDevicesForAction(types, token);
+                setDisp(result || []);
+                /*const acc = await getActions(device.type, token);
+                setAcciones(acc);*/
             } catch (err) {
                 setError(err + ' No se pudieron obtener los atributos.');
             }
@@ -52,22 +58,20 @@ const RuleFormPopup = ({ onClose, onCreate, device }) => {
     }, []);
 
     useEffect(() => {
-        const fetchParams = async () => {
-            if (!act.actionType) {
-                setParam([]);
+        const fetchActions = async () => {
+            if (!act.deviceType) {
+                setDisp([]);
                 return;
             }
             try {
-                const types = await getDevicestypeForAction(act.actionType, token);
-                console.log(types)
-                const result = await getDevicesForAction(types, token);
-                setParam(result || []);
+                const acc = await getActions(act.deviceType, token);
+                setAcciones(acc);
             } catch (err) {
-                setError('Error al obtener parámetros para la acción', err);
+                setError('Error al obtener las acciones para el dispositivo', err);
             }
         };
-        fetchParams();
-    }, [act.actionType]);
+        fetchActions();
+    }, [disp]);
 
 
 
@@ -131,8 +135,20 @@ const RuleFormPopup = ({ onClose, onCreate, device }) => {
 
                 <h4>Acción</h4>
                 <div>
+                    <label>Tipo de dispositivo:</label>
+                    <select value={disp.id} onChange={e => setAct({...act, deviceType: e.target.value})}
+                            >
+                        <option value="">Seleccionar</option>
+                        {disp.map(disp => (
+                            <option key={disp.id} value={disp.name}>{disp.name}</option>
+                        ))}
+                    </select>
+                    {formErrors.actionType && <span className="error">{formErrors.actionType}</span>}
+                </div>
+                <div>
                     <label>Tipo de acción:</label>
-                    <select value={act.actionType} onChange={e => setAct({...act, actionType: e.target.value})}>
+                    <select value={act.actionType} onChange={e => setAct({...act, actionType: e.target.value})}
+                            disabled={!act.deviceType}>
                         <option value="">Seleccionar</option>
                         {acciones.map(act => (
                             <option key={act} value={act}>{act}</option>
@@ -140,13 +156,12 @@ const RuleFormPopup = ({ onClose, onCreate, device }) => {
                     </select>
                     {formErrors.actionType && <span className="error">{formErrors.actionType}</span>}
                 </div>
-                {/*<div>
+                <div>
                     <label>Parámetros:</label>
                     <input type="text" value={act.parameters}
                            onChange={e => setAct({...act, parameters: e.target.value})}/>
-                    {formErrors.parameters && <span className="error">{formErrors.parameters}</span>}
-                </div>*/}
-                <div>
+                </div>
+                {/*<div>
                     <label>Parámetros:</label>
                     <select value={act.parameters}
                             onChange={e => setAct({...act, parameters: e.target.value})}
@@ -157,7 +172,7 @@ const RuleFormPopup = ({ onClose, onCreate, device }) => {
                         ))}
                     </select>
                     {formErrors.parameters && <span className="error">{formErrors.parameters}</span>}
-                </div>
+                </div>*/}
 
                 <div className="modal-actions">
                     <button onClick={handleSubmit}>Crear</button>

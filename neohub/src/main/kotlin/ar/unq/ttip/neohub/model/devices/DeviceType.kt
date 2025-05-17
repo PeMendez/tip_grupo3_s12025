@@ -34,6 +34,16 @@ enum class DeviceType {
         fun getSupportedActions(type: DeviceType): List<ActionType> {
             return supportedActions[type] ?: emptyList()
         }
+
+        private val actionableDevices: Map<DeviceType, List<DeviceType>> = mapOf(
+            SMART_OUTLET to listOf(SMART_OUTLET),
+            TEMPERATURE_SENSOR to listOf(SMART_OUTLET, DIMMER),
+            OPENING_SENSOR to listOf(SMART_OUTLET, DIMMER),
+        )
+
+        fun getActionableDevices(type: DeviceType): List<DeviceType> {
+            return actionableDevices[type] ?: emptyList()
+        }
     }
 
     override fun toString(): String {
