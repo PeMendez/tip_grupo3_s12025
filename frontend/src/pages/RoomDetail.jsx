@@ -206,21 +206,6 @@ const RoomDetail = () => {
 
     useEffect(() => {
         connectWebSocket(handleWebSocketMessage);
-
-        const handleVisibilityChange = () => {
-            if (document.visibilityState === 'visible') {
-                connectWebSocket(handleWebSocketMessage);
-            } else {
-                disconnectWebSocket();
-            }
-        };
-
-        document.addEventListener('visibilitychange', handleVisibilityChange);
-
-        return () => {
-            document.removeEventListener('visibilitychange', handleVisibilityChange);
-            disconnectWebSocket();
-        };
     }, [handleWebSocketMessage]);
 
     useEffect(() => {
