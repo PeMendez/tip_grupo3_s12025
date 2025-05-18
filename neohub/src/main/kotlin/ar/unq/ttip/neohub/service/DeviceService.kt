@@ -29,7 +29,10 @@ class DeviceService(
         val deviceData : DeviceData = mapper.readValue(message, DeviceData::class.java)
         val type = DeviceType.fromString(deviceData.type)
         val name = deviceData.name
+
         val newDevice = factory.createDevice(name, type)
+        newDevice.macAddress=(deviceData.mac_address)
+
         repository.save(newDevice)
     }
 
@@ -82,7 +85,8 @@ class DeviceService(
 
 data class DeviceData(
     val name: String,
-    val type: String
+    val type: String,
+    val mac_address: String
 )
 data class DeviceMessageRequest(
     val message: String

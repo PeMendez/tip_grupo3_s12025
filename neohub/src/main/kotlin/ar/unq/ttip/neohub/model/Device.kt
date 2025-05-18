@@ -16,6 +16,8 @@ abstract class Device(
     @ManyToOne
     @JoinColumn(name = "room_id")
     var room: Room? = null, //al instanciarse un nuevo device, no está en ningún room
+
+    var macAddress: String? = null,
 )
 {
     fun configureTopic() {
