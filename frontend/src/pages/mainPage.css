@@ -24,15 +24,15 @@
  }
 
 .room-grid {
-    display: flex
-;
+    display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    align-items: flex-start;
     gap: 16px;
     margin-top: 20px;
     overflow: scroll;
     max-width: 490px;
-    height: 400px;
+    height: 450px;
 }
 
 .room-grid::-webkit-scrollbar {
