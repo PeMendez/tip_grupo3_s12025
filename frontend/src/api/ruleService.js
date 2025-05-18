@@ -119,3 +119,18 @@ export const getDevicesForAction = async (deviceTypes, token) => {
         throw e;
     }
 };
+
+export const getAllRules = async (token) => {
+    try {
+        const response = await axios.get(`${API_URL}/allRules`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            }
+        });
+        return response.data;
+    } catch (e) {
+        console.log('Error al obtener todas las reglas', e);
+        throw e;
+
+    }
+};

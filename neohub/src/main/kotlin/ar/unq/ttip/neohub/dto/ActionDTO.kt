@@ -8,6 +8,7 @@ import ar.unq.ttip.neohub.model.ruleEngine.Rule
 data class ActionDTO(
     val id: Long,
     val deviceId: Long,
+    val deviceName: String,
     val actionType: String,
     val parameters: String
 )
@@ -16,6 +17,7 @@ fun Action.toDTO(): ActionDTO {
     return ActionDTO(
         id = this.id,
         deviceId = this.device.id,
+        deviceName = this.device.name,
         actionType = this.actionType.toString(),
         parameters = this.parameters
     )

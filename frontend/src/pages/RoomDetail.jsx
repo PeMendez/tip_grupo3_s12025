@@ -25,7 +25,6 @@ const RoomDetail = () => {
     const [roomName, setRoomName] = useState("");
     const [devices, setDevices] = useState([]);
     const [availableDevices, setAvailableDevices] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [editMode, setEditMode] = useState(false);
     const [addMode, setAddMode] = useState(false);
@@ -110,8 +109,6 @@ const RoomDetail = () => {
             console.log('Esperando websocket...');
         } catch (err) {
             console.error(err);
-        } finally {
-            setLoading(false);
         }
     };
 
@@ -149,11 +146,10 @@ const RoomDetail = () => {
     };
 
     const handleWebSocketMessage = useCallback((data) => {
-        //console.log('Llego mensaje ws: ', data)
+        console.log('Llego mensaje ws: ', data)
         if (data.type === "SMART_OUTLET") {
             const deviceId = data.id;
             const newStatus = !!data.status;
-            console.log('Seteando a', newStatus, 'porque llego una actualizacion ws del dispositivo:', deviceId);
             setDevices(prev => {
                 return prev.map(device => {
                     if (String(device.id) === String(deviceId)) {
@@ -168,7 +164,6 @@ const RoomDetail = () => {
         else if (data.type === "TEMP_UPDATE") {
             const deviceId = data.id;
             const temperature = parseFloat(data.temp);
-            console.log('Seteando ', temperature, 'porque llego un mensaje mqtt del dispositivo:', deviceId);
             setDevices(prev => {
                 return prev.map(device => {
                     if (String(device.id) === String(deviceId)) {
@@ -180,8 +175,8 @@ const RoomDetail = () => {
         }
         else if (data.type === "OPENING_UPDATE") {
             const deviceId = data.id;
-            const status = data.status === 'opened';
-            console.log('Seteando a', status, 'porque llego un mensaje mqtt del dispositivo:', deviceId);
+            console.log(data)
+            const status = data.status;
             setDevices(prev => {
                 return prev.map(device => {
                     if (String(device.id) === String(deviceId)) {
@@ -229,20 +224,15 @@ const RoomDetail = () => {
     }, [handleWebSocketMessage]);
 
     useEffect(() => {
+        console.log(id)
         const fetchRoom = async () => {
             try {
-                setLoading(true);
                 const room = await getRoomDetails(id, token);
-                console.log('Rta backend: ', room.deviceList[0].name,': ', room.deviceList[0].status)
-
                 setRoomName(room.name || "Habitación sin nombre");
                 setDevices(room.deviceList || []);
-                console.log('Seteo inicial de dispositivos');
             } catch (err) {
                 console.error(err);
                 setError("Error al cargar detalles de la habitación");
-            } finally {
-                setLoading(false);
             }
         };
         fetchRoom();
@@ -252,14 +242,11 @@ const RoomDetail = () => {
         setEditMode(false);
         setAddMode(true);
         try {
-            setLoading(true);
             const devices = await getUnconfiguredDevices(token);
             setAvailableDevices(devices || []);
         } catch (err) {
             console.error(err);
             setError("Error al cargar los dispositivos");
-        } finally {
-            setLoading(false);
         }
     };
 
@@ -287,18 +274,6 @@ const RoomDetail = () => {
         }
     };
 
-    if (loading || devices.length ===0) return <div className="room-detail-container">Cargando...</div>;
-
-    if (error) {
-        return (
-            <div className="room-detail-container">
-                <BackOrCloseButton />
-                <div className="error-message">{error}</div>
-                <button onClick={() => window.location.reload()}>Reintentar</button>
-            </div>
-        );
-    }
-
     if (addMode) {
         return (
             <div className="main-container">
@@ -308,7 +283,7 @@ const RoomDetail = () => {
                         <h2>Agregar Dispositivos</h2>
                     </div>
                 </div>
-                <div className="room-grid">
+                <div className="room2-grid">
                     {availableDevices.map((device, index) => (
                         <button
                             key={index}
@@ -333,7 +308,7 @@ const RoomDetail = () => {
                         <h2>Editar Dispositivos</h2>
                     </div>
                 </div>
-                <div className="room-grid">
+                <div className="room2-grid">
                     {devices.map((device, index) => (
                         <div
                             key={index}
@@ -376,27 +351,27 @@ const RoomDetail = () => {
         <div className="main-container">
             <div className="header-wrapper">
                 <div className="header">
-                    <BackOrCloseButton />
+                    <BackOrCloseButton/>
                     <h2>{roomName}</h2>
                 </div>
             </div>
             {devices.length > 0 && (
                 <div className="edit-container">
-                    <div className="edit-button">
+                <div className="edit-button">
                         <button onClick={() => setEditMode(true)}>
-                            <FiEdit size={24} />
+                            <FiEdit size={24}/>
                         </button>
                     </div>
                 </div>
             )}
 
-            <div className="room-grid">
+            <div className="room2-grid">
                 {devices.length > 0 ? (
                     devices.map((device, index) => (
                         <div key={index}
                              className={`room-button ${device.status ? 'active' : ''} ${
-                            device.type === 'opening_sensor' && device.status ? 'alarm-active' : ''
-                        }`}
+                                 device.type === 'opening_sensor' && device.status ? 'alarm-active' : ''
+                             }`}
                              onClick={() => handleDeviceClick(device)}>
                             <div
                                 className={`device-icon ${device.type === 'opening_sensor' && device.status ? 'alarm-active' : ''}`}>
@@ -409,14 +384,14 @@ const RoomDetail = () => {
                             )}
                             {device.type === "smart_outlet" && (
                                 <div className="switch-container" onClick={(e) => e.stopPropagation()}>
-                                <label className="switch">
-                                    <input
-                                        type="checkbox"
-                                        checked={!!device.status}
-                                        onChange={() => toggleLight(device)}
-                                    />
-                                    <span className={`slider round ${device.status ? 'on' : 'off'}`}></span>
-                                </label>
+                                    <label className="switch">
+                                        <input
+                                            type="checkbox"
+                                            checked={!!device.status}
+                                            onChange={() => toggleLight(device)}
+                                        />
+                                        <span className={`slider round ${device.status ? 'on' : 'off'}`}></span>
+                                    </label>
                                 </div>
                             )}
                             {device.type === 'opening_sensor' && device.status && (
@@ -428,7 +403,7 @@ const RoomDetail = () => {
                     <div className="no-devices">
                         <p>Aún no tenés dispositivos...</p>
                         <button onClick={handleAddClick}>
-                            <FiPlus /> Agregar dispositivo
+                            <FiPlus/> Agregar dispositivo
                         </button>
                     </div>
                 )}

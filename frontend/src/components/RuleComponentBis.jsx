@@ -1,16 +1,15 @@
 import { useState, useEffect } from 'react';
-import './loginPopup.css';
 import {
     getActions,
     getAttributes,
     getOperators
 } from '../api/ruleService.js'
 import { getAllDevices } from '../api/deviceService.js'; // Nuevo endpoint para obtener todos los dispositivos
+import './rule.css'
 
 const RuleFormPopupBis = ({ onClose, onCreate }) => {
     const [name, setName] = useState('');
-    const [devices, setDevices] = useState([]); // Lista de dispositivos disponibles
-    const [error, setError] = useState('');
+    const [devices, setDevices] = useState([]);
     const [formErrors, setFormErrors] = useState({});
 
     const [conditionDevice, setConditionDevice] = useState(null);
@@ -47,7 +46,7 @@ const RuleFormPopupBis = ({ onClose, onCreate }) => {
                 const devicesData = await getAllDevices(token); // Llama al nuevo endpoint
                 setDevices(devicesData);
             } catch (err) {
-                setError('No se pudieron obtener los dispositivos disponibles.', err);
+                console.log('No se pudieron obtener los dispositivos disponibles.', err);
             }
         };
 
@@ -80,10 +79,10 @@ const RuleFormPopupBis = ({ onClose, onCreate }) => {
                 } else {
                     setAtributos([]);
                     setOperadores([]);
-                    setError('El dispositivo seleccionado no tiene atributos disponibles.');
+                    console.log('El dispositivo seleccionado no tiene atributos disponibles.');
                 }
             } catch (err) {
-                setError('No se pudieron obtener los atributos u operadores del dispositivo seleccionado.');
+                console.log('No se pudieron obtener los atributos u operadores del dispositivo seleccionado.', err);
             }
         };
 
@@ -107,10 +106,10 @@ const RuleFormPopupBis = ({ onClose, onCreate }) => {
                     setAct(prev => ({ ...prev, deviceId: actionDevice.id }));
                 } else {
                     setAcciones([]);
-                    setError('El dispositivo seleccionado no tiene acciones disponibles.');
+                    console.log('El dispositivo seleccionado no tiene acciones disponibles.');
                 }
             } catch (err) {
-                setError('No se pudieron obtener las acciones del dispositivo seleccionado.');
+                console.log('No se pudieron obtener las acciones del dispositivo seleccionado.', err);
             }
         };
 
@@ -121,8 +120,11 @@ const RuleFormPopupBis = ({ onClose, onCreate }) => {
         const errors = {};
 
         if (!name.trim()) errors.name = 'El nombre es obligatorio';
+        if (!cond.deviceId) errors.conditionDevice = 'Seleccioná un dispositivo para la condición';
+        if (!cond.attribute) errors.attribute = 'Seleccioná un atributo';
         if (!cond.operator) errors.operator = 'Seleccioná un operador';
         if (!cond.value.trim()) errors.value = 'El valor no puede estar vacío';
+        if (!act.deviceId) errors.actionDevice = 'Seleccioná un dispositivo para la acción';
         if (!act.actionType) errors.actionType = 'Seleccioná una acción';
 
         if(!requiresParameters(act.actionType)){
@@ -146,7 +148,7 @@ const RuleFormPopupBis = ({ onClose, onCreate }) => {
 
     return (
         <div className="modal-backdrop">
-            <div className="modal">
+            <div className="modal-rule">
                 <h3>Crear nueva regla</h3>
 
                 <input
@@ -165,6 +167,7 @@ const RuleFormPopupBis = ({ onClose, onCreate }) => {
                             <option key={device.id} value={device.id}>{device.name}</option>
                         ))}
                     </select>
+                    {formErrors.conditionDevice && <span className="error">{formErrors.conditionDevice}</span>}
                 </div>
                 <div>
                     <label>Atributo:</label>
@@ -174,6 +177,7 @@ const RuleFormPopupBis = ({ onClose, onCreate }) => {
                             <option key={attr} value={attr}>{attr}</option>
                         ))}
                     </select>
+                    {formErrors.attribute && <span className="error">{formErrors.attribute}</span>}
                 </div>
                 <div>
                     <label>Operador:</label>
@@ -183,10 +187,12 @@ const RuleFormPopupBis = ({ onClose, onCreate }) => {
                             <option key={op} value={op}>{op}</option>
                         ))}
                     </select>
+                    {formErrors.operator && <span className="error">{formErrors.operator}</span>}
                 </div>
                 <div>
                     <label>Valor:</label>
                     <input type="text" value={cond.value} onChange={e => setCond({ ...cond, value: e.target.value })} />
+                    {formErrors.value && <span className="error">{formErrors.value}</span>}
                 </div>
 
                 <h4>Acción</h4>
@@ -198,6 +204,7 @@ const RuleFormPopupBis = ({ onClose, onCreate }) => {
                             <option key={device.id} value={device.id}>{device.name}</option>
                         ))}
                     </select>
+                    {formErrors.actionDevice && <span className="error">{formErrors.actionDevice}</span>}
                 </div>
                 <div>
                     <label>Tipo de acción:</label>
@@ -207,6 +214,7 @@ const RuleFormPopupBis = ({ onClose, onCreate }) => {
                             <option key={action} value={action}>{action}</option>
                         ))}
                     </select>
+                    {formErrors.actionType && <span className="error">{formErrors.actionType}</span>}
                 </div>
                 <div>
                     <label>Parámetros:</label>
@@ -216,9 +224,10 @@ const RuleFormPopupBis = ({ onClose, onCreate }) => {
                         onChange={e => setAct({ ...act, parameters: e.target.value })}
                         disabled={!requiresParameters(act.actionType)}
                     />
+                    {formErrors.parameters && <span className="error">{formErrors.parameters}</span>}
                 </div>
 
-                <div className="modal-actions">
+                <div className="modal-rule-actions">
                     <button onClick={handleSubmit}>Crear</button>
                     <button onClick={onClose}>Cancelar</button>
                 </div>

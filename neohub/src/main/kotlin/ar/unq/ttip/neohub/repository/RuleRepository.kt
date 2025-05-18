@@ -11,8 +11,7 @@ interface RuleRepository : JpaRepository<Rule, Long> {
         SELECT DISTINCT r
         FROM Rule r
         LEFT JOIN r.conditions c
-        LEFT JOIN r.actions a
-        WHERE c.device.id = :deviceId OR a.device.id = :deviceId
+        WHERE c.device.id = :deviceId
     """)
     fun findRulesByDeviceId(deviceId: Long): List<Rule>
 }
