@@ -1,3 +1,16 @@
+.room2-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 20px;
+    overflow: scroll;
+    max-width: 490px;
+}
+.room2-grid::-webkit-scrollbar {
+    display: none;
+}
+
 .room-detail-container {
     position: relative;
     padding: 20px;

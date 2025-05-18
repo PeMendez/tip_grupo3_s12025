@@ -24,11 +24,19 @@
  }
 
 .room-grid {
-    display: flex;
+    display: flex
+;
     flex-wrap: wrap;
     justify-content: center;
     gap: 16px;
     margin-top: 20px;
+    overflow: scroll;
+    max-width: 490px;
+    height: 400px;
+}
+
+.room-grid::-webkit-scrollbar {
+    display: none;
 }
 
 .room-button {
@@ -40,6 +48,7 @@
     text-align: center;
     background-color: #7397ba;
     cursor: pointer;
+    margin-top: 10px;
 }
 
 .room-button:hover {

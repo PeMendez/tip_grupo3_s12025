@@ -5,7 +5,6 @@ import ar.unq.ttip.neohub.dto.DeviceDTO
 import ar.unq.ttip.neohub.dto.RuleDTO
 import ar.unq.ttip.neohub.model.ActionType
 import ar.unq.ttip.neohub.model.Attribute
-import ar.unq.ttip.neohub.model.Device
 import ar.unq.ttip.neohub.model.Operator
 import ar.unq.ttip.neohub.model.devices.DeviceType
 import ar.unq.ttip.neohub.repository.RuleRepository
@@ -81,4 +80,10 @@ class RuleController(
         return homeService.getDevicesByTypesInHome(deviceTypes, user.id)
     }
 
+    @GetMapping("/allRules")
+    fun getAllRules(
+        @AuthenticationPrincipal userDetails: UserDetails): List<RuleDTO> {
+        val user = userService.getUserByUsername(userDetails.username)
+        return homeService.getRulesInHome(user.id)
+    }
 }

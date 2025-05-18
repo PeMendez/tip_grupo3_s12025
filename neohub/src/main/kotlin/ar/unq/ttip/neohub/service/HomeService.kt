@@ -1,7 +1,6 @@
 package ar.unq.ttip.neohub.service
 
-import ar.unq.ttip.neohub.dto.DeviceDTO
-import ar.unq.ttip.neohub.model.Device
+import ar.unq.ttip.neohub.dto.*
 import ar.unq.ttip.neohub.model.Home
 import ar.unq.ttip.neohub.model.Room
 import ar.unq.ttip.neohub.model.User
@@ -29,6 +28,10 @@ class HomeService(
 
     fun getDevicesByTypesInHome(types: List<DeviceType>, userId: Long): List<DeviceDTO> {
         return homeRepository.findByUserIdAndTypeIn(userId, types).map { it.toDTO() }
+    }
+
+    fun getRulesInHome(userId: Long): List<RuleDTO>{
+        return homeRepository.findRulesByUser(userId).map { it.toDTO() }
     }
 
     @Transactional

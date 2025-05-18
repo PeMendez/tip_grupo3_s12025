@@ -5,14 +5,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="09bf219a-ddab-407c-b6b8-1beb0e5da310" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/rule.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/pages/RulesManager.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/api/ruleService.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/api/ruleService.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/RuleComponent.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/RuleComponent.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/DeviceRules.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/DeviceRules.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/RuleComponentBis.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/RuleComponentBis.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/DeviceRules.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/MainPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/MainPage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/RoomDetail.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/RoomDetail.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/mainPage.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/mainPage.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/roomDetail.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/roomDetail.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/rules.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/rules.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/controller/RuleController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/controller/RuleController.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/model/ActionType.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/model/ActionType.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/dto/ActionDTO.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/dto/ActionDTO.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/dto/ConditionDTO.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/dto/ConditionDTO.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/repository/HomeRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/repository/HomeRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/repository/RuleRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/repository/RuleRepository.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/service/HomeService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/service/HomeService.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/service/RuleService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/service/RuleService.kt" afterDir="false" />
     </list>
     <list id="c93fa67c-d594-4956-a819-2b86e3ca1c3c" name="Changes by Martin" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -28,6 +39,7 @@
         <option value="JavaScript File" />
         <option value="Kotlin Enum" />
         <option value="Kotlin Class" />
+        <option value="Kotlin File" />
       </list>
     </option>
   </component>
@@ -149,6 +161,7 @@
       <workItem from="1747275092771" duration="1352000" />
       <workItem from="1747409161282" duration="11932000" />
       <workItem from="1747434944374" duration="3680000" />
+      <workItem from="1747483381170" duration="17418000" />
     </task>
     <servers />
   </component>

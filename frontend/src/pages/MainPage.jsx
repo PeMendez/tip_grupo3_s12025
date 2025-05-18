@@ -79,6 +79,10 @@ function MainPage() {
         }
     }
 
+    const showRules = () => {
+        navigate("/rules");
+    }
+
     if (editMode) {
         return (
             <div className="main-container">
@@ -166,8 +170,15 @@ function MainPage() {
         <div className="main-container">
             <div className="header-wrapper">
                 <div className="header">
-                    <BackOrCloseButton type="x" onClick={logout} />
+                    <BackOrCloseButton type="x" onClick={logout}/>
                     <h2>Mi Hogar</h2>
+                </div>
+            </div>
+            <div className="">
+                <div className="">
+                    <button onClick={() => showRules()}>
+                        Reglas
+                    </button>
                 </div>
             </div>
 
@@ -176,7 +187,7 @@ function MainPage() {
                     <div className="edit-container">
                         <div className="edit-button">
                             <button onClick={() => setEditHome(true)}>
-                                <FiEdit size={24} />
+                                <FiEdit size={24}/>
                             </button>
                         </div>
                     </div>
@@ -189,7 +200,7 @@ function MainPage() {
                                     className="room-button"
                                     onClick={() => navigate(`/room/${room.id}`)}
                                 >
-                                    <img src={type?.img || salaImg} alt={room.name} />
+                                    <img src={type?.img || salaImg} alt={room.name}/>
                                     <span>{room.name}</span>
                                 </div>
                             );
@@ -200,7 +211,7 @@ function MainPage() {
                 <div className="no-rooms">
                     <p>Aún no tenés habitaciones...</p>
                     <button onClick={() => setEditMode(true)}>
-                        <FiEdit /> Editar hogar
+                        <FiEdit/> Editar hogar
                     </button>
                 </div>
             )}
