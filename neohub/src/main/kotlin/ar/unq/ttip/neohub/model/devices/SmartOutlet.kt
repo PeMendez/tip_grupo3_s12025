@@ -54,7 +54,7 @@ class SmartOutlet(
             "turn_on" -> turnOn()
             "turn_off" -> turnOff()
             "toggle" -> toggle()
-            else -> println("Mensaje desconocido para SmartOutlet '$name': $valor")
+            else -> println("Mensaje desconocido para '$type' '$name': $valor")
         }
     }
 

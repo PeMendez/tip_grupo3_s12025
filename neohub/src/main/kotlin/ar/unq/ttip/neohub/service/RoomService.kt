@@ -26,15 +26,15 @@ class RoomService(
     @Transactional
     fun addDeviceToRoom(roomId: Long, deviceId: Long): Room {
         val room = roomRepository.findById(roomId).orElseThrow { RuntimeException("Room not found") }
-        val newDevice = deviceRepository.findById(deviceId).orElseThrow { RuntimeException("Device not found") }
+        val device = deviceRepository.findById(deviceId).orElseThrow { RuntimeException("Device not found") }
 
-        room.addDevice(newDevice)
+        room.addDevice(device)
 
-        deviceRepository.save(newDevice)
+        mqttService.publishConfiguration(device)
+
+        deviceRepository.save(device)
         roomRepository.save(room)
-
-        deviceService.registerDeviceOnMqtt(newDevice)
-
+        deviceService.registerDeviceOnMqtt(device)
         return room
     }
 

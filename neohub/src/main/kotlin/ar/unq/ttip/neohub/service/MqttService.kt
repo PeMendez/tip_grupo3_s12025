@@ -6,10 +6,13 @@ import ar.unq.ttip.neohub.model.Attribute
 import ar.unq.ttip.neohub.model.Device
 import ar.unq.ttip.neohub.model.devices.DeviceType
 import ar.unq.ttip.neohub.repository.DeviceRepository
+import com.fasterxml.jackson.databind.node.ObjectNode
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.eclipse.paho.client.mqttv3.MqttClient
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions
 import org.eclipse.paho.client.mqttv3.MqttException
 import org.eclipse.paho.client.mqttv3.MqttMessage
+import org.h2.util.json.JSONObject
 import org.springframework.context.ApplicationEvent
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
@@ -66,6 +69,23 @@ class MqttService(
         }
     }
 
+    fun publishConfiguration(device: Device) {
+        val objectMapper = jacksonObjectMapper()
+
+        // Crear la configuración como un objeto
+        val config = DeviceConfiguration(
+            name = device.name,
+            new_topic = device.topic,
+        )
+
+        // Convertir el objeto a JSON
+        val jsonMessage = objectMapper.writeValueAsString(config)
+
+        // Publicar el mensaje
+        publish(unconfiguredTopic, jsonMessage)
+    }
+
+
     fun subscribe(topic: String, device: Device? = null) {
         if (!subscribedTopics.contains(topic)) {
             try {
@@ -102,7 +122,23 @@ class MqttService(
     fun handleMqttMessage(topic: String, message: String) {
         println("Received message on topic $topic: $message")
         if (topic.startsWith(unconfiguredTopic)) {
-            handleUnconfiguredDevice(message)
+            val objectMapper = jacksonObjectMapper()
+            try {
+                // Parsear el mensaje como un JSON genérico (ObjectNode)
+                val jsonNode = objectMapper.readTree(message) as? ObjectNode
+                if (jsonNode != null && jsonNode.has("new_topic")) {
+                    val newTopic = jsonNode["new_topic"].asText()
+                    if (newTopic.isNotEmpty()) {
+                        println("Message contains 'new_topic': $newTopic. Ignoring device registration.")
+                        return
+                    }
+                }
+                // Si no tiene el campo "new_topic", tratarlo como un dispositivo no configurado
+                handleUnconfiguredDevice(message)
+            } catch (e: Exception) {
+                println("Error processing message: ${e.message}")
+                // Acción en caso de error, como registrar el problema
+            }
         } else {
             val device = topicDeviceMap[topic]
             if (device != null) {
@@ -157,3 +193,8 @@ class MqttService(
 }
 
 class UnconfiguredDeviceEvent(val message: String): ApplicationEvent(message)
+
+data class DeviceConfiguration(
+    val name: String,
+    val new_topic: String
+)
