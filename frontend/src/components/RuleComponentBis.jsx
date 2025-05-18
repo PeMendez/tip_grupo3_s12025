@@ -7,12 +7,12 @@ import {
 import { getAllDevices } from '../api/deviceService.js'; // Nuevo endpoint para obtener todos los dispositivos
 import './rule.css'
 
-const RuleFormPopupBis = ({ onClose, onCreate }) => {
+const RuleFormPopupBis = ({ onClose, onCreate, device }) => {
     const [name, setName] = useState('');
     const [devices, setDevices] = useState([]);
     const [formErrors, setFormErrors] = useState({});
 
-    const [conditionDevice, setConditionDevice] = useState(null);
+    const [conditionDevice, setConditionDevice] = useState(device || null);
     const [actionDevice, setActionDevice] = useState(null);
 
     const [atributos, setAtributos] = useState([]);
@@ -31,6 +31,12 @@ const RuleFormPopupBis = ({ onClose, onCreate }) => {
         actionType: '',
         parameters: ''
     });
+
+    useEffect(() => {
+        if (device) {
+            setConditionDevice(device);
+        }
+    }, [device]);
 
     const requiresParameters = (actionType) => {
         // Define qué acciones requieren parámetros
@@ -161,7 +167,10 @@ const RuleFormPopupBis = ({ onClose, onCreate }) => {
                 <h4>Condición</h4>
                 <div>
                     <label>Dispositivo:</label>
-                    <select onChange={e => setConditionDevice(devices.find(d => d.id === Number(e.target.value)))}>
+                    <select
+                        value={conditionDevice?.id || ''}
+                        onChange={e => setConditionDevice(devices.find(d => d.id === Number(e.target.value)))}
+                    >
                         <option value="">Seleccionar</option>
                         {devices.map(device => (
                             <option key={device.id} value={device.id}>{device.name}</option>
@@ -171,7 +180,7 @@ const RuleFormPopupBis = ({ onClose, onCreate }) => {
                 </div>
                 <div>
                     <label>Atributo:</label>
-                    <select value={cond.attribute} onChange={e => setCond({ ...cond, attribute: e.target.value })}>
+                    <select value={cond.attribute} onChange={e => setCond({...cond, attribute: e.target.value})}>
                         <option value="">Seleccionar</option>
                         {atributos.map(attr => (
                             <option key={attr} value={attr}>{attr}</option>
