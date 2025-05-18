@@ -213,6 +213,7 @@ const RoomDetail = () => {
         const fetchRoom = async () => {
             try {
                 const room = await getRoomDetails(id, token);
+                console.log(room)
                 setRoomName(room.name || "Habitación sin nombre");
                 setDevices(room.deviceList || []);
             } catch (err) {

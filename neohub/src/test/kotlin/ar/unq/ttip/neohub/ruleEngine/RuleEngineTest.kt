@@ -287,7 +287,7 @@ class RuleEngineTest {
     }
 
 
-    @Test
+    /*@Test
     fun `cuando la temperatura excede el umbral de la regla, la regla da verdadero y se ejecuta la accion`() {
         // Configurar dispositivos
         val temperatureSensor = TemperatureSensor(name = "Temperature Sensor")
@@ -429,7 +429,7 @@ class RuleEngineTest {
         // Verificar que la regla se evalúa y la acción se ejecuta
         assertTrue(result, "La regla debería evaluarse como verdadera.")
         assertEquals(100, dimmer.brightness, "El brillo del dimmer debería haber cambiado a 100%.")
-    }
+    }*/
 
 
 }

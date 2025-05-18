@@ -17,8 +17,12 @@ data class Action(
     val actionType: ActionType,
     val parameters: String   // Parámetros opcionales para la acción
 ){
-    fun execute(){
+    /*fun execute(){
         device.executeAction(actionType, parameters)
+    }*/
+    fun execute(): Device {
+        device.executeAction(actionType, parameters)
+        return device
     }
 
     fun validate() {

@@ -167,10 +167,19 @@ class MqttService(
 
         // Evaluar cada regla
         rules.forEach { rule ->
-            if (rule.evaluateAndExecute()) {
+            val modifiedDevices = rule.evaluateAndExecute()
+            if (modifiedDevices.isNotEmpty()) {
                 println("Rule '${rule.name}' triggered and actions executed.")
-            } else {
-                println("Rule '${rule.name}' not triggered.")
+
+                modifiedDevices.forEach { modifiedDevice ->
+                    try {
+                        deviceRepository.save(modifiedDevice)
+                        println("Estado actualizado guardado para ${modifiedDevice.name}")
+                        handleDeviceUpdate(modifiedDevice)
+                    } catch (e: Exception) {
+                        println("ERROR al guardar ${modifiedDevice.name}: ${e.message}")
+                    }
+                }
             }
         }
     }
