@@ -25,7 +25,6 @@ const RoomDetail = () => {
     const [roomName, setRoomName] = useState("");
     const [devices, setDevices] = useState([]);
     const [availableDevices, setAvailableDevices] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [editMode, setEditMode] = useState(false);
     const [addMode, setAddMode] = useState(false);
@@ -110,8 +109,6 @@ const RoomDetail = () => {
             console.log('Esperando websocket...');
         } catch (err) {
             console.error(err);
-        } finally {
-            setLoading(false);
         }
     };
 
@@ -227,20 +224,15 @@ const RoomDetail = () => {
     }, [handleWebSocketMessage]);
 
     useEffect(() => {
+        console.log(id)
         const fetchRoom = async () => {
             try {
-                setLoading(true);
                 const room = await getRoomDetails(id, token);
-                console.log('Rta backend: ', room.deviceList[0].name,': ', room.deviceList[0].status)
-
                 setRoomName(room.name || "Habitación sin nombre");
                 setDevices(room.deviceList || []);
-                console.log('Seteo inicial de dispositivos');
             } catch (err) {
                 console.error(err);
                 setError("Error al cargar detalles de la habitación");
-            } finally {
-                setLoading(false);
             }
         };
         fetchRoom();
@@ -250,14 +242,11 @@ const RoomDetail = () => {
         setEditMode(false);
         setAddMode(true);
         try {
-            setLoading(true);
             const devices = await getUnconfiguredDevices(token);
             setAvailableDevices(devices || []);
         } catch (err) {
             console.error(err);
             setError("Error al cargar los dispositivos");
-        } finally {
-            setLoading(false);
         }
     };
 
@@ -285,18 +274,6 @@ const RoomDetail = () => {
         }
     };
 
-    if (loading || devices.length ===0) return <div className="room-detail-container">Cargando...</div>;
-
-    if (error) {
-        return (
-            <div className="room-detail-container">
-                <BackOrCloseButton />
-                <div className="error-message">{error}</div>
-                <button onClick={() => window.location.reload()}>Reintentar</button>
-            </div>
-        );
-    }
-
     if (addMode) {
         return (
             <div className="main-container">
@@ -306,7 +283,7 @@ const RoomDetail = () => {
                         <h2>Agregar Dispositivos</h2>
                     </div>
                 </div>
-                <div className="room-grid">
+                <div className="room2-grid">
                     {availableDevices.map((device, index) => (
                         <button
                             key={index}

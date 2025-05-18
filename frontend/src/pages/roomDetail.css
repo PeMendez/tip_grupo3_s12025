@@ -3,7 +3,7 @@
     flex-wrap: wrap;
     justify-content: center;
     gap: 16px;
-    margin-top: 20px;
+    margin: 20px 5px;
     overflow: scroll;
     max-width: 490px;
 }
