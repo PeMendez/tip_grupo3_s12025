@@ -76,6 +76,7 @@ class MqttService(
         val config = DeviceConfiguration(
             name = device.name,
             new_topic = device.topic,
+            mac_address = device.macAddress!!,
         )
 
         // Convertir el objeto a JSON
@@ -134,7 +135,7 @@ class MqttService(
                     }
                 }
                 // Si no tiene el campo "new_topic", tratarlo como un dispositivo no configurado
-                handleUnconfiguredDevice(message)
+                else handleUnconfiguredDevice(message)
             } catch (e: Exception) {
                 println("Error processing message: ${e.message}")
                 // Acción en caso de error, como registrar el problema
@@ -196,5 +197,6 @@ class UnconfiguredDeviceEvent(val message: String): ApplicationEvent(message)
 
 data class DeviceConfiguration(
     val name: String,
-    val new_topic: String
+    val new_topic: String,
+    val mac_address : String
 )
