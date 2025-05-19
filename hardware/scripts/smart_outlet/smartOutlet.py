@@ -46,40 +46,53 @@ def on_message(client, userdata, msg):
     print(f"Mensaje recibido en {msg.topic}: {msg.payload.decode()}")
 
     try:
-        # Determinar si el mensaje es para configuración o comandos
-        if msg.topic == INITIAL_TOPIC:
-            # Intentar interpretar como JSON (configuración)
-            config_message = json.loads(msg.payload.decode())
+        # Intentar decodificar el mensaje como JSON
+        message = json.loads(msg.payload.decode())
+
+        # Si es un mensaje de configuración
+        if "new_topic" in message and message.get("mac_address") == mac_address:
+            new_topic_candidate = message["new_topic"]
             
-            # Validar si el mensaje contiene el identificador correcto
-            if config_message.get("mac_address") == mac_address and "new_topic" in config_message:
-                print(f"Configuración válida recibida para este dispositivo: {config_message}")
-                new_topic = config_message.get("new_topic")
-                if new_topic:
-                    client.subscribe(new_topic)
-                    print(f"Suscrito al nuevo tópico: {new_topic}")
-                    save_config({"new_topic": new_topic, "mac_address": mac_address})
-                    print("Guardada la configuración a archivo")
-            else:
-                print("El mensaje de configuración no está destinado a este dispositivo. Ignorando.")
-        elif msg.topic == new_topic:
-            # Procesar comandos (texto plano)
+            if new_topic_candidate == INITIAL_TOPIC:  # Desconfiguración
+                print("Solicitud de desconfiguración recibida. Restableciendo dispositivo.")
+                new_topic = None
+                client.subscribe(INITIAL_TOPIC)
+                print(f"Suscrito nuevamente al tópico inicial: {INITIAL_TOPIC}")
+
+                # Publicar mensaje inicial como dispositivo no configurado
+                device_info = {
+                    "name": "SimulatedRelay",
+                    "type": "smart_outlet",
+                    "mac_address": mac_address,
+                }
+                client.publish(INITIAL_TOPIC, json.dumps(device_info))
+                print(f"Publicado mensaje inicial en {INITIAL_TOPIC}: {device_info}")
+
+                # Guardar configuración desconfigurada
+                save_config({"new_topic": None, "mac_address": mac_address})
+            else:  # Configuración válida
+                print(f"Configuración válida recibida: {message}")
+                new_topic = new_topic_candidate
+                client.subscribe(new_topic)
+                print(f"Suscrito al nuevo tópico: {new_topic}")
+                save_config({"new_topic": new_topic, "mac_address": mac_address})
+        elif msg.topic == new_topic:  # Procesar comandos
             command = msg.payload.decode()
             if command == "turn_on":
                 relay_state = True
-                print("Comando recibido: ENCENDER. Estado del relay: ENCENDIDO")
+                print("Relay ENCENDIDO")
             elif command == "turn_off":
                 relay_state = False
-                print("Comando recibido: APAGAR. Estado del relay: APAGADO")
+                print("Relay APAGADO")
             elif command == "toggle":
                 relay_state = not relay_state
-                print(f"Comando recibido: ALTERNAR. Estado del relay: {'ENCENDIDO' if relay_state else 'APAGADO'}")
+                print(f"Relay {'ENCENDIDO' if relay_state else 'APAGADO'}")
             else:
                 print(f"Comando desconocido: {command}")
         else:
-            print("El mensaje no está destinado a este dispositivo. Ignorando.")
+            print("Mensaje no destinado a este dispositivo. Ignorando.")
     except json.JSONDecodeError:
-        print("Mensaje no válido recibido. Ignorando.")
+        print("Mensaje no válido. Ignorando.")
 
 # Función para manejar la conexión
 def on_connect(client, userdata, flags, rc, properties=None):
