@@ -14,6 +14,8 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.assertThrows
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
+import kotlin.test.assertContains
+
 @SpringBootTest
 @ActiveProfiles("test")
 class RuleEngineTest {
@@ -287,7 +289,7 @@ class RuleEngineTest {
     }
 
 
-    /*@Test
+    @Test
     fun `cuando la temperatura excede el umbral de la regla, la regla da verdadero y se ejecuta la accion`() {
         // Configurar dispositivos
         val temperatureSensor = TemperatureSensor(name = "Temperature Sensor")
@@ -330,8 +332,9 @@ class RuleEngineTest {
         val result = rule.evaluateAndExecute()
 
         // Verificar que la regla se evalúa y la acción se ejecuta
-        assertTrue(result, "La regla debería evaluarse como verdadera.")
+        assertTrue(rule.lastEvaluationResult, "La regla debería evaluarse como verdadera.")
         assertTrue(fan.isOn, "El aire acondicionado debería estar encendido.")
+        assertContains(result, fan)
     }
 
 
@@ -377,8 +380,9 @@ class RuleEngineTest {
         val result = rule.evaluateAndExecute()
 
         // Verificar que la regla se evalúa y la acción se ejecuta
-        assertFalse(result, "La regla debería evaluarse como falsa.")
+        assertFalse(rule.lastEvaluationResult, "La regla debería evaluarse como falsa.")
         assertFalse(fan.isOn, "El aire acondicionado debería estar encendido.") // Esto depende de implementar un estado en `SmartOutlet`
+        assertFalse(result.contains(fan))
     }
 
     @Test
@@ -427,9 +431,10 @@ class RuleEngineTest {
         val result = rule.evaluateAndExecute()
 
         // Verificar que la regla se evalúa y la acción se ejecuta
-        assertTrue(result, "La regla debería evaluarse como verdadera.")
+        assertTrue(rule.lastEvaluationResult, "La regla debería evaluarse como verdadera.")
         assertEquals(100, dimmer.brightness, "El brillo del dimmer debería haber cambiado a 100%.")
-    }*/
+        assertContains(result,dimmer)
+    }
 
 
 }

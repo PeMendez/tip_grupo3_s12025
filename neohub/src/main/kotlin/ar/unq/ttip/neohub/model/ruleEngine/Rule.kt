@@ -14,7 +14,9 @@ data class Rule(
 
     // Acciones asociadas a la regla
     @OneToMany(mappedBy = "rule", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
-    val actions: MutableList<Action> = mutableListOf()
+    val actions: MutableList<Action> = mutableListOf(),
+
+    var lastEvaluationResult: Boolean = false
 ) {
     /*fun evaluateAndExecute(): Boolean {
         validateConditions() //Esto tiene que arrojar una excepcion si falla.
@@ -26,8 +28,8 @@ data class Rule(
     fun evaluateAndExecute(): List<Device> {
         validateConditions()
         val failedConditions = conditions.filterNot { it.evaluate() }
-
-        if (failedConditions.isEmpty()) {
+        lastEvaluationResult = failedConditions.isEmpty()
+        if (lastEvaluationResult) {
             return actions.mapNotNull { it.execute() } // Devuelve dispositivos modificados
         }
         return emptyList()
