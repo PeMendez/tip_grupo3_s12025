@@ -15,7 +15,7 @@ import {
 } from "../api/roomService";
 import './roomDetail.css';
 import { getUnconfiguredDevices, controlLight } from "../api/deviceService.js";
-import { connectWebSocket, disconnectWebSocket } from "../websocket.js";
+import { connectWebSocket } from "../websocket.js";
 import Toast from '../Toast.jsx'
 
 const RoomDetail = () => {
@@ -118,14 +118,27 @@ const RoomDetail = () => {
         const {
             icon = "https://cdn-icons-png.flaticon.com/512/619/619153.png",
             duration = 3000,
-            toastClass = ''
+            toastClass = '',
+            onClickRedirect = null
         } = options;
 
         if (Notification.permission === "granted") {
-            new Notification(title, {
+            const notification = new Notification(title, {
                 body: message,
                 icon: icon
             });
+            if (onClickRedirect) {
+                notification.onclick = () => {
+                    navigate(onClickRedirect);
+                    window.focus();
+                };
+                if (onClickRedirect) {
+                    notification.onclick = () => {
+                        navigate(onClickRedirect);
+                        window.focus();
+                    };
+                }
+            }
         } else if (Notification.permission !== "denied") {
             Notification.requestPermission().then(permission => {
                 if (permission === "granted") {
@@ -141,7 +154,9 @@ const RoomDetail = () => {
             message: message,
             key: Date.now(),
             duration: duration,
-            toastClass: toastClass
+            toastClass: toastClass,
+            onClick: onClickRedirect ? () => navigate(onClickRedirect) : null
+
         });
     };
 
@@ -193,7 +208,7 @@ const RoomDetail = () => {
                     icon: warning,
                     duration: 5000,
                     toastClass: 'alarm-toast',
-
+                    onClickRedirect: `/room/${id}`
                 }
             );
 
