@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/devices")
-class DeviceController(private val deviceService: DeviceService) {
+class DeviceController(
+    private val deviceService: DeviceService
+) {
 
     // Endpoint para obtener un dispositivo por ID
     @GetMapping("/{deviceId}")

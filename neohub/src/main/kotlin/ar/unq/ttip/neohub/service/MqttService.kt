@@ -68,13 +68,13 @@ class MqttService(
         }
     }
 
-    fun publishConfiguration(device: Device) {
+    fun publishConfiguration(device: Device, unconfigure: Boolean = false) {
         val objectMapper = jacksonObjectMapper()
-
+        val topic = if (unconfigure) unconfiguredTopic else device.topic
         // Crear la configuración como un objeto
         val config = DeviceConfiguration(
             name = device.name,
-            new_topic = device.topic,
+            new_topic = topic,
             mac_address = device.macAddress!!,
         )
 

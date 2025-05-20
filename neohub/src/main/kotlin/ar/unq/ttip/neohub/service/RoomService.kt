@@ -46,15 +46,12 @@ class RoomService(
             .orElseThrow { RuntimeException("Device not found") }
 
         // Eliminar el dispositivo de la lista del cuarto
-        targetRoom.deviceList.remove(targetDevice)
 
-        // Desregistrar el dispositivo
+        mqttService.publishConfiguration(targetDevice, unconfigure = true)
+
+        targetRoom.removeDevice(targetDevice)
         mqttService.unregisterDevice(targetDevice)
-
-        // Resetear el cuarto y el tópico
-        targetDevice.room = null
-        targetDevice.configureTopic()
-
+        // Desregistrar el dispositivo
         deviceRepository.save(targetDevice)
         return roomRepository.save(targetRoom)
     }

@@ -21,6 +21,13 @@ data class Room(
         device.room=this
         device.configureTopic()
     }
+
+    fun removeDevice(device: Device){
+        deviceList.remove(device)
+        device.room=null
+        device.configureTopic()
+    }
+
     override fun toString(): String {
         return "Room(id=$id, name=$name, devices=$deviceList)"
     }
