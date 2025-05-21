@@ -48,9 +48,9 @@ class RoomService(
         // Eliminar el dispositivo de la lista del cuarto
 
         mqttService.publishConfiguration(targetDevice, unconfigure = true)
+        mqttService.unregisterDevice(targetDevice)
 
         targetRoom.removeDevice(targetDevice)
-        mqttService.unregisterDevice(targetDevice)
         // Desregistrar el dispositivo
         deviceRepository.save(targetDevice)
         return roomRepository.save(targetRoom)

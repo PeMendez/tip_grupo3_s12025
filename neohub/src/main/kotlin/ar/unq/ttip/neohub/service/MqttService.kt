@@ -71,11 +71,12 @@ class MqttService(
     }
 
     fun publishConfiguration(device: Device, unconfigure: Boolean = false) {
-        val topic = if (unconfigure) unconfiguredTopic else device.topic
+        val topicToConfigure = if (unconfigure) unconfiguredTopic else device.topic
+        val topicToPublish = if (!unconfigure) unconfiguredTopic else device.topic
         // Crear la configuración como un objeto
         val config = DeviceConfiguration(
             name = device.name,
-            new_topic = topic,
+            new_topic = topicToConfigure,
             mac_address = device.macAddress!!,
         )
 
@@ -83,7 +84,7 @@ class MqttService(
         val jsonMessage = objectMapper.writeValueAsString(config)
 
         // Publicar el mensaje
-        publish(device.topic, jsonMessage)
+        publish(topicToPublish, jsonMessage)
     }
 
     fun subscribe(topic: String, device: Device? = null) {
@@ -123,7 +124,6 @@ class MqttService(
         println("Received message on topic $topic: $message")
         if (topic.startsWith(unconfiguredTopic)) {
             try {
-                // Parsear el mensaje como un JSON genérico (ObjectNode)
                 val jsonNode = objectMapper.readTree(message) as? ObjectNode
                 if (jsonNode != null && jsonNode.has("new_topic")) {
                     val newTopic = jsonNode["new_topic"].asText()
@@ -131,33 +131,42 @@ class MqttService(
                         println("Message contains 'new_topic': $newTopic. Ignoring device registration.")
                         return
                     }
+                } else {
+                    handleUnconfiguredDevice(message)
                 }
-                // Si no tiene el campo "new_topic", tratarlo como un dispositivo no configurado
-                else handleUnconfiguredDevice(message)
             } catch (e: Exception) {
                 println("Error processing message: ${e.message}")
-                // Acción en caso de error, como registrar el problema
             }
         } else {
             val device = topicDeviceMap[topic]
             if (device != null) {
-                device.handleIncomingMessage(message)
-                // Lógica adicional basada en el tipo de dispositivo
-                handleDeviceUpdate(device)
-                try{
-                    deviceRepository.save(device)
-                    println("Se actualizó correctamente ${device.name}")
+                try {
+                    // Parsear el mensaje como JSON y extraer el comando
+                    val jsonNode = objectMapper.readTree(message) as? ObjectNode
+                    if (jsonNode != null && jsonNode.has("command")) {
+                        val command = jsonNode["command"].asText()
+                        val macAddress = jsonNode["mac_address"]?.asText() ?: ""
+                        if (macAddress == device.macAddress) {
+                            device.handleIncomingMessage(command) // Pasar el comando al dispositivo
+                            handleDeviceUpdate(device)
+                            deviceRepository.save(device)
+                            println("Se actualizó correctamente ${device.name}")
+                            evaluateRulesForDevice(device)
+                        } else {
+                            println("ERROR: La MAC del mensaje no coincide con el dispositivo.")
+                        }
+                    } else {
+                        println("ERROR: Mensaje JSON inválido o sin comando.")
+                    }
                 } catch (e: Exception) {
-                    println("ERROR: No se pudo guardar ${device.name} en la BDD.")
+                    println("Error procesando el mensaje JSON: ${e.message}")
                 }
-
-                // Evaluar reglas asociadas al dispositivo
-                evaluateRulesForDevice(device)
             } else {
                 println("ERROR: No se encontró ningún dispositivo para el tópico: $topic")
             }
         }
     }
+
 
     private fun evaluateRulesForDevice(device: Device) {
         // Obtener las reglas asociadas al dispositivo
