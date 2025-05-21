@@ -1,10 +1,13 @@
 package ar.unq.ttip.neohub.service
 
+import ar.unq.ttip.neohub.dto.DeviceCommand
 import ar.unq.ttip.neohub.dto.DeviceDTO
+import ar.unq.ttip.neohub.dto.DeviceData
 import ar.unq.ttip.neohub.model.Device
 import ar.unq.ttip.neohub.model.devices.DeviceFactory
 import ar.unq.ttip.neohub.model.devices.DeviceType
 import ar.unq.ttip.neohub.repository.DeviceRepository
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import jakarta.transaction.Transactional
 import org.springframework.context.event.EventListener
@@ -14,7 +17,8 @@ import org.springframework.stereotype.Service
 class DeviceService(
     private val mqttService: MqttService,
     private val repository: DeviceRepository,
-    private val factory: DeviceFactory
+    private val factory: DeviceFactory,
+    private val objectMapper: ObjectMapper = jacksonObjectMapper()
 ) {
 
     @EventListener
@@ -23,10 +27,7 @@ class DeviceService(
     }
 
     fun handleNewDevice(message: String) {
-        //hay que cambiar esto para que el nombre y tipo los parsee del mensaje
-        val mapper = jacksonObjectMapper()
-
-        val deviceData : DeviceData = mapper.readValue(message, DeviceData::class.java)
+        val deviceData : DeviceData = objectMapper.readValue(message, DeviceData::class.java)
         val type = DeviceType.fromString(deviceData.type)
         val name = deviceData.name
 
@@ -47,12 +48,30 @@ class DeviceService(
         mqttService.unregisterDevice(device)
     }
 
-    fun publishToDevice(deviceId: Long, message: String) {
+    fun publishToDevice(deviceId: Long, commandString: String) {
         val device = repository.findById(deviceId).orElseThrow {
             IllegalArgumentException("Device with ID $deviceId not found.")
         }
-        println("publishToDevice: publicando al device ID: $deviceId, mensaje: $message")
-        mqttService.publish(device.topic, message)
+        // Validar que el dispositivo tiene la información necesaria
+        val currentDeviceTopic = device.topic ?: throw IllegalStateException("Device with ID $deviceId has no assigned topic for commands.")
+        if (currentDeviceTopic.isBlank()) {
+            throw IllegalStateException("Device with ID $deviceId has an empty or blank topic assigned.")
+        }
+        val deviceMacAddress = device.macAddress ?: throw IllegalStateException("Device with ID $deviceId has no MAC address.")
+
+        // Crear el payload del comando
+        val commandPayload = DeviceCommand(
+            mac_address = deviceMacAddress,
+            command = commandString
+        )
+
+        // Convertir el payload a JSON
+        val jsonCommandMessage = objectMapper.writeValueAsString(commandPayload)
+
+        println("publishToDevice: publicando comando JSON al device ID: $deviceId, Tópico: $currentDeviceTopic, Mensaje: $jsonCommandMessage")
+
+        // Usar tu mqttService para publicar el mensaje JSON
+        mqttService.publish(currentDeviceTopic, jsonCommandMessage)
     }
 
     @Transactional
@@ -83,11 +102,3 @@ class DeviceService(
     }
 }
 
-data class DeviceData(
-    val name: String,
-    val type: String,
-    val mac_address: String
-)
-data class DeviceMessageRequest(
-    val message: String
-)

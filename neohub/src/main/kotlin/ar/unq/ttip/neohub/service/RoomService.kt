@@ -55,6 +55,7 @@ class RoomService(
         deviceRepository.save(targetDevice)
         return roomRepository.save(targetRoom)
     }
+
     @Transactional
     fun addNewRoom(homeId: Long, roomDTO: RoomDTO): RoomDTO {
         val home = homeRepository.findById(homeId).orElseThrow { RuntimeException("Home not found") }

@@ -1,7 +1,7 @@
 package ar.unq.ttip.neohub.controller
 
 import ar.unq.ttip.neohub.dto.DeviceDTO
-import ar.unq.ttip.neohub.service.DeviceMessageRequest
+import ar.unq.ttip.neohub.dto.DeviceMessageRequest
 import ar.unq.ttip.neohub.service.DeviceService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*

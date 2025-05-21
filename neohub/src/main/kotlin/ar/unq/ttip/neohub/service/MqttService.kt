@@ -1,18 +1,19 @@
 package ar.unq.ttip.neohub.service
 
+import ar.unq.ttip.neohub.dto.DeviceConfiguration
 import ar.unq.ttip.neohub.dto.toEntity
 import ar.unq.ttip.neohub.handler.MqttWebSocketHandler
 import ar.unq.ttip.neohub.model.Attribute
 import ar.unq.ttip.neohub.model.Device
 import ar.unq.ttip.neohub.model.devices.DeviceType
 import ar.unq.ttip.neohub.repository.DeviceRepository
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.eclipse.paho.client.mqttv3.MqttClient
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions
 import org.eclipse.paho.client.mqttv3.MqttException
 import org.eclipse.paho.client.mqttv3.MqttMessage
-import org.springframework.context.ApplicationEvent
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
 import java.util.*
@@ -22,7 +23,8 @@ class MqttService(
     private val applicationEventPublisher: ApplicationEventPublisher,
     private val webSocketHandler: MqttWebSocketHandler,
     private val ruleService: RuleService,
-    private val deviceRepository: DeviceRepository
+    private val deviceRepository: DeviceRepository,
+    private val objectMapper: ObjectMapper=jacksonObjectMapper()
 ) {
     private val brokerUrl = "tcp://broker.hivemq.com:1883" // "tcp://test.mosquitto.org:1883"
     private val clientId = "NeoHub-API-" + UUID.randomUUID().toString().substring(0, 8)
@@ -69,7 +71,6 @@ class MqttService(
     }
 
     fun publishConfiguration(device: Device, unconfigure: Boolean = false) {
-        val objectMapper = jacksonObjectMapper()
         val topic = if (unconfigure) unconfiguredTopic else device.topic
         // Crear la configuración como un objeto
         val config = DeviceConfiguration(
@@ -82,9 +83,8 @@ class MqttService(
         val jsonMessage = objectMapper.writeValueAsString(config)
 
         // Publicar el mensaje
-        publish(unconfiguredTopic, jsonMessage)
+        publish(device.topic, jsonMessage)
     }
-
 
     fun subscribe(topic: String, device: Device? = null) {
         if (!subscribedTopics.contains(topic)) {
@@ -122,7 +122,6 @@ class MqttService(
     fun handleMqttMessage(topic: String, message: String) {
         println("Received message on topic $topic: $message")
         if (topic.startsWith(unconfiguredTopic)) {
-            val objectMapper = jacksonObjectMapper()
             try {
                 // Parsear el mensaje como un JSON genérico (ObjectNode)
                 val jsonNode = objectMapper.readTree(message) as? ObjectNode
@@ -201,10 +200,3 @@ class MqttService(
 
 }
 
-class UnconfiguredDeviceEvent(val message: String): ApplicationEvent(message)
-
-data class DeviceConfiguration(
-    val name: String,
-    val new_topic: String,
-    val mac_address : String
-)
