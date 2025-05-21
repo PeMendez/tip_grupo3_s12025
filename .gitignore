@@ -1,2 +1,6 @@
 # Directorios generados por MQTT client
 paho*
+.idea/
+
+hardware/device_config.json
+hardware/scripts/device_config.json
