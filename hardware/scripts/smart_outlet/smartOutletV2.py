@@ -3,12 +3,20 @@ import time
 import json
 import os
 import random
+import argparse
 
 # Configuración del broker MQTT y tópicos
 MQTT_BROKER = "broker.hivemq.com"
 MQTT_PORT = 1883
 INITIAL_TOPIC = "neohub/unconfigured" # Tópico para dispositivos no configurados
-CONFIG_FILE = "device_config.json"
+
+# --- Configuración de Argumentos ---
+parser = argparse.ArgumentParser(description="Simulador de Smart Outlet MQTT.")
+parser.add_argument("--id", required=True, help="Identificador único para esta instancia del dispositivo (ej: outlet1)")
+args = parser.parse_args()
+
+DEVICE_INSTANCE_ID = args.id
+CONFIG_FILE = f"device_config_{DEVICE_INSTANCE_ID}.json" # Nombre de archivo único
 
 # --- Variables Globales de Estado del Dispositivo ---
 relay_state = False
@@ -43,9 +51,9 @@ def load_config():
 
 def publish_device_info(client):
     """Publica la información del dispositivo en el tópico inicial."""
-    global device_mac_address, INITIAL_TOPIC
+    global device_mac_address, INITIAL_TOPIC, DEVICE_INSTANCE_ID
     device_info = {
-        "name": "SimulatedRelay",
+        "name": DEVICE_INSTANCE_ID,
         "type": "smart_outlet",
         "mac_address": device_mac_address,
     }
@@ -164,7 +172,7 @@ if __name__ == "__main__":
 
     print(f"Estado inicial del dispositivo: Tópico='{current_mqtt_topic}', Configurado={is_configured}, MAC='{device_mac_address}', PrimeraEjecuciónAbsoluta={first_ever_run}")
 
-    client_id = f"SimulatedRelay-{device_mac_address}"
+    client_id = f"{DEVICE_INSTANCE_ID}-{device_mac_address}"
     client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2, client_id=client_id, clean_session=True)
     client.on_connect = on_connect
     client.on_message = on_message
