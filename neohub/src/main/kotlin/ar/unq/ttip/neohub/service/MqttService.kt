@@ -155,6 +155,18 @@ class MqttService(
                         } else {
                             println("ERROR: La MAC del mensaje no coincide con el dispositivo.")
                         }
+                    } else if (jsonNode != null && jsonNode.has("temperature")) {
+                        val update = jsonNode["temperature"].asText()
+                        val macAddress = jsonNode["mac_address"]?.asText() ?: ""
+                        if (macAddress == device.macAddress) {
+                            device.handleIncomingMessage(update) // Pasar el comando al dispositivo
+                            handleDeviceUpdate(device)
+                            deviceRepository.save(device)
+                            println("Se actualizó correctamente ${device.name}")
+                            evaluateRulesForDevice(device)
+                        } else {
+                            println("ERROR: La MAC del mensaje no coincide con el dispositivo.")
+                        }
                     } else {
                         println("ERROR: Mensaje JSON inválido o sin comando.")
                     }
