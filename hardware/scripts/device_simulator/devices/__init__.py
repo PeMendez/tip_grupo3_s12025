@@ -7,5 +7,6 @@ __all__ = [
     "MqttDevice",
     "SmartOutletDevice",
     "TemperatureSensorDevice",
-    "OpeningSensorDevice"
+    "OpeningSensorDevice",
+    "DimmerDevice"
 ]

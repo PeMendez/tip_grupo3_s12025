@@ -1,5 +1,5 @@
 from devices import MqttDevice
-import time, json, logging
+import time, json
 
 # --- Clase Específica del Dispositivo SmartOutlet ---
 class SmartOutletDevice(MqttDevice):

@@ -58,7 +58,7 @@ def main():
                     except EOFError: # Manejar si el input se cierra (ej. en algunos entornos de ejecución)
                         print("Entrada finalizada, saliendo del bucle de input de temperatura.")
                         break 
-                    time.sleep(1) # Pequeña pausa después del input\
+                    time.sleep(1) # Pequeña pausa después del input
                 elif isinstance(device_instance, OpeningSensorDevice): #Solo para sensor de puerta ventana
                     try:
                         opening_input = input(f"[{device_instance.device_id}] Ingrese estado (actual: {device_instance.isOpen} o 's' para omitir: ")
@@ -77,7 +77,7 @@ def main():
                     except EOFError: # Manejar si el input se cierra (ej. en algunos entornos de ejecución)
                         print("Entrada finalizada, saliendo del bucle de input de apertura de puerta.")
                         break 
-                    time.sleep(1) # Pequeña pausa después del input\
+                    time.sleep(1) # Pequeña pausa después del input
                 else:
                     time.sleep(5) # Para otros dispositivos, solo esperar
         except KeyboardInterrupt:
