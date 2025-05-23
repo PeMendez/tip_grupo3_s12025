@@ -122,60 +122,74 @@ class MqttService(
 
     fun handleMqttMessage(topic: String, message: String) {
         println("Received message on topic $topic: $message")
+
         if (topic.startsWith(unconfiguredTopic)) {
-            try {
-                val jsonNode = objectMapper.readTree(message) as? ObjectNode
-                if (jsonNode != null && jsonNode.has("new_topic")) {
-                    val newTopic = jsonNode["new_topic"].asText()
-                    if (newTopic.isNotEmpty()) {
-                        println("Message contains 'new_topic': $newTopic. Ignoring device registration.")
-                        return
-                    }
-                } else {
-                    handleUnconfiguredDevice(message)
-                }
-            } catch (e: Exception) {
-                println("Error processing message: ${e.message}")
-            }
+            handleUnconfiguredMessage(message)
         } else {
             val device = topicDeviceMap[topic]
             if (device != null) {
-                try {
-                    // Parsear el mensaje como JSON y extraer el comando
-                    val jsonNode = objectMapper.readTree(message) as? ObjectNode
-                    if (jsonNode != null && jsonNode.has("command")) {
-                        val command = jsonNode["command"].asText()
-                        val macAddress = jsonNode["mac_address"]?.asText() ?: ""
-                        if (macAddress == device.macAddress) {
-                            device.handleIncomingMessage(command) // Pasar el comando al dispositivo
-                            handleDeviceUpdate(device)
-                            deviceRepository.save(device)
-                            println("Se actualizó correctamente ${device.name}")
-                            evaluateRulesForDevice(device)
-                        } else {
-                            println("ERROR: La MAC del mensaje no coincide con el dispositivo.")
-                        }
-                    } else if (jsonNode != null && jsonNode.has("temperature")) {
-                        val update = jsonNode["temperature"].asText()
-                        val macAddress = jsonNode["mac_address"]?.asText() ?: ""
-                        if (macAddress == device.macAddress) {
-                            device.handleIncomingMessage(update) // Pasar el comando al dispositivo
-                            handleDeviceUpdate(device)
-                            deviceRepository.save(device)
-                            println("Se actualizó correctamente ${device.name}")
-                            evaluateRulesForDevice(device)
-                        } else {
-                            println("ERROR: La MAC del mensaje no coincide con el dispositivo.")
-                        }
-                    } else {
-                        println("ERROR: Mensaje JSON inválido o sin comando.")
-                    }
-                } catch (e: Exception) {
-                    println("Error procesando el mensaje JSON: ${e.message}")
-                }
+                processDeviceMessage(device, message)
             } else {
                 println("ERROR: No se encontró ningún dispositivo para el tópico: $topic")
             }
+        }
+    }
+
+    fun handleUnconfiguredMessage(message: String) {
+        try {
+            val jsonNode = objectMapper.readTree(message) as? ObjectNode
+            if (jsonNode != null && jsonNode.has("new_topic")) {
+                val newTopic = jsonNode["new_topic"].asText()
+                if (newTopic.isNotEmpty()) {
+                    println("Message contains 'new_topic': $newTopic. Ignoring device registration.")
+                }
+            } else {
+                handleUnconfiguredDevice(message)
+            }
+        } catch (e: Exception) {
+            println("Error processing unconfigured message: ${e.message}")
+        }
+    }
+
+    fun processDeviceMessage(device: Device, message: String) {
+        try {
+            val jsonNode = objectMapper.readTree(message) as? ObjectNode
+            if (jsonNode == null) {
+                println("ERROR: Mensaje no es JSON válido.")
+                return
+            }
+
+            val macAddress = jsonNode["mac_address"]?.asText() ?: ""
+            if (macAddress != device.macAddress) {
+                println("ERROR: La MAC del mensaje no coincide con el dispositivo.")
+                return
+            }
+
+            // Procesar comandos o actualizaciones
+            val command = jsonNode["command"]?.asText()
+            val updateHandlers = mapOf(
+                "temperature" to { value: String -> device.setAttributeValue(value) }, //termometro
+                "status" to { value: String -> device.setAttributeValue(value) }, //puerta
+            )
+
+            if (command != null) {
+                device.handleIncomingMessage(command)
+            } else {
+                // Procesar actualizaciones
+                for ((key, handler) in updateHandlers) {
+                    if (jsonNode.has(key)) {
+                        handler(jsonNode[key].asText())
+                    }
+                }
+            }
+
+            // Guardar cambios y evaluar reglas
+            handleDeviceUpdate(device)
+            deviceRepository.save(device)
+            println("Se actualizó correctamente ${device.name}")
+            evaluateRulesForDevice(device)
+        } catch (e: Exception) {
+            println("Error procesando el mensaje JSON: ${e.message}")
         }
     }
 
