@@ -1,0 +1,251 @@
+import json
+import os
+import random
+import logging
+import paho.mqtt.client as mqtt
+
+class MqttDevice:
+    def __init__(self, device_id, device_type, mqtt_broker, mqtt_port, initial_topic_base="neohub/unconfigured"):
+        self.logger = logging.getLogger(f"MqttDevice.{device_type}.{device_id}") # Logger específico por instancia
+
+        self.device_id = device_id
+        self.device_type = device_type
+        self.mqtt_broker = mqtt_broker
+        self.mqtt_port = mqtt_port
+        
+        # Tópico inicial donde los dispositivos no configurados escuchan/anuncian.
+        # Todos los tipos de dispositivos usarán este mismo tópico base para simplificar.
+        self.initial_topic = initial_topic_base 
+
+        self.config_file = f"config/config_{self.device_type}_{self.device_id}.json"
+        
+        # Atributos de estado que se inicializarán desde el archivo de config o por defecto
+        self.device_mac_address = None
+        self.current_mqtt_topic = self.initial_topic # Por defecto, empieza en el tópico inicial
+        self.is_configured = False
+        self.first_ever_run = False # Se determinará si el archivo de config no existía
+
+        self._initialize_state_from_config() # Carga config, MAC, y estado específico del hijo
+
+        # Configuración del Cliente MQTT
+        # El Client ID debe ser único. Combinar tipo, ID y MAC es una buena práctica.
+        self.client_id = f"{self.device_type}-{self.device_id}-{self.device_mac_address}"
+        self.client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2, client_id=self.client_id, clean_session=True)
+        self.client.on_connect = self._on_connect
+        self.client.on_message = self._on_message
+        # self.client.user_data_set(self) # Opcional, ya que los callbacks son métodos y tienen 'self'
+
+        self.logger.info(f"Dispositivo MQTT '{self.device_id}' ({self.device_type}) inicializado. MAC: {self.device_mac_address}")
+
+    def _initialize_state_from_config(self):
+        """
+        Carga la configuración desde el archivo, inicializa la MAC, el tópico actual,
+        el estado de configuración, y llama a la inicialización de estado específico de la subclase.
+        Si no hay archivo de config, genera MAC y prepara para guardar la config inicial.
+        """
+        config_data = self._load_config_file() # Carga el contenido del archivo JSON
+
+        if config_data and "mac_address" in config_data and config_data["mac_address"]:
+            self.device_mac_address = config_data["mac_address"]
+            self.current_mqtt_topic = config_data.get("device_topic", self.initial_topic)
+            self.is_configured = (self.current_mqtt_topic != self.initial_topic)
+            self.first_ever_run = False # El archivo de configuración ya existía
+            self.logger.info(f"MAC y tópico cargados desde config: MAC={self.device_mac_address}, Tópico={self.current_mqtt_topic}")
+        else:
+            self.first_ever_run = True # No había archivo de config o MAC válida
+            self.device_mac_address = f"{random.randint(0, 255):02X}{random.randint(0, 255):02X}{random.randint(0, 255):02X}"
+            self.current_mqtt_topic = self.initial_topic # Comienza desconfigurado
+            self.is_configured = False
+            self.logger.info(f"No se encontró MAC en config. Nueva MAC generada: {self.device_mac_address}")
+            # La configuración se guardará después de inicializar el estado específico si es first_ever_run
+
+        # Permitir a la subclase inicializar su propio estado desde config_data (si existe)
+        self._initialize_specific_state(config_data if config_data else {})
+
+        if self.first_ever_run:
+            # Si es la primera ejecución (no había config), ahora guardamos la config inicial completa
+            # (incluyendo el estado específico que la subclase haya podido establecer por defecto).
+            self._save_config_file()
+        
+        self.logger.info(f"Estado inicializado: Tópico='{self.current_mqtt_topic}', Configurado={self.is_configured}, PrimeraEjecución={self.first_ever_run}")
+
+    def _initialize_specific_state(self, config_data: dict):
+        """
+        Método para ser sobrescrito por las subclases.
+        Permite a las subclases cargar su estado específico desde el diccionario de configuración.
+        """
+        # Ejemplo en subclase: self.relay_state = config_data.get("relay_state", False)
+        pass
+
+    def _get_config_data_to_save(self) -> dict:
+        """
+        Método para ser sobrescrito por las subclases.
+        Debe devolver un diccionario con todos los datos que se deben guardar en el archivo de config.
+        La subclase DEBE llamar a super()._get_config_data_to_save() y añadir sus datos.
+        """
+        return {
+            "device_topic": self.current_mqtt_topic,
+            "mac_address": self.device_mac_address,
+            "device_type": self.device_type,
+            "device_id": self.device_id,
+            # La subclase añadirá aquí sus propios campos, ej: "relay_state": self.relay_state
+        }
+
+    def _save_config_file(self):
+        """Guarda la configuración actual (incluyendo datos específicos de la subclase) en el archivo."""
+        data_to_save = self._get_config_data_to_save()
+        try:
+            with open(self.config_file, "w") as file:
+                json.dump(data_to_save, file, indent=4)
+            self.logger.info(f"Configuración guardada en {self.config_file}: {data_to_save}")
+        except IOError as e:
+            self.logger.error(f"Error al guardar la configuración en {self.config_file}: {e}")
+
+    def _load_config_file(self) -> dict | None:
+        """Carga la configuración desde el archivo JSON."""
+        if os.path.exists(self.config_file):
+            try:
+                with open(self.config_file, "r") as file:
+                    config = json.load(file)
+                self.logger.info(f"Configuración cargada desde {self.config_file}.")
+                return config
+            except (IOError, json.JSONDecodeError) as e:
+                self.logger.error(f"Error al cargar la configuración de {self.config_file}: {e}")
+        else:
+            self.logger.info(f"No se encontró archivo de configuración: {self.config_file}.")
+        return None
+
+    def _get_specific_device_attributes_for_info(self) -> dict:
+        """
+        Método para ser sobrescrito por las subclases.
+        Permite añadir atributos específicos del tipo de dispositivo al mensaje de información inicial.
+        """
+        return {}
+
+    def _publish_device_info(self):
+        """Publica la información inicial del dispositivo en el initial_topic."""
+        device_info = {
+            "name": f"{self.device_id}", # Nombre genérico
+            "type": self.device_type,
+            "mac_address": self.device_mac_address,
+            "device_id": self.device_id,
+        }
+        # Añadir atributos específicos del tipo de dispositivo
+        device_info.update(self._get_specific_device_attributes_for_info())
+        
+        try:
+            self.client.publish(self.initial_topic, json.dumps(device_info), retain=True)
+            self.logger.info(f"Publicado mensaje de información del dispositivo en {self.initial_topic}: {device_info}")
+        except Exception as e:
+            self.logger.error(f"Error al publicar información del dispositivo: {e}")
+
+    def _on_connect(self, client, userdata, flags, rc, properties=None):
+        if rc == 0:
+            self.logger.info(f"Conexión exitosa al broker MQTT (Código: {rc})")
+            client.subscribe(self.current_mqtt_topic)
+            self.logger.info(f"Suscrito al tópico: {self.current_mqtt_topic}")
+
+            if not self.is_configured and self.first_ever_run:
+                self.logger.info(f"Primera ejecución (sin config previa) y no configurado: publicando info.")
+                self._publish_device_info()
+        else:
+            self.logger.error(f"Error en la conexión al broker, código de error: {rc}")
+
+    def _on_message(self, client, userdata, msg):
+        payload_str = ""
+        try:
+            payload_str = msg.payload.decode()
+            self.logger.debug(f"Mensaje crudo recibido en '{msg.topic}': {payload_str}")
+            message_json = json.loads(payload_str)
+            
+            msg_mac = message_json.get("mac_address")
+
+            if msg_mac == self.device_mac_address:
+                self.logger.info(f"Mensaje para este dispositivo (MAC: {msg_mac}) en '{msg.topic}': {message_json}")
+                requested_topic = message_json.get("new_topic")
+                
+                # Verificar si es un mensaje de comando buscando la clave "command"
+                # Asumimos que un mensaje o es de configuración (tiene "new_topic") o es de comando (tiene "command")
+                is_command_message = "command" in message_json
+
+                if requested_topic: # Mensaje de Configuración/Desconfiguración
+                    if requested_topic == self.initial_topic: # Solicitud de Desconfiguración
+                        if self.is_configured:
+                            self.logger.info("Solicitud de desconfiguración recibida. Restableciendo.")
+                            client.unsubscribe(self.current_mqtt_topic)
+                            self.logger.info(f"Desuscrito de: {self.current_mqtt_topic}")
+                            
+                            self.current_mqtt_topic = self.initial_topic
+                            client.subscribe(self.initial_topic)
+                            self.logger.info(f"Suscrito nuevamente al tópico inicial: {self.initial_topic}")
+                            
+                            self.is_configured = False
+                            self._save_config_file() # Guardar el nuevo estado desconfigurado
+                        else:
+                            self.logger.info("El dispositivo ya está desconfigurado. Ignorando.")
+                    else: # Solicitud de Configuración para un nuevo tópico específico
+                        self.logger.info(f"Solicitud de configuración recibida para el tópico: {requested_topic}")
+                        if self.is_configured and self.current_mqtt_topic != requested_topic:
+                            client.unsubscribe(self.current_mqtt_topic)
+                            self.logger.info(f"Desuscrito del tópico anterior: {self.current_mqtt_topic}")
+                        elif not self.is_configured and self.current_mqtt_topic == self.initial_topic and self.initial_topic != requested_topic :
+                             client.unsubscribe(self.initial_topic) # Estaba en initial, se configura a uno nuevo
+                             self.logger.info(f"Desuscrito del tópico inicial: {self.initial_topic}")
+                        
+                        self.current_mqtt_topic = requested_topic
+                        client.subscribe(self.current_mqtt_topic)
+                        self.logger.info(f"Suscrito al nuevo tópico: {self.current_mqtt_topic}")
+                        self.is_configured = True
+                        self._save_config_file()
+                
+                elif is_command_message: # Mensaje de Comando
+                    if self.is_configured and msg.topic == self.current_mqtt_topic:
+                        self.logger.info(f"Procesando comando JSON: {message_json.get('command')}")
+                        self._handle_device_command(message_json) # Pasar el JSON completo del comando
+                    elif not self.is_configured:
+                        self.logger.warning(f"Comando JSON '{message_json.get('command')}' ignorado: dispositivo no configurado.")
+                    else: # Configurado pero mensaje de comando en tópico incorrecto
+                        self.logger.warning(f"Comando JSON '{message_json.get('command')}' ignorado: recibido en tópico incorrecto '{msg.topic}' (esperado en '{self.current_mqtt_topic}').")
+                else:
+                    self.logger.warning(f"Mensaje JSON para este MAC pero sin 'new_topic' ni 'command'. Contenido: {message_json}")
+
+            elif msg_mac: # JSON con MAC, pero no para este dispositivo
+                self.logger.debug(f"Mensaje JSON ignorado (MAC '{msg_mac}' no coincide con {self.device_mac_address}).")
+            # else: Mensaje JSON sin MAC. Podría ser un broadcast. Ignorar por ahora.
+
+        except json.JSONDecodeError:
+            self.logger.warning(f"Mensaje recibido en '{msg.topic}' no es JSON válido: '{payload_str}'. Ignorando.")
+        except Exception as e:
+            self.logger.error(f"Error procesando mensaje en '{msg.topic}': {e}. Payload: '{payload_str}'", exc_info=True)
+
+    def _handle_device_command(self, command_json: dict):
+        """
+        Método abstracto para ser implementado por subclases.
+        Maneja los comandos específicos del dispositivo.
+        
+        Args:
+            command_json (dict): El mensaje JSON decodificado que contiene el comando.
+                                 Se espera que tenga una clave "command" y "mac_address".
+        """
+        self.logger.warning(f"_handle_device_command no implementado para {self.device_type}. Comando ignorado: {command_json.get('command')}")
+
+    def start(self):
+        """Conecta al broker MQTT e inicia el bucle del cliente."""
+        try:
+            self.logger.info(f"Conectando a {self.mqtt_broker}:{self.mqtt_port} como '{self.client_id}'...")
+            self.client.connect(self.mqtt_broker, self.mqtt_port, keepalive=60)
+            self.client.loop_start() # Inicia un hilo para el bucle MQTT
+            self.logger.info("Bucle MQTT iniciado en hilo separado.")
+        except Exception as e:
+            self.logger.critical(f"No se pudo conectar o iniciar el bucle MQTT: {e}", exc_info=True)
+            # Considerar una estrategia de reintento o terminar si es crítico
+
+    def stop(self):
+        """Detiene el bucle del cliente MQTT y desconecta."""
+        try:
+            self.logger.info("Deteniendo el cliente MQTT...")
+            self.client.loop_stop()
+            self.client.disconnect()
+            self.logger.info("Cliente MQTT desconectado limpiamente.")
+        except Exception as e:
+            self.logger.error(f"Error al detener el cliente MQTT: {e}", exc_info=True)

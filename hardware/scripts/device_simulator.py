@@ -443,7 +443,7 @@ class OpeningSensorDevice(MqttDevice):
         }
     
     def _publish_current_state(self):
-        """Publica la temperatura actual al tópico de estado del dispositivo."""
+        """Publica el estado actual al tópico de estado del dispositivo."""
         if self.is_configured:
             # Definir un sub-tópico para el estado, ej: dispositivo/cocina/luz/estado
             state_topic = f"{self.current_mqtt_topic}" # /state" 
@@ -461,7 +461,7 @@ class OpeningSensorDevice(MqttDevice):
         else:
             self.logger.debug("Dispositivo no configurado, no se publica estado.")
 
-     # Método para actualizar la temperatura (simulando una lectura física)
+     # Método para actualizar el estado de la abertura (simulando apertura o cierre fisicos)
     def update_status(self, new_status: float):
         """Actualiza el estado del sensor y publica el nuevo estado."""
         if(new_status): 

@@ -3,3 +3,5 @@ paho*
 .idea/
 
 hardware/scripts/*.json
+hardware/scripts/device_simulator/devices/__pycache__
+hardware/scripts/device_simulator/config/*.json
