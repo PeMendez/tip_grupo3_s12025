@@ -69,6 +69,8 @@ def main():
                             new_status = True
                         elif opening_input.lower() == 'c':
                             new_status = False
+                        else: 
+                            new_status = device_instance.isOpen
                         device_instance.update_status(new_status)
                     except ValueError:
                         print("Entrada inválida. Por favor ingrese 'o' (open) o 'c' (close).")

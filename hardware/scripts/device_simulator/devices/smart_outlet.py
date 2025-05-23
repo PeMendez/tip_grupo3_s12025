@@ -1,5 +1,5 @@
 from devices import MqttDevice
-import time, json 
+import time, json, logging
 
 # --- Clase Específica del Dispositivo SmartOutlet ---
 class SmartOutletDevice(MqttDevice):
@@ -43,7 +43,6 @@ class SmartOutletDevice(MqttDevice):
         """Maneja los comandos específicos para el Smart Outlet."""
         command = command_json.get("command")
         state_changed = False
-
         if command == "turn_on":
             if not self.relay_state:
                 self.relay_state = True

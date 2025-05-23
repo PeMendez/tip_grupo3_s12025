@@ -1,5 +1,5 @@
 from devices import MqttDevice
-import time, json 
+import time, json, logging
 
 # --- Clase Específica del Dispositivo TemperatureSensor ---
 class TemperatureSensorDevice(MqttDevice):
