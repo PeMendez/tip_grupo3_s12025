@@ -126,8 +126,8 @@ class MqttWebSocketHandler : TextWebSocketHandler()
         sessions.forEach { session ->
             if (session.isOpen) {
                 try {
-                    println("Si lo mandéee....")
                     session.sendMessage(TextMessage(json))
+                    println("Mensaje de webSocket enviado con éxito.")
                 } catch (e: Exception) {
                     println("Error enviando JSON a ${session.id}: ${e.message}")
                 }
