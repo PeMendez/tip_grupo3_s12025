@@ -1,6 +1,7 @@
 from devices import MqttDevice
 import time, json 
 
+# --- Clase Específica del Dispositivo TemperatureSensor ---
 class TemperatureSensorDevice(MqttDevice):
     def __init__(self, device_id, mqtt_broker, mqtt_port, initial_topic_base="neohub/unconfigured"):
         # 1. Inicializar el estado específico ANTES de llamar a super().__init__

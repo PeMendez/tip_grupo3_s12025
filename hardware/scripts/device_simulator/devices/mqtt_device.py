@@ -4,6 +4,7 @@ import random
 import logging
 import paho.mqtt.client as mqtt
 
+# --- Clase base de la que heredarán todos los tipos de dispositivo ---
 class MqttDevice:
     def __init__(self, device_id, device_type, mqtt_broker, mqtt_port, initial_topic_base="neohub/unconfigured"):
         self.logger = logging.getLogger(f"MqttDevice.{device_type}.{device_id}") # Logger específico por instancia
