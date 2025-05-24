@@ -30,13 +30,14 @@ export const getDevice = async (deviceId, token) => {
     }
 };
 
-export const controlLight = async (device, forceState, token) => {
+export const smartOutletCommand = async (device, forceState, token) => {
     const message = forceState? "turn_on" : "turn_off"
     console.log("Enviando un ", message)
     try {
         const response = await axios.post(`${API_URL}/message/${device.id}`,
             {
-                message: message
+                message: message,
+                parameter: ""
             },
             {
                 headers: {
@@ -47,7 +48,30 @@ export const controlLight = async (device, forceState, token) => {
         );
         return response.data;
     } catch (error) {
-        console.error('Error al controlar luces:', error);
+        console.error('Error al controlar enchufe:', error);
+        throw error;
+    }
+};
+
+export const dimmerCommand = async (device, brightness, token) => {
+    const message = "set_brightness"
+    console.log("Enviando un ", message)
+    try {
+        const response = await axios.post(`${API_URL}/message/${device.id}`,
+            {
+                message: message,
+                parameter: brightness.toString()
+            },
+            {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                }
+            }
+        );
+        return response.data;
+    } catch (error) {
+        console.error('Error al controlar brillo:', error);
         throw error;
     }
 };

@@ -14,7 +14,7 @@ import {
     deleteDevice
 } from "../api/roomService";
 import './roomDetail.css';
-import { getUnconfiguredDevices, controlLight } from "../api/deviceService.js";
+import {dimmerCommand, getUnconfiguredDevices, smartOutletCommand} from "../api/deviceService.js";
 import { connectWebSocket } from "../websocket.js";
 import Toast from '../Toast.jsx'
 
@@ -105,14 +105,22 @@ const RoomDetail = () => {
     const toggleLight = async (device) => {
         try {
             console.log('Enviando comando para cambiar estado: ', !device.status);
-            await controlLight(device, !device.status, token);
+            await smartOutletCommand(device, !device.status, token);
             console.log('Esperando websocket...');
         } catch (err) {
             console.error(err);
         }
     };
 
-
+    const setBrightness = async (device, brightness) =>{
+        try {
+            console.log('Enviando comando para setear el brillo a: ', brightness);
+            await dimmerCommand(device, brightness, token);
+            console.log('Esperando websocket...');
+        } catch (err) {
+            console.error(err);
+        }
+    };
 
     const showNotification = (title, message, options = {}) => {
         const {
@@ -174,6 +182,20 @@ const RoomDetail = () => {
                 });
             });
 
+        }
+        else if (data.type === "DIMMER_UPDATE") {
+            console.log("quiero updatear el brillo!")
+            const deviceId = data.id;
+            const brightness = parseInt(data.brightness);
+            setDevices(prev => {
+                return prev.map(device => {
+                    if (String(device.id) === String(deviceId)) {
+                        return { ...device, brightness: brightness };
+                    }
+                    console.log(device.brightness)
+                    return device;
+                });
+            });
         }
 
         else if (data.type === "TEMP_UPDATE") {
@@ -395,6 +417,23 @@ const RoomDetail = () => {
                                     </label>
                                 </div>
                             )}
+
+                            {device.type === "dimmer" && (
+                                <div className="slider-container" onClick={(e) => e.stopPropagation()}>
+                                    <label className="slider-label">
+                                        <input
+                                            type="range"
+                                            min="0"
+                                            max="100"
+                                            value={device.brightness || 0} // Ajusta según el valor actual del brillo
+                                            onChange={(e) => setBrightness(device, e.target.value)} // Envía el valor al backend
+                                        />
+                                        <span className="slider-value">{device.brightness || 0}%</span> {/* Muestra el valor */}
+                                    </label>
+                                </div>
+                            )}
+
+
                             {device.type === 'opening_sensor' && device.status && (
                                 <span className="alarm-status">ACTIVA</span>
                             )}

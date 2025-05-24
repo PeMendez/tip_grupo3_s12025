@@ -229,6 +229,26 @@ h2 {
     margin-top: 8px;
 }
 
+.slider-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    margin: 10px 0;
+}
+
+.slider-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.slider-value{
+    font-size: 14px;
+    text-align: center;
+}
 .slider {
     position: absolute;
     cursor: pointer;
