@@ -48,7 +48,7 @@ class DeviceService(
         mqttService.unregisterDevice(device)
     }
 
-    fun publishToDevice(deviceId: Long, commandString: String) {
+    fun publishToDevice(deviceId: Long, commandString: String, parameter: String = "") {
         val device = repository.findById(deviceId).orElseThrow {
             IllegalArgumentException("Device with ID $deviceId not found.")
         }
@@ -62,7 +62,8 @@ class DeviceService(
         // Crear el payload del comando
         val commandPayload = DeviceCommand(
             mac_address = deviceMacAddress,
-            command = commandString
+            command = commandString,
+            parameters = parameter
         )
 
         // Convertir el payload a JSON

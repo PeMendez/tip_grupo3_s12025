@@ -99,6 +99,18 @@ class MqttWebSocketHandler : TextWebSocketHandler()
         broadcastJson(statusMessage)
     }
 
+    fun sendDimmerUpdate(brightness: Any, deviceId: Long) {
+        val statusMessage = buildJsonMessage(
+            mapOf(
+                "type" to "DIMMER_UPDATE",
+                "id" to deviceId,
+                "brightness" to brightness
+            )
+        )
+        println("Enviando update de status: $statusMessage")
+        broadcastJson(statusMessage)
+    }
+
     fun buildJsonMessage(data: Map<String, Any>): String {
         val jsonBuilder = StringBuilder("{")
 

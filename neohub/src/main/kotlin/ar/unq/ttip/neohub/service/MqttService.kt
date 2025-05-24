@@ -167,13 +167,17 @@ class MqttService(
 
             // Procesar comandos o actualizaciones
             val command = jsonNode["command"]?.asText()
+            val parameters = jsonNode["parameters"]?.asText()
             val updateHandlers = mapOf(
                 "temperature" to { value: String -> device.setAttributeValue(value) }, //termometro
                 "status" to { value: String -> device.setAttributeValue(value) }, //puerta
+                "brightness" to { value: String -> device.setAttributeValue(value) },
             )
-
-            if (command != null) {
-                device.handleIncomingMessage(command)
+             if (command != null) {
+                 if(command.lowercase() == "set_brightness" && parameters != null) {
+                    device.handleIncomingMessage(parameters)
+                 } else
+                    device.handleIncomingMessage(command)
             } else {
                 // Procesar actualizaciones
                 for ((key, handler) in updateHandlers) {
@@ -192,7 +196,6 @@ class MqttService(
             println("Error procesando el mensaje JSON: ${e.message}")
         }
     }
-
 
     private fun evaluateRulesForDevice(device: Device) {
         // Obtener las reglas asociadas al dispositivo
@@ -229,6 +232,7 @@ class MqttService(
             DeviceType.TEMPERATURE_SENSOR -> webSocketHandler.sendTemperatureUpdate(device.getAttributeValue(Attribute.TEMPERATURE), device.id)
             DeviceType.OPENING_SENSOR -> webSocketHandler.sendOpeningUpdate(device.getAttributeValue(Attribute.IS_OPEN), device.id)
             DeviceType.SMART_OUTLET -> webSocketHandler.sendSmartOutletUpdate(device.getAttributeValue(Attribute.IS_ON), device.id)
+            DeviceType.DIMMER -> webSocketHandler.sendDimmerUpdate(device.getAttributeValue(Attribute.BRIGHTNESS), device.id)
             else -> println("Tipo de dispositivo no manejado: ${device.type}")
         }
     }

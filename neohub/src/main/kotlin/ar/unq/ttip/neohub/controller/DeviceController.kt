@@ -46,7 +46,7 @@ class DeviceController(
         @RequestBody messageRequest: DeviceMessageRequest
     ): ResponseEntity<Void>{
         //editar la clase DeviceMessageRequest si necesitamos que mande mas cosas
-        deviceService.publishToDevice(deviceId, messageRequest.message)
+        deviceService.publishToDevice(deviceId, messageRequest.message, messageRequest.parameter)
         println("Respondiendo la request")
         return ResponseEntity.ok().build()
     }

@@ -43,7 +43,7 @@ abstract class Device(
     }
 
     abstract fun handleIncomingMessage(message: String)
-    abstract fun executeAction(actionType: ActionType, parameters: String)
+    abstract fun executeAction(actionType: ActionType, parameters: String = "")
     abstract fun getAttributeValue(attribute: Attribute): Any
     abstract fun setAttributeValue(valor: String)
 }

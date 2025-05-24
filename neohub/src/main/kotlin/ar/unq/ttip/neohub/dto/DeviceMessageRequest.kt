@@ -1,5 +1,6 @@
 package ar.unq.ttip.neohub.dto
 
 data class DeviceMessageRequest(
-    val message: String
+    val message: String,
+    val parameter: String
 )
