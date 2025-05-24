@@ -1,5 +1,5 @@
 import argparse, time
-from devices import SmartOutletDevice, TemperatureSensorDevice, OpeningSensorDevice
+from devices import SmartOutletDevice, TemperatureSensorDevice, OpeningSensorDevice, DimmerDevice
 
 # --- Bloque Principal para Ejecutar el Simulador ---
 def main():
@@ -30,6 +30,13 @@ def main():
         )
     elif(cli_args.type.lower() == "opening_sensor"):
         device_instance = OpeningSensorDevice(
+            device_id=cli_args.id,
+            mqtt_broker=cli_args.broker,
+            mqtt_port=cli_args.port,
+            initial_topic_base=cli_args.initial_topic
+        )
+    elif(cli_args.type.lower() == "dimmer"):
+        device_instance = DimmerDevice(
             device_id=cli_args.id,
             mqtt_broker=cli_args.broker,
             mqtt_port=cli_args.port,
