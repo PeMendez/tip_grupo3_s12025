@@ -57,12 +57,12 @@ h2 {
     cursor: pointer;
     font-size: 16px;
     transition: background-color 0.3s ease;
-    background-color: #7397ba;
-    color: white;
+    background-color: var(--blue-gray);
+    color: var(--ghost-white);
 }
 
 .add-device-btn:hover {
-    background-color: #818cf8;
+    background-color: var(--tropical-indigo);
 }
 
 .device-grid {
@@ -85,8 +85,8 @@ h2 {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     width: 120px;
     text-align: center;
-    background-color: #7397ba;
-    color: white;
+    background-color: var(--tropical-indigo);
+    color: var(--ghost-white);
     cursor: pointer;
     display: flex;
     flex-direction: column;
@@ -97,12 +97,12 @@ h2 {
 
 .room-button:hover {
     transform: scale(1.1);
-    background-color: #818cf8;
+    background-color: var(--tropical-indigo);
 }
 
 .device-icon {
     font-size: 36px;
-    color: white;
+    color: var(--ghost-white);
 }
 
 .room-button span {
@@ -120,7 +120,7 @@ h2 {
 .device-options h3 {
     font-size: 20px;
     margin-bottom: 20px;
-    color: #fff;
+    color: var(--ghost-white);
 }
 
 .device-options-grid {
@@ -131,8 +131,8 @@ h2 {
 }
 
 .device-option-btn {
-    background-color: #7397ba;
-    color: white;
+    background-color: var(--blue-gray);
+    color: var(--ghost-white);
     border-radius: 12px;
     padding: 12px;
     width: 120px;
@@ -150,24 +150,24 @@ h2 {
 
 .device-option-btn:hover {
     transform: scale(1.05);
-    background-color: #818cf8;
+    background-color: var(--tropical-indigo);
 }
 
 .device-option-btn .device-icon {
     font-size: 32px;
-    color: white;
+    color: var(--ghost-white);
 }
 
 .device-option-btn span {
     font-size: 14px;
     font-weight: bold;
-    color: white;
+    color: var(--ghost-white);
 }
 
 .overlay {
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.6);
+    background: var(--light-grone);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -183,12 +183,12 @@ h2 {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: var(--light-grone);
     border-radius: 12px;
     opacity: 0;
     transition: opacity 0.3s ease;
     font-size: 2rem;
-    color: white;
+    color: var(--ghost-white);
 }
 
 .room-editable-container:hover .delete-icon-full {
@@ -197,9 +197,9 @@ h2 {
 
 .add-device-icon {
     border-radius: 12px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 5px var(--light-grone);
     text-align: center;
-    background-color: #7397ba;
+    background-color: var(--blue-gray);
     display: flex;
     justify-content: center;
     flex-direction: column-reverse;
@@ -256,16 +256,16 @@ h2 {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #ccc;
+    background-color: var(--ghost-white);
     transition: .4s;
     border-radius: 24px;
 }
 .slider.on {
-    background-color: #4f46e5;
+    background-color: var(--majorelle-blue);
 }
 
 .slider.off {
-    background-color: #ccc;
+    background-color: var(--ghost-white);
 }
 
 
@@ -285,7 +285,7 @@ h2 {
 }
 
 input:checked + .slider {
-    background-color: #4f46e5;
+    background-color: var(--majorelle-blue);
 }
 
 input:checked + .slider:before {
@@ -297,7 +297,7 @@ input:checked + .slider:before {
 }
 
 .alarm-status {
-    color: #ff4444;
+    color: var(--grape);
     font-weight: bold;
     margin-top: 5px;
     font-size: 12px;
@@ -308,12 +308,12 @@ input:checked + .slider:before {
     to { transform: scale(1.02); box-shadow: 0 0 20px rgba(255,0,0,0.8); }
 }
 .room-button.alarm-active {
-    color: #ff4444;
-    background: #fff0f0;
-    border: 2px solid #ff4444;
+    color: var(--alarm-red);
+    background: var(--ghost-white);
+    border: 2px solid var(--alarm-red);
     animation: alarm-pulse 0.5s infinite alternate;
 }
 .device-icon.alarm-active{
     font-size: 36px;
-    color: #ff4444;
+    color: var(--alarm-red);
 }

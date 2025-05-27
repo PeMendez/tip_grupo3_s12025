@@ -8,10 +8,10 @@
 .app-container {
   background-size: cover;
   background-position: center;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: var(--light-grone);
   border-radius: 20px;
-  box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
-  color: white;
+  box-shadow: 0 0 20px var(--app-green);
+  color: var(--ghost-white);
   text-align: center;
   height: 100vh;
   display: flex;
@@ -22,11 +22,11 @@
 }
 
 .hero {
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: var(--light-grone);
   max-width: 490px;
   padding: 10px;
   border-radius: 20px;
-  box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+  box-shadow: 0 0 20px var(--app-green);
   text-align: center;
 }
 
@@ -50,9 +50,9 @@ p {
 
 button {
   padding: 0.6rem 1.4rem;
-  background-color: #7397ba;
+  background-color: var(--blue-gray);
   border: none;
-  color: white;
+  color: var(--ghost-white);
   font-weight: bold;
   font-size: 1rem;
   border-radius: 999px;
@@ -62,5 +62,5 @@ button {
 }
 
 button:hover {
-  background-color: #5f7c9a;
+  background-color: var(--dark-gray);
 }

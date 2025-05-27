@@ -13,3 +13,21 @@ body {
   justify-content: center;
   align-items: center;
 }
+
+:root{
+  /* CSS HEX */
+  --alarm-red: #ff4444; /*#941E1F;*/
+  --violeta: #54138d; /* ver si este no es muy violento */
+  --grape: #793E5C;
+  --majorelle-blue: #4f46e5;
+  --tropical-indigo: #818cf8;
+  --app-green: #00FFFF19;
+  --light-green: #81DFAF;
+  --blue-gray: #7397ba;
+  --dark-gray: #475569;
+  --light-grone: #111A22;
+  --lighter-gray: #D9D7F9;
+  --champagne-pink: #f2dfd7;
+  --ghost-white: #fef9ff;
+  --rosado: #ECC6D0;
+}

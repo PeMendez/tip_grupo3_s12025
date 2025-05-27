@@ -3,11 +3,11 @@
     top: 20px;
     left: 50%;
     transform: translateX(-50%);
-    background: #ff4444;
-    color: white;
+    background: var(--alarm-red);
+    color: var(--ghost-white);
     padding: 12px 24px;
     border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 12px var(--light-grone);
     z-index: 1000;
     display: flex;
     align-items: center;
@@ -49,5 +49,5 @@
 }
 
 .toast.clickable:hover {
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: var(--lighter-gray);
 }
