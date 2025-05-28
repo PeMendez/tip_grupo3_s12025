@@ -9,7 +9,7 @@
 .back-or-close {
     position: fixed;
     top: 30px;
-    background: #7397ba;
+    background: var(--blue-gray);
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -24,7 +24,7 @@
 
 .back-or-close:hover {
     transform: scale(1.1);
-    background-color: #818cf8;
+    background-color: var(--tropical-indigo);
 }
 
 .back-or-close.arrow {

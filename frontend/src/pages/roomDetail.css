@@ -265,7 +265,7 @@ h2 {
 }
 
 .slider.off {
-    background-color: var(--ghost-white);
+    background-color: var(--majorelle-blue);
 }
 
 
@@ -276,7 +276,7 @@ h2 {
     width: 16px;
     left: 4px;
     bottom: 4px;
-    background-color: white;
+    background-color: var(--ghost-white);
     transition: .4s;
     border-radius: 50%;
 }

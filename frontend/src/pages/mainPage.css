@@ -43,17 +43,17 @@
     position: relative;
     border-radius: 12px;
     padding: 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 5px var(--light-grone);
     width: 120px;
     text-align: center;
-    background-color: #7397ba;
+    background-color: var(--blue-gray);
     cursor: pointer;
     margin: 5px;
 }
 
 .room-button:hover {
     transform: scale(1.1);
-    background-color: #818cf8;
+    background-color: var(--app-green);
 }
 
 .room-button img {
@@ -72,7 +72,7 @@
 
 .edit-button {
     position: relative;
-    background: #7397ba;
+    background: var(--blue-gray);
     top: 0;
     border: none;
     cursor: pointer;
@@ -83,7 +83,7 @@
     height: 40px;
     z-index: 20;
     border-radius: 50%;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px var(--light-grone);
     transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
@@ -97,13 +97,11 @@
     font-size: 24px;
 }
 
-
-
 .add-room-icon {
     border-radius: 12px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 5px var(--light-grone);
     text-align: center;
-    background-color: #7397ba;
+    background-color: var(--blue-gray);
     display: flex;
     justify-content: center;
     margin-top: 40px;
@@ -140,7 +138,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: var(--light-grone);
     border-radius: 12px;
     opacity: 0;
     transition: opacity 0.3s ease;
@@ -159,18 +157,18 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.6);
+    background: var(--light-grone);
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
 .modal {
-    background-color: rgba(0, 0, 0, 0.85);
+    background-color: var(--light-grone);
     padding: 2rem;
     border-radius: 8px;
     width: 300px;
-    color: white;
+    color: var(--ghost-white);
     display: flex;
     flex-direction: column;
 }

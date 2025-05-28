@@ -85,32 +85,32 @@
 }
 
 .device-card {
-    background: white;
+    background: var(--ghost-white);
     border-radius: 16px;
     padding: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    box-shadow: 0 4px 12px var(--light-grone);
     cursor: pointer;
     transition: all 0.3s ease;
     aspect-ratio: 1/1;
     height: 180px;
     position: relative;
     overflow: hidden;
-    border: 1px solid #fdfdfd;
+    border: 1px solid var(--ghost-white);
 }
 
 
 .device-card.active {
-    background: #e0e7ff;
+    background: var(--ghost-white);
     border: 1px solid var(--tropical-indigo);
 }
 
 .device-icon {
     font-size: 32px;
-    color: #475569;
+    color: var(--dark-gray);
     margin-bottom: 12px;
 }
 

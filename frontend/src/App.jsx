@@ -5,6 +5,7 @@ import fondo from './assets/fondo.png';
 import './App.css'
 import RoomDetail from "./pages/RoomDetail.jsx";
 import RulesManager from "./pages/RulesManager.jsx";
+import Header from "./components/Header.jsx"
 
 function App() {
     return (
@@ -24,7 +25,6 @@ function App() {
                     <Route path="/room/:id" element={<RoomDetail />} />
                     <Route path="/rule/:id" element={<RulesManager isDeviceContext={true} />} />
                     <Route path="/rules" element={<RulesManager />} />
-
                 </Routes>
             </Router>
         </div>
