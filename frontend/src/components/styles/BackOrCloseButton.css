@@ -8,7 +8,8 @@
 
 .back-or-close {
     position: fixed;
-    top: 30px;
+    top: 80px;
+    right: 20px;
     background: var(--blue-gray);
     cursor: pointer;
     display: flex;
@@ -28,9 +29,9 @@
 }
 
 .back-or-close.arrow {
-    margin: 20px;
+    margin: 0;
 }
 
 .back-or-close.x {
-    margin: 20px;
+    margin: 0;
 }

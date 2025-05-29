@@ -70,32 +70,6 @@
     margin-right: 30px;
 }
 
-.edit-button {
-    position: relative;
-    background: var(--blue-gray);
-    top: 0;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    z-index: 20;
-    border-radius: 50%;
-    box-shadow: 0 2px 4px var(--light-grone);
-    transition: transform 0.2s ease, background-color 0.2s ease;
-}
-
-.edit-button button {
-    background: transparent;
-    border: none;
-    padding: 0;
-}
-
-.edit-button button svg {
-    font-size: 24px;
-}
 
 .add-room-icon {
     border-radius: 12px;
