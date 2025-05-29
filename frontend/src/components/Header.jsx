@@ -1,40 +1,51 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import './header.module.css'; // Importar la hoja de estilos
+import styles from './styles/header.module.css'; // Importar la hoja de estilos
 import logo from "../assets/NeoHub.png"
+import { FiMenu } from "react-icons/fi";
+import { useNavigate } from 'react-router-dom'
+import TextButton from "./TextButton.jsx";
+
 const Header = ({ title }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-
     const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+    const navigate = useNavigate()
+
+    const logout = () => {
+        localStorage.removeItem('token');
+        setIsMenuOpen(false)
+        navigate("/");
+    };
 
     return (
-        <header className="header">
+        <header className={styles.header}>
             {/* Menú de hamburguesa */}
-            <button onClick={toggleMenu} className="hamburger-button">
-                <span className="material-icons">menu</span>
+            <button onClick={toggleMenu} className={styles.hamburgerButton}>
+                <FiMenu size={24} />
             </button>
 
             {/* Texto dinámico */}
-            <h1 className="header-title">{title}</h1>
+            <h1 className={styles.headerTitle}>{title}</h1>
 
             {/* Logo */}
-            <img src={logo} alt="App Logo" className="header-logo" />
+            <img src={logo} alt="App Logo" className= {styles.headerLogo}/> {/* Sobre esta imagen no toma los estilos. */}
+
+
+            {/* Fondo para cerrar el menú */}
+            {isMenuOpen && <div className={styles.menuOverlay} onClick={toggleMenu}></div>}
 
             {/* Menú desplegable */}
             {isMenuOpen && (
-                <div className="menu">
-                    <ul className="menu-list">
-                        <li className="menu-item">
-                            <Link to="/home" className="menu-link">Mi Hogar</Link>
+                <div className={styles.menu}>
+                    <ul className={styles.menuList} onClick={()=>setIsMenuOpen(false)}>
+                        <li className={styles.menuItem}>
+                            <Link to="/home" className={styles.menuLink}>Mi Hogar</Link>
                         </li>
-                        <li className="menu-item">
-                            <Link to="/rooms" className="menu-link">Habitaciones</Link>
+                        <li className={styles.menuItem}>
+                            <Link to="/rules" className={styles.menuLink}>Reglas</Link>
                         </li>
-                        <li className="menu-item">
-                            <Link to="/profile" className="menu-link">Mi Perfil</Link>
-                        </li>
-                        <li className="menu-item">
-                            <button className="menu-link">Cerrar Sesión</button>
+                        <li className={styles.menuItem}>
+                            <TextButton handleClick={logout} text="Cerrar Sesión" />
                         </li>
                     </ul>
                 </div>

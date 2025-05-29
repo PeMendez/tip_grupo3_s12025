@@ -1,0 +1,90 @@
+/* Estilo para el header */
+.header {
+    position: fixed;
+    top:0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
+    background-color: var(--majorelle-blue);
+    color: var(--ghost-white);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Botón de menú hamburguesa */
+.hamburgerButton {
+    background: none;
+    border: none;
+    color: var(--ghost-white);
+    cursor: pointer;
+    font-size: 1.5rem;
+}
+
+.hamburgerButton:focus {
+    outline: none;
+}
+
+/* Título dinámico */
+.headerTitle {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+/* Logo */
+.headerLogo{
+    height: 100px;
+}
+
+/* Fondo clicable para cerrar el menú */
+.menuOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9;
+}
+
+/* Menú desplegable */
+.menu {
+    position: absolute; /* Posicionar relativo al contenedor */
+    top: 100%; /* Ubicar debajo del header */
+    left: 0; /* Alinear a la izquierda */
+    width: 30%; /* Ocupa 0.3 del ancho */
+    height: 100vh;
+    background-color: var(--dark-gray); /* Fondo sólido gris */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para destacar */
+    z-index: 10; /* Por debajo del header (si tiene un z-index más alto) */
+    padding: 10px 0; /* Espaciado interno */
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* Lista de elementos del menú */
+.menuList {
+    list-style: none; /* Sin viñetas */
+    margin: 0;
+    padding: 0;
+}
+
+/* Elementos del menú */
+.menuItem {
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.menuItem:hover {
+    background-color: var(--tropical-indigo); /* Destacar con el color del header */
+}
+
+/* Links dentro del menú */
+.menuLink {
+    text-decoration: none; /* Sin subrayado */
+    color: var(--ghost-white);
+    display: block; /* Hace clic en toda el área del elemento */
+}
