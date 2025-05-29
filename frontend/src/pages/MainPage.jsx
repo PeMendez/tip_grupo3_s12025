@@ -10,9 +10,11 @@ import lavaderoImg from '../assets/lavadero.jpg'
 import banoImg from '../assets/Baño.jpg'
 import salaImg from '../assets/salaDeJuegos.jpg'
 import { FiEdit, FiPlus } from 'react-icons/fi'
-import './mainPage.css'
+import './styles/mainPage.css'
+import TextButton from "../components/TextButton.jsx";
+import RoundButton from "../components/RoundButton.jsx";
 
-function MainPage() {
+const MainPage = ({ setHeaderTitle }) => {
     const [rooms, setRooms] = useState([])
     const [editMode, setEditMode] = useState(false)
     const [editHome, setEditHome] = useState(false)
@@ -32,11 +34,6 @@ function MainPage() {
 
     const token = localStorage.getItem('token')
 
-    const logout = () => {
-        localStorage.removeItem('token');
-        navigate("/");
-    };
-
     useEffect(() => {
         const fetchRooms = async () => {
             try {
@@ -47,29 +44,29 @@ function MainPage() {
             }
         }
         fetchRooms()
-    }, [token])
+    }, [token]);
 
     const handleAddRoom = async (roomName) => {
         try {
-            await addRoom(token, roomName)
-            const updatedRooms = await getHome(token)
-            setRooms(updatedRooms.rooms || [])
-            setEditMode(false)
+            await addRoom(token, roomName);
+            const updatedRooms = await getHome(token);
+            setRooms(updatedRooms.rooms || []);
+            setEditMode(false);
         } catch (error) {
-            console.error("Error al agregar habitación", error)
+            console.error("Error al agregar habitación", error);
         }
     }
 
     const handleConfirmDelete = async () => {
         if (!roomToDelete) return;
         try {
-            await deleteRoom(token, roomToDelete.id)
-            const updatedRooms = await getHome(token)
-            setRooms(updatedRooms.rooms || [])
-            setShowDeletePopup(false)
-            setRoomToDelete(null)
+            await deleteRoom(token, roomToDelete.id);
+            const updatedRooms = await getHome(token);
+            setRooms(updatedRooms.rooms || []);
+            setShowDeletePopup(false);
+            setRoomToDelete(null);
         } catch (error) {
-            console.error("Error al eliminar habitación", error)
+            console.error("Error al eliminar habitación", error);
         }
     }
 
@@ -84,14 +81,10 @@ function MainPage() {
     }
 
     if (editMode) {
+        setHeaderTitle("Agregar Habitaciones");
         return (
             <div className="main-container">
-                <div className="header-wrapper">
-                    <div className="header">
-                        <BackOrCloseButton type="arrow" onClick={() => setEditMode(false)}/>
-                        <h2>Agregar Habitaciones</h2>
-                    </div>
-                </div>
+                <BackOrCloseButton type="arrow" onClick={() => setEditMode(false)}/>
                 <div className="room-grid">
                     {roomTypes.map((room, index) => (
                         <button key={index} onClick={() => handleAddRoom(room.name)} className="room-button">
@@ -110,14 +103,10 @@ function MainPage() {
     }
 
     if (editHome) {
+        setHeaderTitle("Editar Mis Habitaciones");
         return (
             <div className="main-container">
-                <div className="header-wrapper">
-                    <div className="header">
-                        <BackOrCloseButton type="arrow" onClick={() => setEditHome(false)}/>
-                        <h2>Editar Mis Habitaciones</h2>
-                    </div>
-                </div>
+                <BackOrCloseButton type="arrow" onClick={() => setEditHome(false)}/>
                 <div className="room-grid">
                     {rooms.map((room, index) => {
                         const type = roomTypes.find((r) => r.name === room.name);
@@ -142,12 +131,11 @@ function MainPage() {
                         );
                     })}
                     <div className="add-room-icon">
-                        <button onClick={() => {
+                        <TextButton handleClick={() => {
                             setEditMode(true);
                             setEditHome(false);
-                        }}>
-                            <FiPlus size={24} className="icon" />
-                        </button>
+                        }}
+                        text="Nueva" />
                     </div>
                 </div>
 
@@ -156,8 +144,8 @@ function MainPage() {
                         <div className="modal">
                             <p>¿Estás seguro que querés eliminar la habitación "{roomToDelete?.name}"?</p>
                             <div className="modal-actions">
-                                <button onClick={handleConfirmDelete}>Confirmar</button>
-                                <button onClick={() => setShowDeletePopup(false)}>Cancelar</button>
+                                <TextButton handleClick={handleConfirmDelete} text="Confirmar"/>
+                                <TextButton handleClick={() => setShowDeletePopup(false)} text="Cancelar"/>
                             </div>
                         </div>
                     </div>
@@ -165,31 +153,19 @@ function MainPage() {
             </div>
         );
     }
-
+    setHeaderTitle("Mi Hogar")
     return (
         <div className="main-container">
-            <div className="header-wrapper">
-                <div className="header">
-                    <BackOrCloseButton type="x" onClick={logout}/>
-                    <h2>Mi Hogar</h2>
-                </div>
-            </div>
             <div className="">
-                <div className="">
-                    <button onClick={() => showRules()}>
-                        Reglas
-                    </button>
+                <div className="rulesButton">
+                    <TextButton handleClick={()=> showRules()} text="Reglas"/>
                 </div>
             </div>
 
             {rooms.length > 0 ? (
                 <>
                     <div className="edit-container">
-                        <div className="edit-button">
-                            <button onClick={() => setEditHome(true)}>
-                                <FiEdit size={24}/>
-                            </button>
-                        </div>
+                        <RoundButton type="edit" onClick={() => setEditHome(true)}/>
                     </div>
                     <div className="room-grid">
                         {rooms.map((room, index) => {
@@ -210,9 +186,7 @@ function MainPage() {
             ) : (
                 <div className="no-rooms">
                     <p>Aún no tenés habitaciones...</p>
-                    <button onClick={() => setEditMode(true)}>
-                        <FiEdit/> Editar hogar
-                    </button>
+                    <RoundButton type="edit" onClick={()=>setEditMode(true)}/>
                 </div>
             )}
         </div>

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import './LoginPopup.css';
+import './styles/loginPopup.css';
 import { login } from '../api/authService';
 
 function LoginPopup({ onClose, onSuccessLogin }) {

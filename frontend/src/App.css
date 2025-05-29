@@ -1,29 +1,28 @@
 @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
 
+
 .app {
   min-height: 100vh;
 }
 
+
 .app-container {
-  background-size: cover;
-  background-position: center;
-  background-color: var(--light-grone);
-  border-radius: 20px;
-  box-shadow: 0 0 20px var(--app-green);
+  background-color: var(--dark-gray);
   color: var(--ghost-white);
   text-align: center;
-  height: 100vh;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 100%;
-  max-width: 490px;
+  box-shadow: 0 0 20px var(--app-green);
+  height: 100vh;
+  padding-top: 60px ;
 }
 
 .hero {
   background-color: var(--light-grone);
-  max-width: 490px;
   padding: 10px;
   border-radius: 20px;
   box-shadow: 0 0 20px var(--app-green);
@@ -48,19 +47,4 @@ p {
   margin-bottom: 1.5rem;
 }
 
-button {
-  padding: 0.6rem 1.4rem;
-  background-color: var(--blue-gray);
-  border: none;
-  color: var(--ghost-white);
-  font-weight: bold;
-  font-size: 1rem;
-  border-radius: 999px;
-  cursor: pointer;
-  transition: background 0.2s ease-in-out;
-  font-family: 'Orbitron', sans-serif;
-}
 
-button:hover {
-  background-color: var(--dark-gray);
-}

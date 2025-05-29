@@ -5,7 +5,8 @@ import {
     getOperators
 } from '../api/ruleService.js'
 import { getAllDevices } from '../api/deviceService.js'; // Nuevo endpoint para obtener todos los dispositivos
-import './rule.css'
+import './styles/rule.css'
+import TextButton from "./TextButton.jsx";
 
 const RuleFormPopupBis = ({ onClose, onCreate, device }) => {
     const [name, setName] = useState('');
@@ -237,8 +238,8 @@ const RuleFormPopupBis = ({ onClose, onCreate, device }) => {
                 </div>
 
                 <div className="modal-rule-actions">
-                    <button onClick={handleSubmit}>Crear</button>
-                    <button onClick={onClose}>Cancelar</button>
+                    <TextButton text={"Crear"} handleClick={handleSubmit}/>
+                    <TextButton text={"Cancelar"} handleClick={onClose}/>
                 </div>
             </div>
         </div>

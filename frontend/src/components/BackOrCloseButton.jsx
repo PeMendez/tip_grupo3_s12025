@@ -1,6 +1,6 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { X, ArrowLeft } from 'lucide-react';
-import './BackOrCloseButton.css';
+import './styles/BackOrCloseButton.css';
 
 const BackOrCloseButton = ({ type = 'arrow', onClick }) => {
     const navigate = useNavigate();

@@ -3,11 +3,13 @@ import { useParams } from "react-router-dom";
 import { getAllRules, getRuleForDevice, createRule, deleteRule } from '../api/ruleService.js';
 import { getDevice } from '../api/deviceService.js';
 import BackOrCloseButton from "../components/BackOrCloseButton.jsx";
-import { FiEdit, FiPlus } from "react-icons/fi";
-import './rules.css';
+import './styles/rules.css';
 import RuleFormPopupBis from "../components/RuleComponentBis.jsx";
+import TextButton from "../components/TextButton.jsx";
+import RoundButton from "../components/RoundButton.jsx";
+import {PiTextB} from "react-icons/pi";
 
-const RulesManager = ({ isDeviceContext = false }) => {
+const RulesManager = ({setHeaderTitle, isDeviceContext = false }) => {
     const { id } = useParams(); // Si viene desde ruta con :id
     const token = localStorage.getItem('token');
 
@@ -76,14 +78,13 @@ const RulesManager = ({ isDeviceContext = false }) => {
     const title = isDeviceContext ? `Reglas del dispositivo` : 'Reglas';
     const emptyMessage = isDeviceContext ? 'No hay reglas asociadas a este dispositivo.' : 'No hay reglas.';
 
+    if(editMode){
+        setHeaderTitle("Editar reglas")
+    } else setHeaderTitle(title)
+
     return (
         <div className="main-container">
-            <div className="header-wrapper">
-                <div className="header">
-                    <BackOrCloseButton />
-                    <h2>{editMode ? 'Editar Reglas' : title}</h2>
-                </div>
-            </div>
+            <BackOrCloseButton />
 
             {editMode ? (
                 <>
@@ -115,11 +116,7 @@ const RulesManager = ({ isDeviceContext = false }) => {
                     ) : (
                         <>
                             <div className="edit-container">
-                                <div className="edit-button">
-                                    <button onClick={() => setEditMode(true)}>
-                                        <FiEdit size={24} />
-                                    </button>
-                                </div>
+                                <RoundButton type="edit" onClick={() => setEditMode(true)} />
                             </div>
                             <div className="rule-grid">
                                 {rules.map((rule) => (
@@ -152,10 +149,9 @@ const RulesManager = ({ isDeviceContext = false }) => {
                                     </div>
                                 ))}
                                 <div className="add-device-icon">
-                                    <button onClick={() => setShowPopup(true)}>
-                                        <FiPlus size={24} className="icon" />
-                                    </button>
+                                    <TextButton handleClick={()=> setShowPopup(true)} text="Agregar..."/>
                                 </div>
+
                             </div>
                         </>
                     )}
@@ -175,8 +171,8 @@ const RulesManager = ({ isDeviceContext = false }) => {
                     <div className="modal" onClick={(e) => e.stopPropagation()}>
                         <p>¿Eliminar "{ruleToDelete?.name}"?</p>
                         <div className="modal-actions">
-                            <button onClick={handleConfirmDelete}>Confirmar</button>
-                            <button onClick={() => setShowDeletePopup(false)}>Cancelar</button>
+                            <TextButton handleClick={handleConfirmDelete} text="Confirmar"/>
+                            <TextButton handleClick={ () => setShowDeletePopup(false) } text="Cancelar"/>
                         </div>
                     </div>
                 </div>

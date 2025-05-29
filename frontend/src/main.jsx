@@ -10,9 +10,3 @@ root.render(
         <App />
     </StrictMode>
 );
-
-/*
-    <StrictMode>
-        <App />
-    </StrictMode>
- */

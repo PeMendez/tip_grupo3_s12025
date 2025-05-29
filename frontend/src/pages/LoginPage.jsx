@@ -1,18 +1,21 @@
-import { useState } from 'react'
+import {useEffect, useState} from 'react'
 import { useNavigate } from 'react-router-dom'
 import LoginPopup from '../components/LoginPopUp'
 import RegisterPopup from '../components/RegisterPopUp'
 import logo from '../assets/NeoHub.png'
-import fondo from '../assets/fondo.png'
-import './loginPage.css'
+import './styles/loginPage.css'
 
-function LoginPage() {
+function LoginPage({ setHeaderTitle }) {
     const [showLogin, setShowLogin] = useState(false)
     const [showRegister, setShowRegister] = useState(false)
     const navigate = useNavigate()
 
+    useEffect(() => {
+        setHeaderTitle("NeoHub - Login")
+    }, [setHeaderTitle]);
+
     return (
-        <div className="app-container" style={{ backgroundImage: `url(${fondo})` }}>
+        <div className="app-container">
             <div className="hero">
                 <img src={logo} alt="Neo Hub Logo" className="logo" />
                 <h1>Bienvenido a Neo Hub</h1>

@@ -13,12 +13,12 @@ import {
     addDeviceToRoom,
     deleteDevice
 } from "../api/roomService";
-import './roomDetail.css';
+import './styles/roomDetail.css';
 import {dimmerCommand, getUnconfiguredDevices, smartOutletCommand} from "../api/deviceService.js";
-import { connectWebSocket } from "../websocket.js";
-import Toast from '../Toast.jsx'
+import { connectWebSocket } from "../api/websocket.js";
+import Toast from '../components/Toast.jsx'
 
-const RoomDetail = () => {
+const RoomDetail = ({ setHeaderTitle }) => {
     const { id } = useParams();
     const token = localStorage.getItem('token');
 
@@ -298,14 +298,10 @@ const RoomDetail = () => {
     };
 
     if (addMode) {
+        setHeaderTitle("Agregar dispositivo")
         return (
             <div className="main-container">
-                <div className="header-wrapper">
-                    <div className="header">
-                        <BackOrCloseButton type="arrow" onClick={() => setAddMode(false)} />
-                        <h2>Agregar Dispositivos</h2>
-                    </div>
-                </div>
+                <BackOrCloseButton type="arrow" onClick={() => setAddMode(false)} />
                 <div className="room2-grid">
                     {availableDevices.map((device, index) => (
                         <button
@@ -323,14 +319,10 @@ const RoomDetail = () => {
     }
 
     if (editMode) {
+        setHeaderTitle("Editar dispositivo")
         return (
             <div className="main-container">
-                <div className="header-wrapper">
-                    <div className="header">
-                        <BackOrCloseButton type="arrow" onClick={() => setEditMode(false)} />
-                        <h2>Editar Dispositivos</h2>
-                    </div>
-                </div>
+                <BackOrCloseButton type="arrow" onClick={() => setEditMode(false)} />
                 <div className="room2-grid">
                     {devices.map((device, index) => (
                         <div
@@ -369,15 +361,10 @@ const RoomDetail = () => {
             </div>
         );
     }
-
+    setHeaderTitle(roomName)
     return (
         <div className="main-container">
-            <div className="header-wrapper">
-                <div className="header">
-                    <BackOrCloseButton/>
-                    <h2>{roomName}</h2>
-                </div>
-            </div>
+            <BackOrCloseButton/>
             {devices.length > 0 && (
                 <div className="edit-container">
                 <div className="edit-button">

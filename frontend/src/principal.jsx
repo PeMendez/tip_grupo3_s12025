@@ -12,8 +12,8 @@ import {
 } from 'react-icons/fi';
 import { LuAirVent } from "react-icons/lu";
 import { controlLight } from './api/homeService.js';
-import { connectWebSocket, disconnectWebSocket } from './websocket';
-import Toast from './Toast';
+import { connectWebSocket, disconnectWebSocket } from './api/websocket.js';
+import Toast from './components/Toast.jsx';
 
 const SmartHomeDashboard = () => {
 

@@ -1,34 +1,33 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import LoginPage from './pages/LoginPage'
 import MainPage from './pages/MainPage'
-import fondo from './assets/fondo.png';
 import './App.css'
 import RoomDetail from "./pages/RoomDetail.jsx";
 import RulesManager from "./pages/RulesManager.jsx";
-import Header from "./components/Header.jsx"
+import Header from "./components/Header.jsx";
+import {useState} from "react";
 
-function App() {
+const App = () => {
+    const [headerTitle, setHeaderTitle] = useState("NeoHub");
     return (
-        <div
-            className="app-container"
-            style={{
-                backgroundImage: `url(${fondo})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                minHeight: '100vh'
-            }}
-        >
+        <div className="app-container">
             <Router>
+                <Header title={headerTitle}/>
                 <Routes>
-                    <Route path="/" element={<LoginPage/>}/>
-                    <Route path="/home" element={<MainPage/>}/>
-                    <Route path="/room/:id" element={<RoomDetail />} />
-                    <Route path="/rule/:id" element={<RulesManager isDeviceContext={true} />} />
-                    <Route path="/rules" element={<RulesManager />} />
+                    <Route path="/"
+                           element={<LoginPage setHeaderTitle={setHeaderTitle}/>}/>
+                    <Route path="/home"
+                           element={<MainPage setHeaderTitle={setHeaderTitle}/>}/>
+                    <Route path="/room/:id"
+                           element={<RoomDetail setHeaderTitle={setHeaderTitle}/>}/>
+                    <Route path="/rules"
+                           element={<RulesManager setHeaderTitle={setHeaderTitle} />}/>
+                    <Route path="/rule/:id"
+                           element={<RulesManager isDeviceContext={true} setHeaderTitle={setHeaderTitle}/>}/>
                 </Routes>
             </Router>
         </div>
-            )
-            }
+    )
+}
 
 export default App

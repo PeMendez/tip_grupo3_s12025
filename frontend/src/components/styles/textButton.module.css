@@ -1,0 +1,16 @@
+.textButton {
+    padding: 0.6rem 1.4rem;
+    background-color: var(--blue-gray);
+    border: none;
+    color: var(--ghost-white);
+    font-weight: bold;
+    font-size: 1rem;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.2s ease-in-out;
+    font-family: 'Orbitron', sans-serif;
+}
+
+.textButton:hover {
+    background-color: var(--tropical-indigo);
+}
