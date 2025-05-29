@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { register } from '../api/authService.js'
+import TextButton from "./TextButton.jsx";
 
 function RegisterPopup({ onClose, onSuccessRegister }) {
     const [usernameOrEmail, setUsernameOrEmail] = useState('')
@@ -39,8 +40,8 @@ function RegisterPopup({ onClose, onSuccessRegister }) {
                 />
                 {error && <div className="error-message">{error}</div>}
                 <div className="modal-actions">
-                    <button onClick={handleRegister}>Registrarse</button>
-                    <button onClick={onClose}>Cancelar</button>
+                    <TextButton text={"Registrarse"} handleClick={handleRegister}/>
+                    <TextButton text={"Cancelar"} handleClick={onClose}/>
                 </div>
             </div>
         </div>

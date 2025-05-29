@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import './styles/loginPopup.css';
 import { login } from '../api/authService';
+import TextButton from "./TextButton.jsx";
 
 function LoginPopup({ onClose, onSuccessLogin }) {
     const [username, setUsername] = useState('');
@@ -38,8 +39,8 @@ function LoginPopup({ onClose, onSuccessLogin }) {
                 />
                 {error && <div className="error-message">{error}</div>}
                 <div className="modal-actions">
-                    <button onClick={handleLogin}>Entrar</button>
-                    <button onClick={onClose}>Cancelar</button>
+                    <TextButton text={"Entrar"} handleClick={handleLogin}/>
+                    <TextButton text={"Cancelar"} handleClick={onClose}/>
                 </div>
             </div>
         </div>

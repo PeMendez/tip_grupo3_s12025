@@ -7,7 +7,6 @@ import './styles/rules.css';
 import RuleFormPopupBis from "../components/RuleComponentBis.jsx";
 import TextButton from "../components/TextButton.jsx";
 import RoundButton from "../components/RoundButton.jsx";
-import {PiTextB} from "react-icons/pi";
 
 const RulesManager = ({setHeaderTitle, isDeviceContext = false }) => {
     const { id } = useParams(); // Si viene desde ruta con :id

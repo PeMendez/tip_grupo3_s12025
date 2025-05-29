@@ -25,7 +25,7 @@ const RoomDetail = ({ setHeaderTitle }) => {
     const [roomName, setRoomName] = useState("");
     const [devices, setDevices] = useState([]);
     const [availableDevices, setAvailableDevices] = useState([]);
-    const [error, setError] = useState(null);
+    const [_, setError] = useState(null);
     const [editMode, setEditMode] = useState(false);
     const [addMode, setAddMode] = useState(false);
     const [showDeletePopup, setShowDeletePopup] = useState(false);

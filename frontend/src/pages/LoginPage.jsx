@@ -4,6 +4,7 @@ import LoginPopup from '../components/LoginPopUp'
 import RegisterPopup from '../components/RegisterPopUp'
 import logo from '../assets/NeoHub.png'
 import './styles/loginPage.css'
+import TextButton from "../components/TextButton.jsx";
 
 function LoginPage({ setHeaderTitle }) {
     const [showLogin, setShowLogin] = useState(false)
@@ -21,8 +22,8 @@ function LoginPage({ setHeaderTitle }) {
                 <h1>Bienvenido a Neo Hub</h1>
                 <p>Controlá tu hogar inteligente desde un solo lugar.</p>
                 <div className="botones">
-                    <button onClick={() => setShowLogin(true)}>Iniciar sesión</button>
-                    <button onClick={() => setShowRegister(true)}>Registrarte</button>
+                    <TextButton text={"Iniciar sesión"} handleClick={() => setShowLogin(true)}/>
+                    <TextButton text={"Registrarse"} handleClick={() => setShowRegister(true)}/>
                 </div>
             </div>
 
