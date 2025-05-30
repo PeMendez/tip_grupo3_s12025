@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useParams } from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import { getAllRules, getRuleForDevice, createRule, deleteRule } from '../api/ruleService.js';
-import { getDevice } from '../api/deviceService.js';
+import {getConfiguredDeviceCount, getDevice} from '../api/deviceService.js';
 import BackOrCloseButton from "../components/BackOrCloseButton.jsx";
 import './styles/rules.css';
 import RuleFormPopupBis from "../components/RuleComponentBis.jsx";
@@ -11,7 +11,9 @@ import RoundButton from "../components/RoundButton.jsx";
 const RulesManager = ({setHeaderTitle, isDeviceContext = false }) => {
     const { id } = useParams(); // Si viene desde ruta con :id
     const token = localStorage.getItem('token');
+    const navigate = useNavigate();
 
+    const [deviceCount, setDeviceCount] = useState(0);
     const [rules, setRules] = useState([]);
     const [device, setDevice] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -41,6 +43,21 @@ const RulesManager = ({setHeaderTitle, isDeviceContext = false }) => {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+        const fetchDeviceCount = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                const count = await getConfiguredDeviceCount(token);
+                setDeviceCount(count);
+            } catch (error) {
+                console.error('Error al cargar el conteo de dispositivos configurados:', error);
+            }
+        };
+
+        fetchDeviceCount();
+    }, []);
+
 
     useEffect(() => {
         if (token) fetchRules();
@@ -107,10 +124,19 @@ const RulesManager = ({setHeaderTitle, isDeviceContext = false }) => {
                 </>
             ) : (
                 <>
-                    {rules.length === 0 ? (
+                    {rules.length === 0 ?
+                    (
                         <>
                             <p>{emptyMessage}</p>
-                            <button onClick={() => setShowPopup(true)}>Agregar Regla</button>
+                            {deviceCount>=2 ?
+                                (<div className="add-device-icon">
+                                    <TextButton handleClick={()=> setShowPopup(true)} text="Agregar Regla"/>
+                                </div>) :
+                                (<div>
+                                    <p>No tienes suficientes dispositivos configurados para agregar reglas.</p>
+                                    <TextButton handleClick={() => navigate('/home')} text="A mis habitaciones..."/>
+                                </div>)
+                            }
                         </>
                     ) : (
                         <>
@@ -147,9 +173,15 @@ const RulesManager = ({setHeaderTitle, isDeviceContext = false }) => {
                                         )}
                                     </div>
                                 ))}
-                                <div className="add-device-icon">
-                                    <TextButton handleClick={()=> setShowPopup(true)} text="Agregar..."/>
-                                </div>
+                                {deviceCount>2 ?
+                                    (<div className="add-device-icon">
+                                        <TextButton handleClick={()=> setShowPopup(true)} text="Agregar..."/>
+                                    </div>) :
+                                    (<div>
+                                        <p>No tienes suficientes dispositivos configurados para agregar reglas.</p>
+                                        <TextButton handleClick={() => navigate('/home')} text="A mis habitaciones..."/>
+                                    </div>)
+                                }
 
                             </div>
                         </>

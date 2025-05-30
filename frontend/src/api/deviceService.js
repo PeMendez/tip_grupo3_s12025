@@ -16,6 +16,20 @@ export const getUnconfiguredDevices = async (token) => {
     }
 };
 
+export const getConfiguredDeviceCount = async (token) => {
+    try {
+        const response = await axios.get(`${API_URL}/configuredCount`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error al obtener el conteo de dispositivos configurados:', error);
+        throw new Error('No se pudo obtener el conteo de dispositivos configurados.');
+    }
+};
+
 export const getDevice = async (deviceId, token) => {
     try {
         const response = await axios.get(`${API_URL}/${deviceId}`, {

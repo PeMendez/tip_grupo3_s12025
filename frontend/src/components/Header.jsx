@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './styles/header.module.css'; // Importar la hoja de estilos
-import logo from "../assets/NeoHub.png"
+import logo from "../assets/Logo1.svg"
 import { FiMenu } from "react-icons/fi";
 import { useNavigate } from 'react-router-dom'
 import TextButton from "./TextButton.jsx";

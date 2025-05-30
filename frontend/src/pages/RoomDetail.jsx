@@ -17,6 +17,8 @@ import './styles/roomDetail.css';
 import {dimmerCommand, getUnconfiguredDevices, smartOutletCommand} from "../api/deviceService.js";
 import { connectWebSocket } from "../api/websocket.js";
 import Toast from '../components/Toast.jsx'
+import TextButton from "../components/TextButton.jsx";
+import RoundButton from "../components/RoundButton.jsx";
 
 const RoomDetail = ({ setHeaderTitle }) => {
     const { id } = useParams();
@@ -184,7 +186,6 @@ const RoomDetail = ({ setHeaderTitle }) => {
 
         }
         else if (data.type === "DIMMER_UPDATE") {
-            console.log("quiero updatear el brillo!")
             const deviceId = data.id;
             const brightness = parseInt(data.brightness);
             setDevices(prev => {
@@ -192,7 +193,6 @@ const RoomDetail = ({ setHeaderTitle }) => {
                     if (String(device.id) === String(deviceId)) {
                         return { ...device, brightness: brightness };
                     }
-                    console.log(device.brightness)
                     return device;
                 });
             });
@@ -303,16 +303,19 @@ const RoomDetail = ({ setHeaderTitle }) => {
             <div className="main-container">
                 <BackOrCloseButton type="arrow" onClick={() => setAddMode(false)} />
                 <div className="room2-grid">
-                    {availableDevices.map((device, index) => (
-                        <button
-                            key={index}
-                            onClick={() => handleAddDevice(device)}
-                            className="room-button"
-                        >
-                            <div className="device-icon">{getDeviceIcon(device.type)}</div>
-                            <span>{device.name}</span>
-                        </button>
-                    ))}
+                    {availableDevices.length>0 ? <>
+                        ({availableDevices.map((device, index) => (
+                            <button
+                                key={index}
+                                onClick={() => handleAddDevice(device)}
+                                className="room-button"
+                            >
+                                <div className="device-icon">{getDeviceIcon(device.type)}</div>
+                                <span>{device.name}</span>
+                            </button>
+                        ))}
+                        </> : <p>¡Conectá un dispositivo NeoHub para empezar!</p>
+                    }
                 </div>
             </div>
         );
@@ -367,11 +370,7 @@ const RoomDetail = ({ setHeaderTitle }) => {
             <BackOrCloseButton/>
             {devices.length > 0 && (
                 <div className="edit-container">
-                <div className="edit-button">
-                        <button onClick={() => setEditMode(true)}>
-                            <FiEdit size={24}/>
-                        </button>
-                    </div>
+                    <RoundButton type="edit" onClick={() => setEditMode(true)}/>
                 </div>
             )}
 
@@ -429,9 +428,7 @@ const RoomDetail = ({ setHeaderTitle }) => {
                 ) : (
                     <div className="no-devices">
                         <p>Aún no tenés dispositivos...</p>
-                        <button onClick={handleAddClick}>
-                            <FiPlus/> Agregar dispositivo
-                        </button>
+                        <TextButton text="+ Agregar dispositivo" handleClick={handleAddClick}/>
                     </div>
                 )}
             </div>
