@@ -29,35 +29,49 @@ class SmartOutlet(
         println("$name toggled to ${if (isOn) "ON" else "OFF"}")
     }
 
-    override fun handleIncomingMessage(message: String) {
-        /*when (message.lowercase()) {
-            "turn_on" -> turnOn()
-            "turn_off" -> turnOff()
-            "toggle" -> toggle()
-            else -> println("Mensaje desconocido para SmartOutlet '$name': $message")
-        }*/
-        setAttributeValue(message)
+    private fun setOutletStatus(valor: String) {
+        // El valor JSON booleano se convierte a String "true" o "false" por valueNode.asText()
+        this.isOn = valor.toBooleanStrictOrNull() ?: run {
+            println("ERROR: Valor de status '$valor' no es un booleano válido para SmartOutlet '${this.name}'.")
+            return // No cambiar el estado si el valor es inválido
+        }
+        println("INFO: Estado del SmartOutlet '${this.name}' actualizado a: ${if(this.isOn) "ENCENDIDO" else "APAGADO"}")
+    }
+
+    override fun handleAttributeUpdate(attribute: String, value: String): Boolean {
+        return when (attribute.lowercase()) {
+            "status" -> {
+                setOutletStatus(value)
+                true
+            }
+            else -> super.handleAttributeUpdate(attribute, value)
+        }
     }
 
     override fun executeAction(actionType: ActionType, parameters: String) {
         println("$name ejecutando $actionType...")
-        handleIncomingMessage(actionType.toString())
-    }
-
-
-    override fun getAttributeValue(attribute: Attribute): Any {
-        return isOn
-    }
-
-    override fun setAttributeValue(valor: String) {
-        when (valor) {
-            "turn_on" -> turnOn()
-            "turn_off" -> turnOff()
-            "toggle" -> toggle()
-            else -> println("Mensaje desconocido para '$type' '$name': $valor")
+        when (actionType) {
+            ActionType.TURN_ON -> setOutletStatus("true")
+            ActionType.TURN_OFF -> setOutletStatus("false")
+            else -> {
+                throw UnsupportedOperationException("El Dimmer no soporta la acción: $actionType")
+            }
         }
     }
 
+    override fun getAttributeValue(attribute: Attribute): Any {
+        when (attribute){
+            Attribute.IS_ON -> return isOn
+            else -> throw IllegalArgumentException("Atributo no soportado por ${name}")
+        }
+    }
+
+    override fun setAttributeValue(attribute: Attribute, value: String) {
+        when (attribute){
+            Attribute.IS_ON -> setOutletStatus(value)
+            else -> throw IllegalArgumentException("Atributo no soportado por ${name}")
+        }
+    }
 
     override fun toDTO(): DeviceDTO {
         return super.toDTO().copy(status = isOn)

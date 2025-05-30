@@ -14,24 +14,28 @@ class Dimmer( name: String,
 
     var brightness: Int = 0
 
-    fun updateBrightness(percentage: Int) {
-        brightness = if (percentage<=0) 0
-        else if (percentage>=100) 100
-        else percentage
+    private fun updateBrightness(percentage: String) { // Lo hacemos privado o protegido, llamado desde updateAttribute
+        try {
+            val percentage = percentage.toInt()
+            this.brightness = when {
+                percentage <= 0 -> 0
+                percentage >= 100 -> 100
+                else -> percentage
+            }
+            println("INFO: Brillo del Dimmer '${this.name}' actualizado a: ${this.brightness}%")
+        } catch (e: NumberFormatException) {
+            println("ERROR: Valor de brillo '$percentage' no es un número entero válido para Dimmer '${this.name}'.")
+        }
     }
 
-    override fun handleIncomingMessage(message: String) {
-        /*val newBrightness = message.toIntOrNull()
-        if (newBrightness != null) {
-            updateBrightness(newBrightness)
-        } else {
-            println("Mensaje no válido para $name")
-        }*/
-        val isValid = message.isBlank() || message.toIntOrNull() == null
-        if (!isValid) {
-            setAttributeValue(message)
-        } else {
-            println("Mensaje no válido para $name")
+    override fun handleAttributeUpdate(attribute: String, value: String): Boolean {
+        return when (attribute.lowercase()) { // Usar lowercase para ser flexible con las claves
+            "brightness" -> {
+                updateBrightness(value)
+                true // Atributo reconocido y procesado
+            }
+            // Aquí podrían manejarse otros atributos específicos del dimmer, ej: "color_temp"
+            else -> super.handleAttributeUpdate(attribute, value) // Llamar al de la clase base si no se reconoce aquí
         }
     }
 
@@ -40,29 +44,27 @@ class Dimmer( name: String,
 
         when (actionType) {
             ActionType.SET_BRIGHTNESS -> {
-                // Valida que el parámetro sea un valor numérico válido antes de procesarlo
-                val brightnessValue = parameters.toIntOrNull()
-                    ?: throw IllegalArgumentException("Parámetro inválido para SET_BRIGHTNESS: $parameters")
-
                 // Enviar el mensaje de actualización al dimmer
-                handleIncomingMessage(brightnessValue.toString())
+                updateBrightness(parameters)
             }
             else -> {
-                println("Acción no soportada: $actionType")
                 throw UnsupportedOperationException("El Dimmer no soporta la acción: $actionType")
             }
         }
     }
 
     override fun getAttributeValue(attribute: Attribute): Any {
-        return brightness
+        when (attribute){
+            Attribute.BRIGHTNESS -> {return brightness}
+            else -> throw IllegalArgumentException("Atributo no soportado por ${name}")
+        }
     }
 
-    override fun setAttributeValue(valor: String) {
-        val percentage = valor.toInt()
-        brightness = if (percentage<=0) 0
-        else if (percentage>=100) 100
-        else percentage
+    override fun setAttributeValue(attribute: Attribute, value: String) {
+        when (attribute){
+            Attribute.BRIGHTNESS -> {updateBrightness(value)}
+            else -> throw IllegalArgumentException("Atributo no soportado por ${name}")
+        }
     }
 
     override fun toDTO(): DeviceDTO {

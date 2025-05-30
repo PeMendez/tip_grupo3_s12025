@@ -1,6 +1,5 @@
 package ar.unq.ttip.neohub.service
 import ar.unq.ttip.neohub.dto.DeviceDTO
-import ar.unq.ttip.neohub.dto.toDTO
 import ar.unq.ttip.neohub.dto.toEntity
 import ar.unq.ttip.neohub.model.Home
 import ar.unq.ttip.neohub.model.Room
@@ -81,7 +80,7 @@ class DeviceServiceTest {
         `when`(repositoryMock.findById(deviceDTO.id)).thenReturn(Optional.of(device))
 
         // Act
-        deviceService.publishToDevice(deviceDTO.id, message)
+        deviceService.sendCommand(deviceDTO.id, message)
 
         // Assert
         assertEquals(expectedTopic, device.topic)

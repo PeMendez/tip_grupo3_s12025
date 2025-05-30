@@ -29,6 +29,11 @@ class DeviceController(
         return deviceService.getUnconfiguredDevices()
     }
 
+    @GetMapping("/configuredCount")
+    fun getConfiguredDevicesCount(): Long {
+        return deviceService.countConfiguredDevices()
+    }
+
     // Endpoint para eliminar un dispositivo
     @DeleteMapping("/{deviceId}")
     fun deleteDevice(@PathVariable deviceId: Long) {
@@ -46,7 +51,7 @@ class DeviceController(
         @RequestBody messageRequest: DeviceMessageRequest
     ): ResponseEntity<Void>{
         //editar la clase DeviceMessageRequest si necesitamos que mande mas cosas
-        deviceService.publishToDevice(deviceId, messageRequest.message, messageRequest.parameter)
+        deviceService.sendCommand(deviceId, messageRequest.message, messageRequest.parameter)
         println("Respondiendo la request")
         return ResponseEntity.ok().build()
     }

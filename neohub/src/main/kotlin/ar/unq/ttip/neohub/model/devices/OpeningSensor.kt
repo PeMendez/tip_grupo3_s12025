@@ -15,37 +15,42 @@ class OpeningSensor(
 
     var isOpen= false
 
-    fun updateStatus(newStatus: Boolean) {
-        isOpen = newStatus
+    fun updateStatus(newStatus: String) {
+        try {
+            isOpen = newStatus.toBoolean()
+        }
+        catch (e:Exception){
+
+        }
         println("$name ahora está ${if (isOpen) "abierto" else "cerrado"}")
     }
 
-    override fun handleIncomingMessage(message: String) {
-        when(message){
-            "opened"-> setAttributeValue("true")
-            "closed"-> setAttributeValue("false")
-            else -> println("Mensaje no válido para $name")
+    override fun handleAttributeUpdate(attribute: String, value: String): Boolean {
+        return when(attribute.lowercase()) {
+            "status" -> {
+                updateStatus(value)
+                true
+            }
+            else -> super.handleAttributeUpdate(attribute, value)
         }
     }
-
-    /*override fun getAttribute(attribute: String): String {
-        return when (attribute) {
-            "isOpen" -> isOpen.toString()
-            else -> throw IllegalArgumentException("Atributo no soportado para $type: $attribute")
-        }
-    }*/
 
     override fun executeAction(actionType: ActionType, parameters: String) {
         throw UnsupportedOperationException("$type no soporta acciones.")
     }
 
     override fun getAttributeValue(attribute: Attribute): Boolean {
-        return isOpen
+        when (attribute) {
+            Attribute.IS_OPEN -> return isOpen
+            else -> throw IllegalArgumentException("Atributo no soportado por ${name}")
+        }
     }
 
-    override fun setAttributeValue(valor: String) {
-        isOpen = valor.toBoolean()
-        println("$name ahora está ${if (isOpen) "abierto" else "cerrado"}")
+    override fun setAttributeValue(attribute: Attribute, value: String) {
+        when (attribute) {
+            Attribute.IS_OPEN -> updateStatus(value)
+            else -> throw IllegalArgumentException("Atributo no soportado por ${name}")
+        }
     }
 
     override fun toDTO(): DeviceDTO {

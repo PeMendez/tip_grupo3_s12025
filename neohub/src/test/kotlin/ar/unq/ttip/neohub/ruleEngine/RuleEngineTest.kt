@@ -296,7 +296,7 @@ class RuleEngineTest {
         val fan = SmartOutlet(name = "Ventilador")
 
         // Inicializar estado inicial
-        temperatureSensor.updateTemperature(30.0) // Usamos el método para actualizar la temperatura
+        temperatureSensor.updateTemperature("30.0") // Usamos el méthodo para actualizar la temperatura
         fan.turnOff()
 
         // Configurar condición asociada al sensor
@@ -344,7 +344,7 @@ class RuleEngineTest {
         val temperatureSensor = TemperatureSensor(name = "Temperature Sensor")
         val fan = SmartOutlet(name = "Ventilador")
 
-        temperatureSensor.updateTemperature(24.0)
+        temperatureSensor.updateTemperature("24.0")
         fan.turnOff()
 
         // Configurar condición asociada al sensor
@@ -392,8 +392,8 @@ class RuleEngineTest {
         val dimmer = Dimmer(name = "Dimmer")
 
         // Inicializar estado inicial
-        openingSensor.updateStatus(false) // Inicialmente la puerta está cerrada
-        dimmer.updateBrightness(50) // El brillo inicial es 50%
+        openingSensor.setAttributeValue(Attribute.IS_OPEN,"false") // Inicialmente la puerta está cerrada
+        dimmer.setAttributeValue(Attribute.BRIGHTNESS, "50") // El brillo inicial es 50%
 
         // Configurar condición asociada al sensor
         val condition = Condition(
@@ -425,7 +425,7 @@ class RuleEngineTest {
         action.rule = rule
 
         // Actualizar estado: Abrir la puerta
-        openingSensor.updateStatus(true)
+        openingSensor.setAttributeValue(Attribute.IS_OPEN,"true")
 
         // Simular evaluación de la regla
         val result = rule.evaluateAndExecute()

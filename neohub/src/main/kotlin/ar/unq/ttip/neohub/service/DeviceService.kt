@@ -48,12 +48,12 @@ class DeviceService(
         mqttService.unregisterDevice(device)
     }
 
-    fun publishToDevice(deviceId: Long, commandString: String, parameter: String = "") {
+    fun sendCommand(deviceId: Long, commandString: String, parameter: String = "") {
         val device = repository.findById(deviceId).orElseThrow {
             IllegalArgumentException("Device with ID $deviceId not found.")
         }
         // Validar que el dispositivo tiene la información necesaria
-        val currentDeviceTopic = device.topic ?: throw IllegalStateException("Device with ID $deviceId has no assigned topic for commands.")
+        val currentDeviceTopic = device.topic
         if (currentDeviceTopic.isBlank()) {
             throw IllegalStateException("Device with ID $deviceId has an empty or blank topic assigned.")
         }
@@ -66,13 +66,14 @@ class DeviceService(
             parameters = parameter
         )
 
+        val commandTopic = "$currentDeviceTopic/command"
         // Convertir el payload a JSON
         val jsonCommandMessage = objectMapper.writeValueAsString(commandPayload)
 
-        println("publishToDevice: publicando comando JSON al device ID: $deviceId, Tópico: $currentDeviceTopic, Mensaje: $jsonCommandMessage")
+        println("sendCommand: publicando comando JSON al device ID: $deviceId, Tópico: $commandTopic, Mensaje: $jsonCommandMessage")
 
-        // Usar tu mqttService para publicar el mensaje JSON
-        mqttService.publish(currentDeviceTopic, jsonCommandMessage)
+        // Usar mqttService para publicar el mensaje JSON
+        mqttService.publish(commandTopic, jsonCommandMessage)
     }
 
     @Transactional
@@ -100,6 +101,12 @@ class DeviceService(
 
     fun getUnconfiguredDevices(): List<DeviceDTO> {
         return repository.findByRoomIsNull().map { it.toDTO() }
+    }
+
+    fun countConfiguredDevices(): Long{
+        val count = repository.countConfiguredDevices()
+        println("countConfiguredDevices: $count")
+        return count
     }
 }
 

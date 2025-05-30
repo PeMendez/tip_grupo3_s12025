@@ -151,49 +151,57 @@ class MqttService(
         }
     }
 
+// Asumiendo que 'objectMapper' está disponible (inyectado o global)
+// y que 'deviceRepository' y 'evaluateRulesForDevice' son parte de tu lógica de servicio.
+
     fun processDeviceMessage(device: Device, message: String) {
         try {
             val jsonNode = objectMapper.readTree(message) as? ObjectNode
             if (jsonNode == null) {
-                println("ERROR: Mensaje no es JSON válido.")
+                println("ERROR: Mensaje no es JSON válido o no es un objeto JSON.")
                 return
             }
 
-            val macAddress = jsonNode["mac_address"]?.asText() ?: ""
-            if (macAddress != device.macAddress) {
-                println("ERROR: La MAC del mensaje no coincide con el dispositivo.")
+            val macAddress = jsonNode["mac_address"]?.asText()
+            // Es crucial que los mensajes de estado del dispositivo siempre incluyan 'mac_address'.
+            // Los scripts de Python que hemos desarrollado lo hacen.
+            if (macAddress == null || macAddress != device.macAddress) {
+                println("ERROR: La MAC del mensaje (${macAddress ?: "N/A"}) no coincide con la del dispositivo ${device.macAddress} o falta.")
                 return
             }
 
-            // Procesar comandos o actualizaciones
-            val command = jsonNode["command"]?.asText()
-            val parameters = jsonNode["parameters"]?.asText()
-            val updateHandlers = mapOf(
-                "temperature" to { value: String -> device.setAttributeValue(value) }, //termometro
-                "status" to { value: String -> device.setAttributeValue(value) }, //puerta
-                "brightness" to { value: String -> device.setAttributeValue(value) },
-            )
-             if (command != null) {
-                 if(command.lowercase() == "set_brightness" && parameters != null) {
-                    device.handleIncomingMessage(parameters)
-                 } else
-                    device.handleIncomingMessage(command)
-            } else {
-                // Procesar actualizaciones
-                for ((key, handler) in updateHandlers) {
-                    if (jsonNode.has(key)) {
-                        handler(jsonNode[key].asText())
+            var attributesUpdated = false
+            val metadataFields = setOf("mac_address", "device_id", "timestamp") // Campos a ignorar para la actualización de atributos
+
+            // Iterar sobre los campos en el JSON
+            jsonNode.fields().forEach { (key, valueNode) ->
+                if (key !in metadataFields) {
+                    // Llamar a un mét,odo en la entidad 'Device' para que maneje la actualización de este atributo.
+                    // Este mét,odo se encargará de la lógica específica del tipo de dispositivo.
+                    val valueAsString = valueNode.asText() // Pasamos el valor como String, la entidad lo parseará.
+                    val updated = device.handleAttributeUpdate(key, valueAsString) // El mét,odo 'handle attribute update' debería devolver true si el atributo fue reconocido y procesado.
+                    if (updated) {
+                        attributesUpdated = true
                     }
                 }
             }
 
-            // Guardar cambios y evaluar reglas
-            handleDeviceUpdate(device)
-            deviceRepository.save(device)
-            println("Se actualizó correctamente ${device.name}")
-            evaluateRulesForDevice(device)
+            if (attributesUpdated) {
+                // Guardar cambios en el dispositivo (ya que sus atributos internos fueron modificados)
+                deviceRepository.save(device)
+                println("Se actualizó correctamente el estado de '${device.name}' (MAC: ${device.macAddress}). Atributos procesados del mensaje: $message")
+                evaluateRulesForDevice(device) // Evaluar reglas si el estado cambió
+                handleDeviceUpdate(device)
+            } else {
+                println("No se procesaron atributos actualizables para '${device.name}' (MAC: ${device.macAddress}) del mensaje: $message")
+            }
+
+        } catch (e: com.fasterxml.jackson.core.JsonProcessingException) {
+            println("Error al parsear el mensaje JSON: ${e.message}")
         } catch (e: Exception) {
-            println("Error procesando el mensaje JSON: ${e.message}")
+            // Es buena idea loguear la traza completa para errores inesperados
+            println("Error procesando el mensaje del dispositivo: ${e.message}")
+            e.printStackTrace()
         }
     }
 
@@ -233,7 +241,6 @@ class MqttService(
             DeviceType.OPENING_SENSOR -> webSocketHandler.sendOpeningUpdate(device.getAttributeValue(Attribute.IS_OPEN), device.id)
             DeviceType.SMART_OUTLET -> webSocketHandler.sendSmartOutletUpdate(device.getAttributeValue(Attribute.IS_ON), device.id)
             DeviceType.DIMMER -> webSocketHandler.sendDimmerUpdate(device.getAttributeValue(Attribute.BRIGHTNESS), device.id)
-            else -> println("Tipo de dispositivo no manejado: ${device.type}")
         }
     }
 

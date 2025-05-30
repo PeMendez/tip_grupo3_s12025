@@ -90,14 +90,14 @@ class MqttIntegrationTest @Autowired constructor(
         val deviceDTO = device.toDTO()
         // Act & Assert
         validMessages.forEach { (message, expectedState) ->
-            deviceService.publishToDevice(deviceDTO.id, message)
+            deviceService.sendCommand(deviceDTO.id, message)
             Thread.sleep(500) // Esperar un momento para que se procese el mensaje
 
             assertEquals(expectedState, smartOutlet.isOn, "El estado del SmartOutlet no coincide con el mensaje enviado: $message")
         }
 
         // Probar un mensaje inválido
-        deviceService.publishToDevice(deviceDTO.id, invalidMessage)
+        deviceService.sendCommand(deviceDTO.id, invalidMessage)
         Thread.sleep(500) // Esperar un momento para que se procese el mensaje
 
         // Verificar que el estado del SmartOutlet no cambió

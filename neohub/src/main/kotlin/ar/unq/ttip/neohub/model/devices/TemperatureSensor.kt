@@ -15,43 +15,42 @@ class TemperatureSensor(
 
     var temperature: Double = 0.0
 
-    fun updateTemperature(newTemperature: Double) {
-        temperature = newTemperature
-        println("$name temperature updated to $temperature°C")
-        //En realidad la temperatura no se pasaría por parámetro sino por MQTT
-    }
-
-    override fun handleIncomingMessage(message: String) {
-        /*val temp = message.toDoubleOrNull()
-        if (temp != null) {
-            updateTemperature(temp)
-        } else {
-            println("Mensaje inválido para TemperatureSensor '$name': $message")
-        }*/
-
-        val temp = message.isBlank() || message.toDoubleOrNull() == null
-        if (!temp) {
-            setAttributeValue(message)
-        } else {
-            println("Mensaje inválido para TemperatureSensor '$name': $message")
+    fun updateTemperature(newTemperature: String) {
+        try {
+            this.temperature = newTemperature.toDouble()
+            println("INFO: Temperatura del Sensor '${this.name}' actualizada a: ${this.temperature}")
+        } catch (e: NumberFormatException) {
+            println("ERROR: Valor de temperatura '$newTemperature' no es un número válido para Sensor '${this.name}'.")
         }
     }
 
-
+    override fun handleAttributeUpdate(attribute: String, value: String): Boolean {
+        return when(attribute.lowercase()) {
+            "temperature" -> {
+                updateTemperature(value)
+                true
+            }
+            else -> super.handleAttributeUpdate(attribute, value)
+        }
+    }
 
     override fun executeAction(actionType: ActionType, parameters: String) {
         throw UnsupportedOperationException("$type no soporta acciones.")
     }
 
     override fun getAttributeValue(attribute: Attribute): Any {
-        return temperature
+        when (attribute){
+            Attribute.TEMPERATURE -> {return temperature}
+            else -> throw IllegalArgumentException("Atributo no soportado por ${name}")
+        }
     }
 
-    override fun setAttributeValue(valor: String) {
-        temperature = valor.toDouble()
-        println("$name temperature updated to $temperature°C")
+    override fun setAttributeValue(attribute: Attribute, value: String) {
+        when (attribute){
+            Attribute.TEMPERATURE -> updateTemperature(value)
+            else -> throw IllegalArgumentException("Atributo no soportado por ${name}")
+        }
     }
-
 
     override fun toDTO(): DeviceDTO {
         return super.toDTO().copy(temperature = temperature)

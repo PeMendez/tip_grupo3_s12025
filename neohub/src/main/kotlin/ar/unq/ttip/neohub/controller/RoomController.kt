@@ -2,6 +2,7 @@ package ar.unq.ttip.neohub.controller
 
 import ar.unq.ttip.neohub.dto.RoomDTO
 import ar.unq.ttip.neohub.dto.toDTO
+import ar.unq.ttip.neohub.service.DeviceService
 import ar.unq.ttip.neohub.service.RoomService
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/room")
-class RoomController(private val roomService: RoomService) {
+class RoomController(private val roomService: RoomService, private val deviceService: DeviceService) {
 
     @GetMapping("/{roomId}")
     fun getRoomDetails(
@@ -37,6 +38,17 @@ class RoomController(private val roomService: RoomService) {
         @PathVariable deviceId: Long
     ): ResponseEntity<RoomDTO> {
         val room = roomService.removeDeviceFromRoom(deviceId, roomId)
+        return ResponseEntity.ok(room.toDTO())
+    }
+
+    @DeleteMapping ("/{roomId}/resetDevice/{deviceId}")
+    fun factoryResetDevice(
+        @AuthenticationPrincipal userDetails: UserDetails,
+        @PathVariable roomId: Long,
+        @PathVariable deviceId: Long
+    ): ResponseEntity<RoomDTO> {
+        val room = roomService.removeDeviceFromRoom(deviceId, roomId)
+        deviceService.deleteDevice(deviceId)
         return ResponseEntity.ok(room.toDTO())
     }
 

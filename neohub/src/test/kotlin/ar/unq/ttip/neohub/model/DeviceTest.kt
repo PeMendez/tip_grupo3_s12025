@@ -61,16 +61,16 @@ class DeviceTest {
         kotlin.test.assertEquals("neohub/LivingRoom/smart_outlet/Lamp", smartOutlet.topic)
 
         // Simular mensajes MQTT
-        smartOutlet.handleIncomingMessage("turn_on")
+        smartOutlet.handleAttributeUpdate("turn_on", "")
         kotlin.test.assertEquals(true, smartOutlet.isOn)
 
-        smartOutlet.handleIncomingMessage("turn_off")
+        smartOutlet.handleAttributeUpdate("turn_off", "")
         kotlin.test.assertEquals(false, smartOutlet.isOn)
 
-        smartOutlet.handleIncomingMessage("toggle")
+        smartOutlet.handleAttributeUpdate("toggle", "")
         kotlin.test.assertEquals(true, smartOutlet.isOn)
 
-        smartOutlet.handleIncomingMessage("invalid_command")
+        smartOutlet.handleAttributeUpdate("invalid_command", "")
         kotlin.test.assertEquals(true, smartOutlet.isOn, "Estado no debería cambiar con comandos inválidos")
     }
 
@@ -85,13 +85,13 @@ class DeviceTest {
         kotlin.test.assertEquals("neohub/Bedroom/temperature_sensor/Thermometer", tempSensor.topic)
 
         // Simular mensajes MQTT
-        tempSensor.handleIncomingMessage("25.5")
+        tempSensor.handleAttributeUpdate("25.5", "")
         kotlin.test.assertEquals(25.5, tempSensor.temperature)
 
-        tempSensor.handleIncomingMessage("18.3")
+        tempSensor.handleAttributeUpdate("18.3", "")
         kotlin.test.assertEquals(18.3, tempSensor.temperature)
 
-        tempSensor.handleIncomingMessage("invalid")
+        tempSensor.handleAttributeUpdate("invalid", "")
         kotlin.test.assertEquals(18.3, tempSensor.temperature, "Temperatura no debería cambiar con mensajes inválidos")
     }
 

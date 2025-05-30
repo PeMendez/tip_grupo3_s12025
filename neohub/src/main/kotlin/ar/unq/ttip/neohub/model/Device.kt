@@ -42,8 +42,11 @@ abstract class Device(
         return "Device(id=$id, name='$name', type='${type}', topic='$topic')"
     }
 
-    abstract fun handleIncomingMessage(message: String)
+    fun handleAttributeUpdate(attribute: String, value: String): Boolean {
+        println("ADVERTENCIA: Device.updateAttribute no manejó la clave '$attribute' para el dispositivo '${type} - ${name}'.")
+        return false // Por defecto, no se reconoce el atributo
+    }
     abstract fun executeAction(actionType: ActionType, parameters: String = "")
     abstract fun getAttributeValue(attribute: Attribute): Any
-    abstract fun setAttributeValue(valor: String)
+    abstract fun setAttributeValue(attribute: Attribute, value: String)
 }
