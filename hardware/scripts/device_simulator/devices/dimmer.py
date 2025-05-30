@@ -59,8 +59,7 @@ class DimmerDevice(MqttDevice):
     def _publish_current_state(self):
         """Publica el brillo actual al tópico de estado del dispositivo."""
         if self.is_configured:
-            # Definir un sub-tópico para el estado, ej: dispositivo/cocina/luz/estado
-            state_topic = f"{self.current_mqtt_topic}/state" 
+            state_topic = f"{self.current_mqtt_topic}" 
             payload = {
                 "mac_address": self.device_mac_address,
                 "device_id": self.device_id,

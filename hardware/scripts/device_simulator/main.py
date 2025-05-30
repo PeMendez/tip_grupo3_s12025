@@ -1,4 +1,4 @@
-import argparse, time
+import argparse, time, logging
 from devices import SmartOutletDevice, TemperatureSensorDevice, OpeningSensorDevice, DimmerDevice
 
 # --- Bloque Principal para Ejecutar el Simulador ---
@@ -12,6 +12,8 @@ def main():
     
     cli_args = parser.parse_args()
 
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+    
     device_instance = None
 
     if cli_args.type.lower() == "smart_outlet":
