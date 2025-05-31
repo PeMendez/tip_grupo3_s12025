@@ -127,12 +127,12 @@ const RuleFormPopupBis = ({ onClose, onCreate, device }) => {
         const errors = {};
 
         if (!name.trim()) errors.name = 'El nombre es obligatorio';
-        if (!cond.deviceId) errors.conditionDevice = 'Seleccioná un dispositivo para la condición';
-        if (!cond.attribute) errors.attribute = 'Seleccioná un atributo';
-        if (!cond.operator) errors.operator = 'Seleccioná un operador';
-        if (!cond.value.trim()) errors.value = 'El valor no puede estar vacío';
-        if (!act.deviceId) errors.actionDevice = 'Seleccioná un dispositivo para la acción';
-        if (!act.actionType) errors.actionType = 'Seleccioná una acción';
+        else if (!cond.deviceId) errors.conditionDevice = 'Seleccioná un dispositivo para la condición';
+        else if (!cond.attribute) errors.attribute = 'Seleccioná un atributo';
+        else if (!cond.operator) errors.operator = 'Seleccioná un operador';
+        else if (!cond.value.trim()) errors.value = 'El valor no puede estar vacío';
+        else if (!act.deviceId) errors.actionDevice = 'Seleccioná un dispositivo para la acción';
+        else if (!act.actionType) errors.actionType = 'Seleccioná una acción';
 
         if(!requiresParameters(act.actionType)){
             act.parameters = "";    // si no requiere parametros manda string vacio

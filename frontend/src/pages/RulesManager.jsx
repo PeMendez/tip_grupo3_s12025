@@ -7,6 +7,7 @@ import './styles/rules.css';
 import RuleFormPopupBis from "../components/RuleComponentBis.jsx";
 import TextButton from "../components/TextButton.jsx";
 import RoundButton from "../components/RoundButton.jsx";
+import RuleFormPopup from "../components/RuleFormPopup.jsx";
 
 const RulesManager = ({setHeaderTitle, isDeviceContext = false }) => {
     const { id } = useParams(); // Si viene desde ruta con :id
@@ -190,7 +191,7 @@ const RulesManager = ({setHeaderTitle, isDeviceContext = false }) => {
             )}
 
             {showPopup && (
-                <RuleFormPopupBis
+                <RuleFormPopup
                     onClose={() => setShowPopup(false)}
                     onCreate={handleCreateRule}
                     device={isDeviceContext ? device : null}

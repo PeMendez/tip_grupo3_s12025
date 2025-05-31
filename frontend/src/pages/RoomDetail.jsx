@@ -344,9 +344,7 @@ const RoomDetail = ({ setHeaderTitle }) => {
                         </div>
                     ))}
                     <div className="add-device-icon">
-                        <button onClick={handleAddClick}>
-                            <FiPlus size={24} className="icon" />
-                        </button>
+                        <RoundButton type="plus" onClick={handleAddClick}/>
                     </div>
                 </div>
 
@@ -355,8 +353,8 @@ const RoomDetail = ({ setHeaderTitle }) => {
                         <div className="modal" onClick={(e) => e.stopPropagation()}>
                             <p>¿Eliminar "{deviceToDelete?.name}"?</p>
                             <div className="modal-actions">
-                                <button onClick={handleConfirmDelete}>Confirmar</button>
-                                <button onClick={() => setShowDeletePopup(false)}>Cancelar</button>
+                                <TextButton text="Confirmar" handleClick={handleConfirmDelete}/>
+                                <TextButton text="Cancelar" handleClick={() => setShowDeletePopup(false)}/>
                             </div>
                         </div>
                     </div>

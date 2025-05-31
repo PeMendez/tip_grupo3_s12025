@@ -1,5 +1,5 @@
 import { X, ArrowLeft } from 'lucide-react';
-import {FiEdit} from "react-icons/fi";
+import {FiEdit, FiPlus} from "react-icons/fi";
 import styles from './styles/roundButton.module.css'
 
 const RoundButton = ({ type = 'edit', onClick: handleClick }) => {
@@ -10,6 +10,8 @@ const RoundButton = ({ type = 'edit', onClick: handleClick }) => {
                 <FiEdit size={28}/>
             ) : type === 'arrow'? (
                 <ArrowLeft size={28}  />
+            ) : type === 'plus'? (
+                <FiPlus size={28}  />
             ) : <X size={28}  /> }
         </div>
     );
