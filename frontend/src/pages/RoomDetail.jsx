@@ -31,7 +31,7 @@ const RoomDetail = () => {
 
     const [editMode, setEditMode] = useState(false);
     const [addMode, setAddMode] = useState(false);
-    const [deviceToDelete, setDeviceToDelete] = useState(null);
+
 
     if (addMode) {
         return (
@@ -47,11 +47,10 @@ const RoomDetail = () => {
         return (
             <EditModeView
                 devices={devices}
-                onDeleteDevice={(device) => {
-                    setDeviceToDelete(device);
-                }}
+                deleteDevice={handleDeleteDevice}
                 onAddDevice={() => setAddMode(true)}
                 onClose={() => setEditMode(false)}
+                showNotification={showNotification}
             />
         );
     }

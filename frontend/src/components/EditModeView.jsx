@@ -1,10 +1,34 @@
+import {useState}  from "react";
 import BackOrCloseButton from "../components/BackOrCloseButton";
 import DeleteModal from "./DeleteModal";
 import { FiPlus } from 'react-icons/fi';
 import { getDeviceIcon } from "./utils.jsx";
 
-const EditModeView = ({ devices, onDeleteDevice, onAddDevice, onClose }) => {
+
+const EditModeView = ({ devices, deleteDevice, onAddDevice, onClose, showNotification  }) => {
     const [deviceToDelete, setDeviceToDelete] = useState(null);
+
+    const handleConfirmDelete = async () => {
+        if (!deviceToDelete) return;
+
+        try {
+            await deleteDevice(deviceToDelete.id);
+            showNotification(
+                "Dispositivo eliminado",
+                `Se eliminó ${deviceToDelete.name} correctamente`,
+                { duration: 3000 }
+            );
+        } catch (error) {
+            showNotification(
+                "Error",
+                `No se pudo eliminar ${deviceToDelete.name}`,
+                { duration: 5000, toastClass: 'error-toast' }
+            );
+            console.error("Error al eliminar:", error);
+        } finally {
+            setDeviceToDelete(null);
+        }
+    };
 
     return (
         <div className="main-container">
@@ -40,10 +64,7 @@ const EditModeView = ({ devices, onDeleteDevice, onAddDevice, onClose }) => {
             {deviceToDelete && (
                 <DeleteModal
                     device={deviceToDelete}
-                    onConfirm={() => {
-                        onDeleteDevice(deviceToDelete.id);
-                        setDeviceToDelete(null);
-                    }}
+                    onConfirm={handleConfirmDelete}
                     onCancel={() => setDeviceToDelete(null)}
                 />
             )}

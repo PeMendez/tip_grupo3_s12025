@@ -168,11 +168,13 @@ const useDeviceActions = (roomId, fetchRoom, setDevices) => {
     const handleDeleteDevice = useCallback(async (deviceId) => {
         try {
             await deleteDevice(roomId, deviceId, token);
-            await fetchRoom();
+            const updatedRoom = await fetchRoom();
+            setDevices(updatedRoom.deviceList || []);
         } catch (err) {
             console.error("Error al eliminar dispositivo", err);
+            throw err;
         }
-    }, [roomId, token, fetchRoom]);
+    }, [roomId, token, fetchRoom, setDevices]);
 
     return {
         toggleLight,
