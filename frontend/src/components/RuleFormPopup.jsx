@@ -120,7 +120,7 @@ const RuleFormPopup = ({ onClose, onCreate, device: initialDevice }) => { // Ren
             setFormErrors(errors); //
             return; //
         }
-        setFormErrors({}); // Limpia errores si todo está bien
+        setFormErrors({}); // Limpia errores si to-do está bien
 
         const newRule = { //
             name, //

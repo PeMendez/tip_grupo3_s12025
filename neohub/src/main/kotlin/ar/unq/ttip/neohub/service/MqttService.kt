@@ -151,9 +151,6 @@ class MqttService(
         }
     }
 
-// Asumiendo que 'objectMapper' está disponible (inyectado o global)
-// y que 'deviceRepository' y 'evaluateRulesForDevice' son parte de tu lógica de servicio.
-
     fun processDeviceMessage(device: Device, message: String) {
         try {
             val jsonNode = objectMapper.readTree(message) as? ObjectNode

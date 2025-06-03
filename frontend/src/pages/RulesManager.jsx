@@ -48,14 +48,12 @@ const RulesManager = ({setHeaderTitle, isDeviceContext = false }) => {
     useEffect(() => {
         const fetchDeviceCount = async () => {
             try {
-                const token = localStorage.getItem('token');
                 const count = await getConfiguredDeviceCount(token);
                 setDeviceCount(count);
             } catch (error) {
                 console.error('Error al cargar el conteo de dispositivos configurados:', error);
             }
         };
-
         fetchDeviceCount();
     }, []);
 
