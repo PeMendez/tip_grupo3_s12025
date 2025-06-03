@@ -5,7 +5,7 @@ export const subscribeToPushNotifications = async () => {
         return null;
     }
 
-    const VAPID_PUBLIC_KEY = 'TU_CLAVE_PUBLICA_VAPID'; // Reemplaza con tu clave real
+    const VAPID_PUBLIC_KEY = 'BLL-7oUmgMqtohKsK-JwA4X2gzm0FW_ia5fWVj1zq9BhRTtYDrNsKLCuo066Ju6I4vEJgcljU-Z7S1RiAW1NHj8'
 
     try {
         const registration = await navigator.serviceWorker.ready;
