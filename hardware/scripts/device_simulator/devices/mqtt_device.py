@@ -283,7 +283,7 @@ class MqttDevice:
             "device_id": self.device_id,
             "response_to_command": original_command_json.get("command"),
             "status": "ack_received",
-            "timestamp": time.time()
+            "timestamp": time()
         }
         try:
             self.client.publish(self.current_mqtt_topic, json.dumps(ack_payload))
