@@ -5,12 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="09bf219a-ddab-407c-b6b8-1beb0e5da310" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/frontend/src/api/service-worker.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/DeleteModal.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/deviceControls/DimmerControl.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/deviceControls/OpeningSensorControl.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/deviceControls/SmartOutletControl.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/deviceControls/TemperatureSensorControl.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/grid/AddModeView.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/grid/DefaultModeView.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/grid/DeviceCard.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/grid/EditModeView.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/grid/utils.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/main.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/principal.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/principal.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/security/SecurityConfig.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/security/SecurityConfig.kt" afterDir="false" />
     </list>
     <list id="c93fa67c-d594-4956-a819-2b86e3ca1c3c" name="Changes by Martin" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -56,7 +61,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "Spring Boot.NeohubApplication.executor": "Run",
-    "git-widget-placeholder": "front/modular",
+    "git-widget-placeholder": "main",
     "javascript.nodejs.core.library.configured.version": "22.14.0",
     "javascript.nodejs.core.library.typings.version": "22.13.17",
     "kotlin-language-version-configured": "true",
@@ -99,8 +104,14 @@
   </component>
   <component name="RunManager">
     <configuration name="NeohubApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="envFilePaths">
+        <option value="$PROJECT_DIR$/neohub/src/main/resources/.env" />
+      </option>
       <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
       <module name="neohub" />
+      <selectedOptions>
+        <option name="environmentVariables" />
+      </selectedOptions>
       <option name="SPRING_BOOT_MAIN_CLASS" value="ar.unq.ttip.neohub.NeohubApplication" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -149,6 +160,7 @@
       <workItem from="1747409161282" duration="11932000" />
       <workItem from="1747434944374" duration="3680000" />
       <workItem from="1747483381170" duration="29234000" />
+      <workItem from="1749070737973" duration="1628000" />
     </task>
     <servers />
   </component>
