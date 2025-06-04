@@ -5,16 +5,20 @@ import logo from "../assets/Logo1.svg"
 import { FiMenu } from "react-icons/fi";
 import { useNavigate } from 'react-router-dom'
 import TextButton from "./TextButton.jsx";
+import usePushNotifications from "../hooks/usePushNotifications.js";
 
 const Header = ({ title }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
     const navigate = useNavigate()
 
+    const {unsubscribe} = usePushNotifications()
+
     const logout = () => {
         localStorage.removeItem('token');
         setIsMenuOpen(false)
         navigate("/");
+        unsubscribe()
     };
 
     return (

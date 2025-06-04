@@ -10,6 +10,7 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('push', (event) => {
+    console.log("Notificacion PUSH recibida.")
     const data = event.data?.json() || { title: 'NeoHub', body: 'Nueva notificación' };
 
     const options = {
@@ -28,6 +29,7 @@ self.addEventListener('push', (event) => {
 });
 
 self.addEventListener('notificationclick', (event) => {
+    console.log("Notificacion PUSH cliqueada.")
     event.notification.close();
     event.waitUntil(
         self.clients.matchAll({type: 'window'}).then((clientList) => {
