@@ -35,6 +35,22 @@ const MainPage = ({ setHeaderTitle }) => {
     const token = localStorage.getItem('token')
 
     useEffect(() => {
+        setHeaderTitle("Mi Hogar");
+    }, []);
+
+    useEffect(() => {
+        if (editMode) {
+            setHeaderTitle("Agregar Habitaciones");
+        }
+    }, [editMode]);
+
+    useEffect(() => {
+        if (editHome) {
+            setHeaderTitle("Editar Mis Habitaciones");
+        }
+    }, [editHome]);
+
+    useEffect(() => {
         const fetchRooms = async () => {
             try {
                 const fetchedRooms = await getHome(token)
@@ -81,7 +97,6 @@ const MainPage = ({ setHeaderTitle }) => {
     }
 
     if (editMode) {
-        setHeaderTitle("Agregar Habitaciones");
         return (
             <div className="main-container">
                 <BackOrCloseButton type="arrow" onClick={() => setEditMode(false)}/>
@@ -103,7 +118,6 @@ const MainPage = ({ setHeaderTitle }) => {
     }
 
     if (editHome) {
-        setHeaderTitle("Editar Mis Habitaciones");
         return (
             <div className="main-container">
                 <BackOrCloseButton type="arrow" onClick={() => setEditHome(false)}/>
@@ -153,7 +167,7 @@ const MainPage = ({ setHeaderTitle }) => {
             </div>
         );
     }
-    setHeaderTitle("Mi Hogar")
+
     return (
         <div className="main-container">
             <div className="">
