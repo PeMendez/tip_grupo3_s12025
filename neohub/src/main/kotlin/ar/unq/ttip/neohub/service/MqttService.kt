@@ -17,6 +17,8 @@ import org.eclipse.paho.client.mqttv3.MqttMessage
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
 import java.util.*
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.ConcurrentHashMap
 
 @Service
 class MqttService(
@@ -32,6 +34,8 @@ class MqttService(
     private val subscribedTopics = mutableSetOf<String>()
     private val topicDeviceMap = mutableMapOf<String, Device>() //necesito dado el topic encontrar el dispositivo
     private val unconfiguredTopic = "neohub/unconfigured"
+    // Mapa para almacenar futuros de acks pendientes
+    private val ackFutures = ConcurrentHashMap<Long, CompletableFuture<Boolean>>()
 
     init {
         try {
@@ -168,6 +172,15 @@ class MqttService(
                 return
             }
 
+            // Manejo de mensajes de tipo ACK
+            val responseToCommand = jsonNode["response_to_command"]?.asText()
+            if (responseToCommand == "ack") {
+                println("Recibido ACK del dispositivo ${device.name} (MAC: ${device.macAddress}).")
+                ackFutures[device.id]?.complete(true) // Completar el futuro pendiente
+                ackFutures.remove(device.id) // Eliminar el futuro del mapa
+                return
+            }
+
             var attributesUpdated = false
             val metadataFields = setOf("mac_address", "device_id", "timestamp") // Campos a ignorar para la actualización de atributos
 
@@ -201,6 +214,12 @@ class MqttService(
             println("Error procesando el mensaje del dispositivo: ${e.message}")
             e.printStackTrace()
         }
+    }
+
+    fun registerAckFuture(deviceId: Long): CompletableFuture<Boolean> {
+        val future = CompletableFuture<Boolean>()
+        ackFutures[deviceId] = future
+        return future
     }
 
     private fun evaluateRulesForDevice(device: Device) {

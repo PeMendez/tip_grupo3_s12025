@@ -11,6 +11,7 @@ import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeoutException
 
 @Service
 class RoomService(
@@ -29,38 +30,22 @@ class RoomService(
 
     fun sendAckToDevices(roomId: Long): Map<Long, Boolean> {
         val room = getRoomDetails(roomId)
-        val devices = room.deviceList
-
-        if (devices.isEmpty()) {
-            throw RuntimeException("No hay dispositivos asociados a la habitación con ID: $roomId")
+        val futures = room.deviceList.associate { device ->
+            val future = mqttService.registerAckFuture(device.id)
+            // mqttService.publish("${device.topic}/command", """{"command": "ack"}""")
+            deviceService.sendCommand(device.id, "ack")
+            device.id to future
         }
 
-        val deviceStatus = mutableMapOf<Long, Boolean>()
-        val futures = mutableMapOf<Long, CompletableFuture<Boolean>>()
-
-        devices.forEach { device ->
-            val future = CompletableFuture<Boolean>()
-            futures[device.id] = future
-
-             // Enviar el comando de ACK al dispositivo
+        return futures.mapValues { (_, future) ->
             try {
-                deviceService.sendCommand(device.id, "ack")
-            } catch (e: Exception) {
-                future.complete(false) // Si el envío falla, marcar como no respondido
+                future.get(5, TimeUnit.SECONDS) // Timeout de 5 segundos
+            } catch (e: TimeoutException) {
+                false
             }
         }
-
-        // Esperar los ACKs con timeout
-        futures.forEach { (deviceId, future) ->
-            try {
-                deviceStatus[deviceId] = future.get(ackTimeoutMillis, TimeUnit.MILLISECONDS)
-            } catch (e: Exception) {
-                deviceStatus[deviceId] = false // Timeout o error
-            }
-        }
-
-        return deviceStatus
     }
+
 
     @Transactional
     fun addDeviceToRoom(roomId: Long, deviceId: Long): Room {
