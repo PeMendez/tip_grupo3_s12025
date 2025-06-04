@@ -72,7 +72,7 @@ class MqttService(
 
     fun publishConfiguration(device: Device, unconfigure: Boolean = false) {
         val topicToConfigure = if (unconfigure) unconfiguredTopic else device.topic
-        val topicToPublish = if (!unconfigure) unconfiguredTopic else device.topic
+        val topicToPublish = if (!unconfigure) unconfiguredTopic else (device.topic + "/command")
         // Crear la configuración como un objeto
         val config = DeviceConfiguration(
             name = device.name,
@@ -82,7 +82,7 @@ class MqttService(
 
         // Convertir el objeto a JSON
         val jsonMessage = objectMapper.writeValueAsString(config)
-
+        println("Publicando configuracion para  ${device.name}...")
         // Publicar el mensaje
         publish(topicToPublish, jsonMessage)
     }
@@ -136,6 +136,7 @@ class MqttService(
     }
 
     fun handleUnconfiguredMessage(message: String) {
+        println("Dispositivo desconfigurado.")
         try {
             val jsonNode = objectMapper.readTree(message) as? ObjectNode
             if (jsonNode != null && jsonNode.has("new_topic")) {
