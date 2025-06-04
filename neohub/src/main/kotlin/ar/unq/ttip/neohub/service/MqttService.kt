@@ -26,6 +26,7 @@ class MqttService(
     private val webSocketHandler: MqttWebSocketHandler,
     private val ruleService: RuleService,
     private val deviceRepository: DeviceRepository,
+    private val notificationService: PushNotificationService,
     private val objectMapper: ObjectMapper=jacksonObjectMapper()
 ) {
     private val brokerUrl = "tcp://broker.hivemq.com:1883" // "tcp://test.mosquitto.org:1883"
@@ -254,8 +255,24 @@ class MqttService(
     private fun handleDeviceUpdate(device: Device) {
         println("Se recibió una actualización para el dispositivo de tipo ${device.type}...")
         when (device.type) {
+            DeviceType.OPENING_SENSOR -> {
+                //Ver si toda esta logica conviene extraerla a otro lado.
+                val isOpen = device.getAttributeValue(Attribute.IS_OPEN)
+                webSocketHandler.sendOpeningUpdate(isOpen, device.id)
+                val isOpenBoolean = device.getAttributeValue(Attribute.IS_OPEN) as? Boolean
+                if (isOpenBoolean != null) {
+                    val message = if (isOpenBoolean) {
+                        "Sensor ${device.name} está ahora abierto!"
+                    } else {
+                        "Sensor ${device.name} está ahora cerrado!"
+                    }
+                    notificationService.sendPushNotification("Sensor ${device.name}", message)
+                } else {
+                    println("El atributo IS_OPEN no es un booleano.")
+                }
+
+            }
             DeviceType.TEMPERATURE_SENSOR -> webSocketHandler.sendTemperatureUpdate(device.getAttributeValue(Attribute.TEMPERATURE), device.id)
-            DeviceType.OPENING_SENSOR -> webSocketHandler.sendOpeningUpdate(device.getAttributeValue(Attribute.IS_OPEN), device.id)
             DeviceType.SMART_OUTLET -> webSocketHandler.sendSmartOutletUpdate(device.getAttributeValue(Attribute.IS_ON), device.id)
             DeviceType.DIMMER -> webSocketHandler.sendDimmerUpdate(device.getAttributeValue(Attribute.BRIGHTNESS), device.id)
         }

@@ -9,7 +9,6 @@ import ar.unq.ttip.neohub.repository.HomeRepository
 import ar.unq.ttip.neohub.repository.RoomRepository
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
-import java.util.concurrent.CompletableFuture
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 
