@@ -1,0 +1,9 @@
+JWT_SECRET=Vbmxz3dX7LkJc8E4J1XbN6GvXuBgME6HrGoYixTx9PvCPkquv+6WOkU3kE+INXAIu6x7RYeR9s7UEX3L4IUZrA==
+VAPID_PUBLIC_KEY=BLL-7oUmgMqtohKsK-JwA4X2gzm0FW_ia5fWVj1zq9BhRTtYDrNsKLCuo066Ju6I4vEJgcljU-Z7S1RiAW1NHj8
+VAPID_PRIVATE_KEY=BJOfjJD2uhpXPIi5aFMMQZLmGPXH7ga7H7H8IWSNJJQ
+DB_USERNAME=neohub_db
+DB_PASSWORD=neo_hub
+
+# En el intelliJ ir al menu -> run -> edit configurations
+# En la NeoHubApplication darle a Modify Options (ALT+M) y ver que este tildada las Environment Variables
+# Ahora aparece esa opcion, buscar este archivo. Va en src/main/resources/.env al lado del properties
