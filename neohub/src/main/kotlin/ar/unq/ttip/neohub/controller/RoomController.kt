@@ -1,9 +1,11 @@
 package ar.unq.ttip.neohub.controller
 
+import ar.unq.ttip.neohub.dto.AckResponse
 import ar.unq.ttip.neohub.dto.RoomDTO
 import ar.unq.ttip.neohub.dto.toDTO
 import ar.unq.ttip.neohub.service.DeviceService
 import ar.unq.ttip.neohub.service.RoomService
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.core.userdetails.UserDetails
@@ -19,6 +21,20 @@ class RoomController(private val roomService: RoomService, private val deviceSer
         @PathVariable roomId: Long): ResponseEntity<RoomDTO> {
         val room = roomService.getRoomDetails(roomId)
         return ResponseEntity.ok(room.toDTO())
+    }
+
+    @GetMapping("/{roomId}/ack")
+    fun getDevicesAck(
+        @AuthenticationPrincipal userDetails: UserDetails,
+        @PathVariable roomId: Long): ResponseEntity<AckResponse> {
+        return try {
+            val ackStatus = roomService.sendAckToDevices(roomId)
+            ResponseEntity.ok(AckResponse(success = true, data = ackStatus))
+        } catch (e: Exception) {
+            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                AckResponse(success = false, error = e.message ?: "Error procesando los dispositivos")
+            )
+        }
     }
 
     @PostMapping("/{roomId}/addDevice/{deviceId}")

@@ -9,6 +9,8 @@ import ar.unq.ttip.neohub.repository.HomeRepository
 import ar.unq.ttip.neohub.repository.RoomRepository
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.TimeUnit
 
 @Service
 class RoomService(
@@ -16,11 +18,48 @@ class RoomService(
     private val deviceRepository: DeviceRepository,
     private val homeRepository: HomeRepository,
     private val mqttService: MqttService,
-    private val deviceService: DeviceService
+    private val deviceService: DeviceService,
 ) {
+    private val ackTimeoutMillis: Long = 5000
+
     fun getRoomDetails(roomId: Long): Room {
         return roomRepository.findById(roomId)
             .orElseThrow { RuntimeException("Habitación no encontrada") }
+    }
+
+    fun sendAckToDevices(roomId: Long): Map<Long, Boolean> {
+        val room = getRoomDetails(roomId)
+        val devices = room.deviceList
+
+        if (devices.isEmpty()) {
+            throw RuntimeException("No hay dispositivos asociados a la habitación con ID: $roomId")
+        }
+
+        val deviceStatus = mutableMapOf<Long, Boolean>()
+        val futures = mutableMapOf<Long, CompletableFuture<Boolean>>()
+
+        devices.forEach { device ->
+            val future = CompletableFuture<Boolean>()
+            futures[device.id] = future
+
+             // Enviar el comando de ACK al dispositivo
+            try {
+                deviceService.sendCommand(device.id, "ack")
+            } catch (e: Exception) {
+                future.complete(false) // Si el envío falla, marcar como no respondido
+            }
+        }
+
+        // Esperar los ACKs con timeout
+        futures.forEach { (deviceId, future) ->
+            try {
+                deviceStatus[deviceId] = future.get(ackTimeoutMillis, TimeUnit.MILLISECONDS)
+            } catch (e: Exception) {
+                deviceStatus[deviceId] = false // Timeout o error
+            }
+        }
+
+        return deviceStatus
     }
 
     @Transactional
