@@ -1,8 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import LoginPage from './pages/LoginPage'
-import MainPage from './pages/MainPage'
+import MainPage2 from './pages/MainPage2.jsx'
 import './App.css'
-import RoomDetail from "./pages/RoomDetail.jsx";
+import RoomDetail2 from "./pages/RoomDetail2.jsx";
 import RulesManager from "./pages/RulesManager.jsx";
 import Header from "./components/Header.jsx";
 import {useState, useEffect} from "react";
@@ -30,9 +30,9 @@ const App = () => {
                     <Route path="/"
                            element={<LoginPage setHeaderTitle={setHeaderTitle}/>}/>
                     <Route path="/home"
-                           element={<MainPage setHeaderTitle={setHeaderTitle}/>}/>
+                           element={<MainPage2 setHeaderTitle={setHeaderTitle}/>}/>
                     <Route path="/room/:id"
-                           element={<RoomDetail setHeaderTitle={setHeaderTitle}/>}/>
+                           element={<RoomDetail2 setHeaderTitle={setHeaderTitle}/>}/>
                     <Route path="/rules"
                            element={<RulesManager setHeaderTitle={setHeaderTitle} />}/>
                     <Route path="/rule/:id"

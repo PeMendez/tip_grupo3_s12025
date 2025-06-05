@@ -3,6 +3,7 @@ import DeviceCard from './DeviceCard';
 import BackOrCloseButton from "../BackOrCloseButton";
 
 const DeviceGrid = ({ roomName, devices, onEdit, onAddDevice, toggleLight, setBrightness }) => {
+
     return (
         <>
             <div className="header-wrapper">

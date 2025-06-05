@@ -7,7 +7,6 @@ const AddModeView = ({ availableDevices, onAddDevice, onClose }) => {
             <div className="header-wrapper">
                 <div className="header">
                     <BackOrCloseButton type="arrow" onClick={onClose} />
-                    <h2>Agregar Dispositivos</h2>
                 </div>
             </div>
 

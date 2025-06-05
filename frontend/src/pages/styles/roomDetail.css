@@ -174,7 +174,7 @@ h2 {
     z-index: 1000;
 }
 
-.delete-icon-full {
+.delete-icon-full2 {
     position: absolute;
     top: 0;
     left: 0;
@@ -183,15 +183,14 @@ h2 {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--light-grone);
     border-radius: 12px;
     opacity: 0;
     transition: opacity 0.3s ease;
-    font-size: 2rem;
+    font-size: xxx-large;
     color: var(--ghost-white);
 }
 
-.room-editable-container:hover .delete-icon-full {
+.room-editable-container:hover .delete-icon-full2 {
     opacity: 1;
 }
 
