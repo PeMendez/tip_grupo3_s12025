@@ -12,6 +12,8 @@ import lavaderoImg from '../assets/lavadero.jpg'
 import banoImg from '../assets/Baño.jpg'
 import salaImg from '../assets/salaDeJuegos.jpg'
 import './styles/mainPage.css';
+import usePushNotifications from "../hooks/usePushNotifications.js";
+import {useTitle} from "../contexts/TitleContext.jsx";
 
 const roomImages = {
     'Cocina': cocinaImg,
@@ -23,11 +25,14 @@ const roomImages = {
     'Sala de juegos': salaImg
 };
 
-const MainPage2 = ({ setHeaderTitle }) => {
+const MainPage2 = () => {
     const [rooms, setRooms] = useState([]);
     const [mode, setMode] = useState('view'); // 'view' | 'add' | 'edit'
     const navigate = useNavigate();
     const token = localStorage.getItem('token');
+    const {isSubscribed,error} = usePushNotifications(); //Sin esto no andan las push
+    //usar el flag y el msg error para mostrar un toast?
+    const {setHeaderTitle} = useTitle();
 
     useEffect(() => {
         const titles = {

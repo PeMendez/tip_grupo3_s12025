@@ -19,8 +19,9 @@ import { connectWebSocket } from "../api/websocket.js";
 import Toast from '../components/Toast.jsx'
 import TextButton from "../components/TextButton.jsx";
 import RoundButton from "../components/RoundButton.jsx";
+import {useTitle} from "../contexts/TitleContext.jsx";
 
-const RoomDetail = ({ setHeaderTitle }) => {
+const RoomDetail = () => {
     const { id } = useParams();
     const token = localStorage.getItem('token');
 
@@ -36,6 +37,7 @@ const RoomDetail = ({ setHeaderTitle }) => {
     const audioContextRef = useRef(null);
     const [audioEnabled, setAudioEnabled] = useState(false);
     const navigate = useNavigate();
+    const {setHeaderTitle} = useTitle();
 
     const handleDeviceClick = (device) => {
         navigate(`/rule/${device.id}`);

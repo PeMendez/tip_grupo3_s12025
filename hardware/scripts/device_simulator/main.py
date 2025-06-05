@@ -6,7 +6,7 @@ def main():
     parser = argparse.ArgumentParser(description="Simulador de Dispositivo MQTT IoT.")
     parser.add_argument("--id", required=True, help="Identificador único para esta instancia del dispositivo (ej: outlet_sala).")
     parser.add_argument("--type", default="smart_outlet", help="Tipo de dispositivo a simular (ej: smart_outlet).")
-    parser.add_argument("--broker", default="broker.hivemq.com", help="Dirección del broker MQTT.")
+    parser.add_argument("--broker", default="localhost", help="Dirección del broker MQTT.")
     parser.add_argument("--port", type=int, default=1883, help="Puerto del broker MQTT.")
     parser.add_argument("--initial-topic", default="neohub/unconfigured", help="Tópico base para dispositivos no configurados.")
     

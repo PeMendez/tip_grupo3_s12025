@@ -7,8 +7,9 @@ import AddModeView from "../components/grid/AddModeView";
 import Toast from '../components/Toast.jsx';
 import './styles/roomDetail.css';
 import useDeviceData from "../hooks/useDeviceData.js";
+import {useTitle} from "../contexts/TitleContext.jsx";
 
-const RoomDetail = ({ setHeaderTitle }) => {
+const RoomDetail = () => {
     const { id } = useParams();
     const {
         roomName,
@@ -31,6 +32,8 @@ const RoomDetail = ({ setHeaderTitle }) => {
 
     const [editMode, setEditMode] = useState(false);
     const [addMode, setAddMode] = useState(false);
+
+    const {setHeaderTitle} = useTitle();
 
     useEffect(() => {
         setHeaderTitle("");

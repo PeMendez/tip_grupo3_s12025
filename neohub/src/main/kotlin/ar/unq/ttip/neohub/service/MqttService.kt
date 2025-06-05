@@ -29,7 +29,7 @@ class MqttService(
     private val notificationService: PushNotificationService,
     private val objectMapper: ObjectMapper=jacksonObjectMapper()
 ) {
-    private val brokerUrl = "tcp://broker.hivemq.com:1883" // "tcp://test.mosquitto.org:1883"
+    private val brokerUrl = "tcp://localhost:1883" //"tcp://broker.hivemq.com:1883" // "tcp://test.mosquitto.org:1883"
     private val clientId = "NeoHub-API-" + UUID.randomUUID().toString().substring(0, 8)
     private val mqttClient: MqttClient = MqttClient(brokerUrl, clientId, null)
     private val subscribedTopics = mutableSetOf<String>()

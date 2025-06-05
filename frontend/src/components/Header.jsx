@@ -6,19 +6,25 @@ import { FiMenu } from "react-icons/fi";
 import { useNavigate } from 'react-router-dom'
 import TextButton from "./TextButton.jsx";
 import usePushNotifications from "../hooks/usePushNotifications.js";
+import {useAuth} from "../contexts/AuthContext.jsx";
+import {logout} from "../api/authService.js"
+import {useTitle} from "../contexts/TitleContext.jsx";
 
-const Header = ({ title }) => {
+const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const {setIsAuthenticated} = useAuth();
+    const {unsubscribe} = usePushNotifications();
 
-    const {unsubscribe} = usePushNotifications()
+    const {headerTitle} = useTitle();
 
-    const logout = () => {
-        localStorage.removeItem('token');
-        setIsMenuOpen(false)
+    const handleLogout = () => {
+        logout();
+        setIsAuthenticated(false);
+        setIsMenuOpen(false);
         navigate("/");
-        unsubscribe()
+        unsubscribe();
     };
 
     return (
@@ -29,7 +35,7 @@ const Header = ({ title }) => {
             </button>
 
             {/* Texto dinámico */}
-            <h1 className={styles.headerTitle}>{title}</h1>
+            <h1 className={styles.headerTitle}>{headerTitle}</h1>
 
             {/* Logo */}
             <img src={logo} alt="App Logo" className= {styles.headerLogo}/> {/* Sobre esta imagen no toma los estilos. */}
@@ -49,7 +55,7 @@ const Header = ({ title }) => {
                             <Link to="/rules" className={styles.menuLink}>Reglas</Link>
                         </li>
                         <li className={styles.menuItem}>
-                            <TextButton handleClick={logout} text="Cerrar Sesión" />
+                            <TextButton handleClick={handleLogout} text="Cerrar Sesión" />
                         </li>
                     </ul>
                 </div>

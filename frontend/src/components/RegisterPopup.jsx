@@ -3,22 +3,21 @@ import { register } from '../api/authService.js'
 import TextButton from "./TextButton.jsx";
 
 function RegisterPopup({ onClose, onSuccessRegister }) {
-    const [usernameOrEmail, setUsernameOrEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [error, setError] = useState('')
+    const [usernameOrEmail, setUsernameOrEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
 
     const handleRegister = async () => {
         if (!usernameOrEmail || !password) {
-            setError('Todos los campos son obligatorios.')
-            return
+            setError('Todos los campos son obligatorios.');
+            return;
         }
-
         try {
-            const response = await register(usernameOrEmail, password)
-            onSuccessRegister(response)
-            onClose()
+            const response = await register(usernameOrEmail, password);
+            onSuccessRegister(response);
+            onClose();
         } catch (err) {
-            setError(err + 'Error en el registro. Intente de nuevo.')
+            setError(err + 'Error en el registro. Intente de nuevo.');
         }
     }
 

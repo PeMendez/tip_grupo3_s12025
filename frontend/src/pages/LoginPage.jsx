@@ -5,15 +5,26 @@ import RegisterPopup from '../components/RegisterPopUp'
 import logo from '../assets/Logo1.svg'
 import './styles/loginPage.css'
 import TextButton from "../components/TextButton.jsx";
+import {useAuth} from "../contexts/AuthContext.jsx";
+import {useTitle} from "../contexts/TitleContext.jsx";
 
-function LoginPage({ setHeaderTitle }) {
-    const [showLogin, setShowLogin] = useState(false)
-    const [showRegister, setShowRegister] = useState(false)
-    const navigate = useNavigate()
+function LoginPage() {
+    const [showLogin, setShowLogin] = useState(false);
+    const [showRegister, setShowRegister] = useState(false);
+    const navigate = useNavigate();
+    const {isAuthenticated, setIsAuthenticated} = useAuth();
+
+    const {setHeaderTitle} = useTitle();
 
     useEffect(() => {
         setHeaderTitle("NeoHub - Login")
     }, [setHeaderTitle]);
+
+    useEffect(() => {
+        if(isAuthenticated) {
+            navigate("/home");
+        }
+    },);
 
     return (
         <div className="app-container">
@@ -31,8 +42,9 @@ function LoginPage({ setHeaderTitle }) {
                 <LoginPopup
                     onClose={() => setShowLogin(false)}
                     onSuccessLogin={() => {
-                        navigate('/home')
-                        setShowLogin(false)
+                        setIsAuthenticated(true);
+                        navigate('/home');
+                        setShowLogin(false);
                     }}
                 />
             )}
@@ -41,8 +53,9 @@ function LoginPage({ setHeaderTitle }) {
                 <RegisterPopup
                     onClose={() => setShowRegister(false)}
                     onSuccessRegister={() => {
-                        navigate('/home')
-                        setShowRegister(false)
+                        setIsAuthenticated(true);
+                        navigate('/home');
+                        setShowRegister(false);
                     }}
                 />
             )}

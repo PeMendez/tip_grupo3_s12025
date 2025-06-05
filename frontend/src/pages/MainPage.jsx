@@ -14,8 +14,9 @@ import './styles/mainPage.css'
 import TextButton from "../components/TextButton.jsx";
 import RoundButton from "../components/RoundButton.jsx";
 import usePushNotifications from "../hooks/usePushNotifications.js";
+import {useTitle} from "../contexts/TitleContext.jsx";
 
-const MainPage = ({ setHeaderTitle }) => {
+const MainPage = () => {
     const [rooms, setRooms] = useState([])
     const [editMode, setEditMode] = useState(false)
     const [editHome, setEditHome] = useState(false)
@@ -24,6 +25,8 @@ const MainPage = ({ setHeaderTitle }) => {
     const [roomToDelete, setRoomToDelete] = useState(null)
 
     const {isSubscribed,error} = usePushNotifications();
+
+    const {setHeaderTitle} = useTitle();
 
     const roomTypes = [
         {name: 'Cocina', img: cocinaImg},

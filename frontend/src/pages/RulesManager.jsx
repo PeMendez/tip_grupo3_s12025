@@ -7,8 +7,9 @@ import './styles/rules.css';
 import TextButton from "../components/TextButton.jsx";
 import RoundButton from "../components/RoundButton.jsx";
 import RuleFormPopup from "../components/RuleFormPopup.jsx";
+import {useTitle} from "../contexts/TitleContext.jsx";
 
-const RulesManager = ({setHeaderTitle, isDeviceContext = false }) => {
+const RulesManager = ({ isDeviceContext = false }) => {
     const { id } = useParams(); // Si viene desde ruta con :id
     const token = localStorage.getItem('token');
     const navigate = useNavigate();
@@ -23,6 +24,8 @@ const RulesManager = ({setHeaderTitle, isDeviceContext = false }) => {
     const [showDeletePopup, setShowDeletePopup] = useState(false);
     const [ruleToDelete, setRuleToDelete] = useState(null);
     const [expandedRuleId, setExpandedRuleId] = useState(null);
+
+    const {setHeaderTitle} = useTitle();
 
     const fetchRules = async () => {
         try {

@@ -10,8 +10,9 @@ function LoginPopup({ onClose, onSuccessLogin }) {
 
     const handleLogin = async () => {
         try {
-            const data = await login(username, password);
-            localStorage.setItem('token', data.token);
+            //const data = ...
+            await login(username, password);
+            //localStorage.setItem('token', data.token);
             onSuccessLogin();
         } catch (err) {
             setError('Credenciales incorrectas');
