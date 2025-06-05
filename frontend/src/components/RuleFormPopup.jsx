@@ -193,7 +193,7 @@ const RuleFormPopup = ({ onClose, onCreate, device: initialDevice }) => { // Ren
                 </div>
 
                 {/* Caso especial para el valor del atributo IS_ON */}
-                {cond.attribute === 'IS_ON' ? (
+                {cond.attribute === 'IS_ON' || cond.attribute === 'IS_OPEN' ? (
                     <div>
                         <label>Valor:</label>
                         <select
@@ -202,8 +202,8 @@ const RuleFormPopup = ({ onClose, onCreate, device: initialDevice }) => { // Ren
                             disabled={!cond.attribute}
                         >
                             <option value="">Seleccionar Estado</option>
-                            <option value="true">Encendido</option>
-                            <option value="false">Apagado</option>
+                            <option value="true">{cond.attribute === 'IS_ON' ? "Encendido" : "Abierto"} </option>
+                            <option value="false">{cond.attribute === 'IS_ON' ? "Apagado" : "Cerrado"}</option>
                         </select>
                     </div>
                 ) : (

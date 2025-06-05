@@ -1,7 +1,7 @@
 export const attributeTranslations = {
     TEMPERATURE: 'Temperatura',
     IS_ON: 'Estado (Encendido/Apagado)',
-    IS_OPEN: 'Está abierto',
+    IS_OPEN: 'Estado (Abierto/Cerrado)',
     BRIGHTNESS: 'Brillo',
     // Agrega aquí todos los atributos que necesites traducir
 };
