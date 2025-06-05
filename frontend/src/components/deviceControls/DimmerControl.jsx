@@ -1,4 +1,16 @@
+import { useState } from "react";
+
 const DimmerControl = ({ device, setBrightness }) => {
+    const [tempBrightness, setTempBrightness] = useState(device.brightness || 0);
+
+    const handleSliderChange = (e) => {
+        setTempBrightness(e.target.value);
+    };
+
+    const handleSliderRelease = () => {
+        setBrightness(device, tempBrightness);
+    };
+
     return (
         <div className="slider-container" onClick={(e) => e.stopPropagation()}>
             <label className="slider-label">
@@ -6,10 +18,12 @@ const DimmerControl = ({ device, setBrightness }) => {
                     type="range"
                     min="0"
                     max="100"
-                    value={device.brightness || 0}
-                    onChange={(e) => setBrightness(device, e.target.value)}
+                    value={tempBrightness}
+                    onChange={handleSliderChange}
+                    onMouseUp={handleSliderRelease}
+                    onTouchEnd={handleSliderRelease}
                 />
-                <span className="slider-value">{device.brightness || 0}%</span>
+                <span className="slider-value">{tempBrightness}%</span>
             </label>
         </div>
     );
