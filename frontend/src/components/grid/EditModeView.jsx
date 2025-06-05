@@ -35,7 +35,6 @@ const EditModeView = ({ devices, deleteDevice, onAddDevice, onClose, showNotific
             <div className="header-wrapper">
                 <div className="header">
                     <BackOrCloseButton type="arrow" onClick={onClose} />
-                    <h2>Editar Dispositivos</h2>
                 </div>
             </div>
 

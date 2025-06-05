@@ -5,17 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="09bf219a-ddab-407c-b6b8-1beb0e5da310" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/frontend/src/components/DeleteModal.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/components/deviceControls/DimmerControl.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/components/deviceControls/OpeningSensorControl.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/components/deviceControls/SmartOutletControl.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/components/deviceControls/TemperatureSensorControl.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/components/grid/AddModeView.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/components/grid/DefaultModeView.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/components/grid/DeviceCard.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/components/grid/EditModeView.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/components/grid/utils.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/grid/GridView.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/hooks/useDeviceData.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/hooks/useRoomData.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/pages/MainPage2.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/pages/RoomDetail2.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/components/ui/button.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/ui/button.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/components/ui/card.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/ui/card.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/grid/AddModeView.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/grid/AddModeView.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/grid/DefaultModeView.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/grid/DefaultModeView.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/grid/EditModeView.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/grid/EditModeView.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/styles/mainPage.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/styles/mainPage.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/styles/roomDetail.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/styles/roomDetail.css" afterDir="false" />
     </list>
     <list id="c93fa67c-d594-4956-a819-2b86e3ca1c3c" name="Changes by Martin" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -32,6 +35,7 @@
         <option value="Kotlin Class" />
         <option value="Kotlin File" />
         <option value="JavaScript File" />
+        <option value="JSX File" />
       </list>
     </option>
   </component>
@@ -61,7 +65,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "Spring Boot.NeohubApplication.executor": "Run",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "feature/comp",
     "javascript.nodejs.core.library.configured.version": "22.14.0",
     "javascript.nodejs.core.library.typings.version": "22.13.17",
     "kotlin-language-version-configured": "true",
@@ -89,9 +93,9 @@
       <recent name="C:\Users\Peque\IdeaProjects\tip_grupo3_s12025\frontend\public" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Peque\IdeaProjects\tip_grupo3_s12025\frontend\src\components" />
       <recent name="C:\Users\Peque\IdeaProjects\tip_grupo3_s12025\frontend\src\assets" />
       <recent name="C:\Users\Peque\IdeaProjects\tip_grupo3_s12025\frontend\src\pages" />
-      <recent name="C:\Users\Peque\IdeaProjects\tip_grupo3_s12025\frontend\src\components" />
       <recent name="C:\Users\Peque\IdeaProjects\tip_grupo3_s12025\frontend\public" />
     </key>
     <key name="CreateKotlinClassDialog.RecentsKey">
@@ -160,7 +164,7 @@
       <workItem from="1747409161282" duration="11932000" />
       <workItem from="1747434944374" duration="3680000" />
       <workItem from="1747483381170" duration="29234000" />
-      <workItem from="1749070737973" duration="1628000" />
+      <workItem from="1749070737973" duration="10729000" />
     </task>
     <servers />
   </component>
