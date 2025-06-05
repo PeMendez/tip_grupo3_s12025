@@ -8,6 +8,14 @@ import TextButton from "../components/TextButton.jsx";
 import RoundButton from "../components/RoundButton.jsx";
 import RuleFormPopup from "../components/RuleFormPopup.jsx";
 import {useTitle} from "../contexts/TitleContext.jsx";
+import {
+    attributeTranslations,
+    operatorTranslations,
+    actionTranslations,
+    getTranslation,
+    openingSensorBooleanValueTranslations,
+    outletBooleanValueTranslations,
+} from '../api/ruleMapping.js'; // Asegúrate que la ruta sea correcta
 
 const RulesManager = ({ isDeviceContext = false }) => {
     const { id } = useParams(); // Si viene desde ruta con :id
@@ -27,7 +35,10 @@ const RulesManager = ({ isDeviceContext = false }) => {
 
     const {setHeaderTitle} = useTitle();
 
+
+
     const fetchRules = async () => {
+        setLoading(true);
         try {
             if (isDeviceContext && id) {
                 const [rulesData, deviceData] = await Promise.all([
@@ -62,7 +73,17 @@ const RulesManager = ({ isDeviceContext = false }) => {
 
     useEffect(() => {
         if (token) fetchRules();
-    }, [id, token]);
+    }, [id, token, isDeviceContext]);
+
+    //Efecto para el title.
+    useEffect(() => {
+        const baseTitle = isDeviceContext ? (device ? `Reglas de ${device.name}` : 'Reglas del dispositivo') : 'Reglas'; //
+        if (editMode) { //
+            setHeaderTitle("Editar reglas"); //
+        } else {
+            setHeaderTitle(baseTitle);
+        }
+    }, [editMode, isDeviceContext, device, setHeaderTitle]);
 
     const handleCreateRule = async (newRule) => {
         try {
@@ -89,15 +110,27 @@ const RulesManager = ({ isDeviceContext = false }) => {
         setExpandedRuleId(prevId => (prevId === ruleId ? null : ruleId));
     };
 
-    if (loading) return <p>Cargando reglas...</p>;
-    if (error) return <p>{error}</p>;
+    // Helper para renderizar el valor de la condición de forma amigable
+    const renderConditionValue = (attribute, value) => {
+        attribute = attribute.toUpperCase();
+        // Primero, intenta traducir valores booleanos si el atributo es IS_ON
+        if (attribute === 'IS_ON') { // Asume que 'IS_ON' es el identificador crudo
+            return getTranslation(value.toString(), outletBooleanValueTranslations, value); // Convierte a string por si acaso es booleano
+        }
+        if (attribute === 'IS_OPEN') {
+            return getTranslation(value.toString(), openingSensorBooleanValueTranslations, value); // Lo mismo para sensor puerta
+        }
+        // Podría añadir más lógica aquí para otros atributos si es necesario
+        if (attribute === 'TEMPERATURE') return `${value}°C`;
+        if (attribute === 'BRIGHTNESS') return `${value}%`;
+        return value; // Devuelve el valor como está si no hay traducción especial
+    };
 
-    const title = isDeviceContext ? `Reglas del dispositivo` : 'Reglas';
+    if (loading) return <div className="loading-message">Cargando reglas...</div>;
+    // No mostrar mensaje de error y de "no hay reglas" al mismo tiempo.
+    if (error && rules.length === 0) return <p className="error-message">{error}</p>;
+
     const emptyMessage = isDeviceContext ? 'No hay reglas asociadas a este dispositivo.' : 'No hay reglas.';
-
-    if(editMode){
-        setHeaderTitle("Editar reglas")
-    } else setHeaderTitle(title)
 
     return (
         <div className="main-container">
@@ -158,7 +191,10 @@ const RulesManager = ({ isDeviceContext = false }) => {
                                                 <ul>
                                                     {rule.conditions?.map((cond, index) => (
                                                         <li key={index}>
-                                                            {cond.deviceName} {cond.attribute} {cond.operator} {cond.value}
+                                                            {cond.deviceName}{' '}
+                                                            {getTranslation(cond.attribute, attributeTranslations)}{' '}
+                                                            {getTranslation(cond.operator, operatorTranslations)}{' '}
+                                                            {renderConditionValue(cond.attribute, cond.value)}
                                                         </li>
                                                     ))}
                                                 </ul>
@@ -166,7 +202,9 @@ const RulesManager = ({ isDeviceContext = false }) => {
                                                 <ul>
                                                     {rule.actions?.map((act, index) => (
                                                         <li key={index}>
-                                                            {act.deviceName} {act.actionType} {act.parameters}
+                                                            {getTranslation(act.actionType, actionTranslations)}{' '}
+                                                            {act.parameters} {/* Los parámetros usualmente no se traducen o dependen del tipo de acción */}
+                                                            {act.deviceName}{' '}
                                                         </li>
                                                     ))}
                                                 </ul>
@@ -179,7 +217,7 @@ const RulesManager = ({ isDeviceContext = false }) => {
                                         <TextButton handleClick={()=> setShowPopup(true)} text="Agregar..."/>
                                     </div>) :
                                     (<div>
-                                        <p>No tienes suficientes dispositivos configurados para agregar reglas.</p>
+                                        <p>Necesitas al menos 2 dispositivos configurados para agregar reglas.</p>
                                         <TextButton handleClick={() => navigate('/home')} text="A mis habitaciones..."/>
                                     </div>)
                                 }

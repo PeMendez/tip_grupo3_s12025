@@ -1,7 +1,7 @@
 export const attributeTranslations = {
     TEMPERATURE: 'Temperatura',
-    IS_ON: 'Estado (Encendido/Apagado)',
-    IS_OPEN: 'Estado (Abierto/Cerrado)',
+    IS_ON: 'Estado',
+    IS_OPEN: 'Está',
     BRIGHTNESS: 'Brillo',
     // Agrega aquí todos los atributos que necesites traducir
 };
@@ -9,18 +9,28 @@ export const attributeTranslations = {
 export const operatorTranslations = {
     GREATER_THAN: 'Mayor que',
     LESS_THAN: 'Menor que',
-    EQUALS: 'Igual a',
+    EQUALS: '=',
     // Agrega aquí todos los operadores
 };
 
 export const actionTranslations = {
     TURN_ON: 'Encender',
     TURN_OFF: 'Apagar',
-    SET_BRIGHTNESS: 'Ajustar Brillo',
+    SET_BRIGHTNESS: 'Ajustar Brillo a ',
     // Agrega aquí todas las acciones
+};
+
+export const outletBooleanValueTranslations = {
+    'TRUE': 'Encendido',
+    'FALSE': 'Apagado',
+};
+
+export const openingSensorBooleanValueTranslations = {
+    'TRUE': 'Abierto',
+    'FALSE': 'Cerrado',
 };
 
 // Función genérica para obtener la traducción o el valor original
 export const getTranslation = (value, translationMap) => {
-    return translationMap[value] || value;
+    return translationMap[value.toUpperCase()] || value;
 };
