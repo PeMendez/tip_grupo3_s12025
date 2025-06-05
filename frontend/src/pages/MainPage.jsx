@@ -9,10 +9,11 @@ import garajeImg from '../assets/garaje.jpg'
 import lavaderoImg from '../assets/lavadero.jpg'
 import banoImg from '../assets/Baño.jpg'
 import salaImg from '../assets/salaDeJuegos.jpg'
-import { FiEdit, FiPlus } from 'react-icons/fi'
+import { FiPlus } from 'react-icons/fi'
 import './styles/mainPage.css'
 import TextButton from "../components/TextButton.jsx";
 import RoundButton from "../components/RoundButton.jsx";
+import usePushNotifications from "../hooks/usePushNotifications.js";
 
 const MainPage = ({ setHeaderTitle }) => {
     const [rooms, setRooms] = useState([])
@@ -21,6 +22,8 @@ const MainPage = ({ setHeaderTitle }) => {
     const navigate = useNavigate()
     const [showDeletePopup, setShowDeletePopup] = useState(false)
     const [roomToDelete, setRoomToDelete] = useState(null)
+
+    const {isSubscribed,error} = usePushNotifications();
 
     const roomTypes = [
         {name: 'Cocina', img: cocinaImg},

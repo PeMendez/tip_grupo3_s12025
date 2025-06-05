@@ -26,7 +26,8 @@ class MqttIntegrationTest @Autowired constructor(
     private val roomService: RoomService,
     private val deviceService: DeviceService,
     private val homeService: HomeService,
-    private val mqttWebSocketHandler: MqttWebSocketHandler
+    private val mqttWebSocketHandler: MqttWebSocketHandler,
+    private val notificationService: PushNotificationService
 ) {
     @Autowired
     private lateinit var deviceRepository: DeviceRepository
@@ -42,7 +43,7 @@ class MqttIntegrationTest @Autowired constructor(
 
     @Test
     fun `when handleUnconfiguredDevice is called, should publish UnconfiguredDeviceEvent`() {
-        val mqttServiceMock = MqttService(applicationEventPublisher, mqttWebSocketHandler, ruleService, deviceRepository)
+        val mqttServiceMock = MqttService(applicationEventPublisher, mqttWebSocketHandler, ruleService, deviceRepository, notificationService)
         val testMessage = "test_device_message"
         //tengo que inyectarle el mock a mano porque sino usa el bean real.
         //pero veia por consola que andaba, asi que yo ya sabia que estaba andando

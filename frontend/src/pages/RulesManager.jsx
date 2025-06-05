@@ -4,7 +4,6 @@ import { getAllRules, getRuleForDevice, createRule, deleteRule } from '../api/ru
 import {getConfiguredDeviceCount, getDevice} from '../api/deviceService.js';
 import BackOrCloseButton from "../components/BackOrCloseButton.jsx";
 import './styles/rules.css';
-import RuleFormPopupBis from "../components/RuleComponentBis.jsx";
 import TextButton from "../components/TextButton.jsx";
 import RoundButton from "../components/RoundButton.jsx";
 import RuleFormPopup from "../components/RuleFormPopup.jsx";

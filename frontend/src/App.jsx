@@ -5,22 +5,11 @@ import './App.css'
 import RoomDetail2 from "./pages/RoomDetail2.jsx";
 import RulesManager from "./pages/RulesManager.jsx";
 import Header from "./components/Header.jsx";
-import {useState, useEffect} from "react";
-import { subscribeToPushNotifications } from './api/pushNotification.js';
+import {useState} from "react";
+
 
 const App = () => {
     const [headerTitle, setHeaderTitle] = useState("NeoHub");
-
-    useEffect(() => {
-        const handlePushSubscription = async () => {
-            const token = localStorage.getItem('token');
-            if (token) {
-                await subscribeToPushNotifications();
-            }
-        };
-
-        handlePushSubscription();
-    }, []);
 
     return (
         <div className="app-container">

@@ -1,4 +1,3 @@
-// src/hooks/useDeviceAttributes.js (crea una carpeta hooks si no la tienes)
 import { useState, useEffect } from 'react';
 import { getAttributes } from '../api/ruleService'; // Asegúrate que la ruta sea correcta
 import { attributeTranslations, getTranslation } from '../api/ruleMapping.js'; // Importa tus traducciones
