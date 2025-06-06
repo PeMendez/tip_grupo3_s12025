@@ -1,101 +1,131 @@
-import {useEffect, useState} from "react";
-import { useParams } from "react-router-dom";
-import useRoomData from "../hooks/useRoomData.js"
-import DefaultModeView from "../components/grid/DefaultModeView.jsx";
-import EditModeView from "../components/grid/EditModeView";
-import AddModeView from "../components/grid/AddModeView";
-import Toast from '../components/Toast.jsx';
-import './styles/roomDetail.css';
+import { useEffect, useState } from "react";
+import {useNavigate, useParams} from "react-router-dom";
+import useRoomData from "../hooks/useRoomData.js";
 import useDeviceData from "../hooks/useDeviceData.js";
-import {useTitle} from "../contexts/TitleContext.jsx";
+import { useTitle } from "../contexts/TitleContext.jsx";
+import GridView from "../components/grid/GridView";
+import Toast from '../components/Toast.jsx';
+import {getDeviceIcon} from "../components/grid/utils.jsx";
+import './styles/roomDetail.css';
+import RoundButton from "../components/RoundButton.jsx";
+import BackOrCloseButton from "../components/BackOrCloseButton.jsx";
 
-const RoomDetail = () => {
+const RoomDetail2 = () => {
     const { id } = useParams();
+    const navigate = useNavigate()
+    const [mode, setMode] = useState('view'); // 'view' | 'add' | 'edit'
+    const { setHeaderTitle } = useTitle();
+
     const {
         roomName,
         devices,
         availableDevices,
-        error,
         fetchRoom,
         setDevices
     } = useRoomData(id);
 
     const {
         toggleLight,
-        setBrightness,
         handleAddDevice,
         handleDeleteDevice,
-        showNotification,
+        fetchAvailableDevices,
         toast,
         setToast
     } = useDeviceData(id, fetchRoom, setDevices);
 
-    const [editMode, setEditMode] = useState(false);
-    const [addMode, setAddMode] = useState(false);
-
-    const {setHeaderTitle} = useTitle();
 
     useEffect(() => {
-        setHeaderTitle("");
-    }, []);
+        const titles = {
+            'view': roomName || "",
+            'add': "Agregar Dispositivos",
+            'edit': "Editar Dispositivos"
+        };
+        setHeaderTitle(titles[mode]);
+    }, [mode, roomName, setHeaderTitle]);
 
     useEffect(() => {
-        if (addMode) {
-            setHeaderTitle("Agregar Dispositivos");
+        if (mode === 'add') {
+            fetchAvailableDevices();
         }
-    }, [addMode]);
+    }, [mode, fetchAvailableDevices]);
 
-    useEffect(() => {
-        if (editMode) {
-            setHeaderTitle("Editar Mis Dispositivos");
+    const handleDeviceClick = (device) => {
+        if (mode !== 'view') return;
+
+        if (device.type === 'smart_outlet' || device.type === 'dimmer') {
+            toggleLight(device.id);
         }
-    }, [editMode]);
+    };
+
+    const handleClose = () => {
+        navigate('/home');
+    };
 
 
-    if (addMode) {
+    if (mode === 'add') {
         return (
-            <AddModeView
-                availableDevices={availableDevices}
-                onAddDevice={handleAddDevice}
-                onClose={() => setAddMode(false)}
+            <GridView
+                type="device"
+                items={availableDevices}
+                onItemClick={(device) => {
+                    handleAddDevice(device);
+                    setMode('view');
+                }}
+                onClose={() => setMode('view')}
+                getIcon={(device) => getDeviceIcon(device.type)}
             />
         );
     }
 
-    if (editMode) {
+    if (mode === 'edit') {
         return (
-            <EditModeView
-                devices={devices}
-                deleteDevice={handleDeleteDevice}
-                onAddDevice={() => setAddMode(true)}
-                onClose={() => setEditMode(false)}
-                showNotification={showNotification}
+            <GridView
+                type="device"
+                items={devices}
+                editMode={true}
+                onDelete={handleDeleteDevice}
+                onAdd={() => setMode('add')}
+                onClose={() => setMode('view')}
+                getIcon={(device) => getDeviceIcon(device.type)}
             />
         );
     }
 
     return (
         <div className="main-container">
-            <DefaultModeView
-                roomName={roomName}
-                devices={devices}
-                onEdit={() => setEditMode(true)}
-                onAddDevice={() => setAddMode(true)}
-                toggleLight={toggleLight}
-                setBrightness={setBrightness}
-                setHeaderTitle={setHeaderTitle}
-            />
+            {devices.length > 0 ? (
+                <>
+                    <div className="edit-container">
+                        <RoundButton type="edit" onClick={() => setMode('edit')}/>
+                    </div>
+                    <GridView
+                        type="device"
+                        items={devices}
+                        onItemClick={handleDeviceClick}
+                        getIcon={(device) => getDeviceIcon(device.type)}
+                    />
+                </>
+            ) : (
+                <div className="main-container">
+                    <BackOrCloseButton type="arrow" onClick={handleClose}/>
+                    <div className="no-rooms">
+                        <p>Aún no tenés dispositivos...</p>
+                        <RoundButton type="edit" onClick={() => setMode('add')}/>
+                    </div>
+                </div>
+                    )}
 
-            {toast && (
-                <Toast
-                    key={toast.key}
-                    message={toast.message}
-                    duration={3000}
-                    onClose={() => setToast(null)}
-                />
-            )}
-        </div>
-    );
-};
 
-export default RoomDetail;
+                    {toast && (
+                        <Toast
+                            key={toast.key}
+                            message={toast.message}
+                            duration={3000}
+                            onClose={() => setToast(null)}
+                        />
+                    )}
+                </div>
+            );
+            };
+
+export default RoomDetail2;

@@ -17,7 +17,8 @@ function RegisterPopup({ onClose, onSuccessRegister }) {
             onSuccessRegister(response);
             onClose();
         } catch (err) {
-            setError(err + 'Error en el registro. Intente de nuevo.');
+            setError( 'Error en el registro. Intente de nuevo.');
+            console.log(err)
         }
     }
 
