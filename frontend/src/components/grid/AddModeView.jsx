@@ -10,18 +10,22 @@ const AddModeView = ({ availableDevices, onAddDevice, onClose }) => {
                 </div>
             </div>
 
-            <div className="room2-grid">
-                {availableDevices.map((device, index) => (
-                    <button
-                        key={index}
-                        onClick={() => onAddDevice(device)}
-                        className="room-button"
-                    >
-                        <div className="device-icon">{getDeviceIcon(device.type)}</div>
-                        <span>{device.name}</span>
-                    </button>
-                ))}
-            </div>
+            {availableDevices.length === 0 ? (
+                <p>Conecta un dispositivo!</p>
+            ) : (
+                <div className="room2-grid">
+                    {availableDevices.map((device, index) => (
+                        <button
+                            key={index}
+                            onClick={() => onAddDevice(device)}
+                            className="room-button"
+                        >
+                            <div className="device-icon">{getDeviceIcon(device.type)}</div>
+                            <span>{device.name}</span>
+                        </button>
+                    ))}
+                </div> )
+            }
         </div>
     );
 };

@@ -23,6 +23,7 @@ const useRoomData = (roomId) => {
     const fetchAvailableDevices = useCallback(async () => {
         try {
             const devices = await getUnconfiguredDevices(token);
+            console.log(devices)
             setAvailableDevices(devices || []);
         } catch (err) {
             console.error(err);
@@ -33,6 +34,10 @@ const useRoomData = (roomId) => {
     useEffect(() => {
         fetchRoom();
     }, [fetchRoom]);
+
+    useEffect(() => {
+        fetchAvailableDevices();
+    }, [fetchAvailableDevices]);
 
     return {
         roomName,

@@ -4,17 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="09bf219a-ddab-407c-b6b8-1beb0e5da310" name="Changes" comment="">
+    <list default="true" id="09bf219a-ddab-407c-b6b8-1beb0e5da310" name="Changes" comment="fix visuales">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/api/deviceService.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/api/deviceService.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/RegisterPopup.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/RegisterPopup.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/ui/button.jsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/ui/card.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/grid/AddModeView.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/grid/AddModeView.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/hooks/useRoomData.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/hooks/useRoomData.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/MainPage2.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/MainPage2.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/pages/RoomDetail2.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/RoomDetail2.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hardware/scripts/device_simulator/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/hardware/scripts/device_simulator/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/service/MqttService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/service/MqttService.kt" afterDir="false" />
     </list>
     <list id="c93fa67c-d594-4956-a819-2b86e3ca1c3c" name="Changes by Martin" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -61,7 +55,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "Spring Boot.NeohubApplication.executor": "Run",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "Merging main",
     "javascript.nodejs.core.library.configured.version": "22.14.0",
     "javascript.nodejs.core.library.typings.version": "22.13.17",
     "kotlin-language-version-configured": "true",
@@ -161,7 +155,17 @@
       <workItem from="1747434944374" duration="3680000" />
       <workItem from="1747483381170" duration="29234000" />
       <workItem from="1749070737973" duration="10729000" />
+      <workItem from="1749249788911" duration="3265000" />
     </task>
+    <task id="LOCAL-00001" summary="fix visuales">
+      <option name="closed" value="true" />
+      <created>1749241430259</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1749241430259</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -180,6 +184,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="lala" />
-    <option name="LAST_COMMIT_MESSAGE" value="lala" />
+    <MESSAGE value="fix visuales" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix visuales" />
   </component>
 </project>

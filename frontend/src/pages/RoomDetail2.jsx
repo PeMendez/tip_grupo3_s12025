@@ -2,13 +2,12 @@ import { useEffect, useState } from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import useRoomData from "../hooks/useRoomData.js";
 import useDeviceData from "../hooks/useDeviceData.js";
-import { useTitle } from "../contexts/TitleContext.jsx";
-import GridView from "../components/grid/GridView";
-import Toast from '../components/Toast.jsx';
+import {useTitle} from "../contexts/TitleContext.jsx";
+import GridView from "../components/grid/GridView.jsx";
 import {getDeviceIcon} from "../components/grid/utils.jsx";
-import './styles/roomDetail.css';
 import RoundButton from "../components/RoundButton.jsx";
 import BackOrCloseButton from "../components/BackOrCloseButton.jsx";
+import Toast from "../components/Toast.jsx";
 
 const RoomDetail2 = () => {
     const { id } = useParams();
@@ -21,18 +20,17 @@ const RoomDetail2 = () => {
         devices,
         availableDevices,
         fetchRoom,
-        setDevices
+        setDevices,
+        fetchAvailableDevices
     } = useRoomData(id);
 
     const {
         toggleLight,
         handleAddDevice,
         handleDeleteDevice,
-        fetchAvailableDevices,
         toast,
         setToast
-    } = useDeviceData(id, fetchRoom, setDevices);
-
+    } = useDeviceData(id, fetchRoom, setDevices, fetchAvailableDevices);
 
     useEffect(() => {
         const titles = {
@@ -49,6 +47,12 @@ const RoomDetail2 = () => {
         }
     }, [mode, fetchAvailableDevices]);
 
+    useEffect(() => {
+        if (mode === 'edit') {
+            fetchRoom();
+        }
+    }, [mode, fetchRoom]);
+
     const handleDeviceClick = (device) => {
         if (mode !== 'view') return;
 
@@ -61,19 +65,24 @@ const RoomDetail2 = () => {
         navigate('/home');
     };
 
-
     if (mode === 'add') {
         return (
-            <GridView
-                type="device"
-                items={availableDevices}
-                onItemClick={(device) => {
-                    handleAddDevice(device);
-                    setMode('view');
-                }}
-                onClose={() => setMode('view')}
-                getIcon={(device) => getDeviceIcon(device.type)}
-            />
+            <div>
+                {availableDevices.length === 0 ? (
+                    <p>Conecta un dispositivo!</p>
+                ) : (
+                    <GridView
+                        type="device"
+                        items={availableDevices}
+                        onItemClick={(device) => {
+                            handleAddDevice(device);
+                            setMode('view');
+                        }}
+                        onClose={() => setMode('view')}
+                        getIcon={(device) => getDeviceIcon(device.type)}
+                    />
+                )}
+            </div>
         );
     }
 
@@ -113,19 +122,18 @@ const RoomDetail2 = () => {
                         <RoundButton type="edit" onClick={() => setMode('add')}/>
                     </div>
                 </div>
-                    )}
+            )}
 
-
-                    {toast && (
-                        <Toast
-                            key={toast.key}
-                            message={toast.message}
-                            duration={3000}
-                            onClose={() => setToast(null)}
-                        />
-                    )}
-                </div>
-            );
-            };
+            {toast && (
+                <Toast
+                    key={toast.key}
+                    message={toast.message}
+                    duration={3000}
+                    onClose={() => setToast(null)}
+                />
+            )}
+        </div>
+    );
+};
 
 export default RoomDetail2;
