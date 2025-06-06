@@ -17,6 +17,7 @@ const RoomDetail = () => {
         availableDevices,
         error,
         fetchRoom,
+        fetchAvailableDevices,
         setDevices
     } = useRoomData(id);
 
@@ -41,12 +42,14 @@ const RoomDetail = () => {
 
     useEffect(() => {
         if (addMode) {
+            fetchAvailableDevices();
             setHeaderTitle("Agregar Dispositivos");
         }
     }, [addMode]);
 
     useEffect(() => {
         if (editMode) {
+            fetchRoom();
             setHeaderTitle("Editar Mis Dispositivos");
         }
     }, [editMode]);
@@ -59,7 +62,7 @@ const RoomDetail = () => {
                 onAddDevice={handleAddDevice}
                 onClose={() => setAddMode(false)}
             />
-        );
+        )
     }
 
     if (editMode) {
