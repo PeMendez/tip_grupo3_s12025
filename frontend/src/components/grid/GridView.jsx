@@ -27,7 +27,7 @@ const GridView = ({
     };
 
     const handleConfirmDelete = () => {
-        onDelete(itemToDelete);
+        onDelete(itemToDelete.id);
         setItemToDelete(null);
     };
 
