@@ -69,7 +69,12 @@ const RoomDetail2 = () => {
         return (
             <div>
                 {availableDevices.length === 0 ? (
-                    <p>Conecta un dispositivo!</p>
+                        <div className="main-container">
+                            <BackOrCloseButton type="arrow" onClick={handleClose}/>
+                            <div className="no-rooms">
+                                <p>Conecta un dispositivo!</p>
+                            </div>
+                        </div>
                 ) : (
                     <GridView
                         type="device"

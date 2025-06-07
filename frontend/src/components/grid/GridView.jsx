@@ -3,7 +3,7 @@ import BackOrCloseButton from "../BackOrCloseButton";
 import TextButton from "../TextButton";
 import DeleteModal from "../DeleteModal";
 import { FiPlus } from 'react-icons/fi';
-import '../../pages/styles/mainPage.css';
+import './styles/gridView.css'
 
 const GridView = ({
                       type,
