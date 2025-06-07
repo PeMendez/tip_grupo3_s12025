@@ -9,7 +9,15 @@ export const getRoomDetails = async (roomId, token) => {
                 'Authorization': `Bearer ${token}`
             }
         });
-        return response.data;
+        const ackResponse = await axios.get(`${API_URL}/${roomId}/ack`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        return {
+            room: response.data,
+            ack: ackResponse.data.data
+        };
     } catch (error) {
         console.error('Error al obtener detalles de la habitación:', error);
         throw error;

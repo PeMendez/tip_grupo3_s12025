@@ -1,4 +1,3 @@
-/* Estilos específicos para el componente GridView */
 .main-container {
     display: flex;
     flex-direction: column;
@@ -17,6 +16,7 @@
     max-width: 490px;
     height: 450px;
     align-content: flex-start;
+    padding: 20px;
 }
 
 .room-grid::-webkit-scrollbar {
@@ -52,7 +52,6 @@
     border-radius: 8px;
 }
 
-/* Modo edición */
 .room-button.edit-mode {
     position: relative;
     transition: all 0.3s ease;
@@ -78,7 +77,6 @@
     opacity: 1;
 }
 
-/* Icono de eliminación */
 .delete-icon-full {
     position: absolute;
     top: 50%;
@@ -95,14 +93,12 @@
     opacity: 1;
 }
 
-/* Efectos hover en modo edición */
 .room-button.edit-mode:hover img,
 .room-button.edit-mode:hover span {
     filter: blur(2px);
     opacity: 0.8;
 }
 
-/* Estilos para el botón de añadir */
 .add-room-icon {
     border-radius: 12px;
     box-shadow: 0 2px 5px var(--light-grone);
@@ -113,4 +109,48 @@
     margin-top: 40px;
     flex-direction: column-reverse;
     margin-bottom: 40px;
+}
+
+.room-button.ack {
+    border: 2px solid var(--light-green);
+}
+
+.room-button.noAck {
+    border: 2px solid var(--alarm-red);
+    background-color: var(--red--gray);
+}
+
+.room-button.edit-mode {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.room-button.noAck::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(138, 153, 168, 0.6);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1;
+    border-radius: 12px;
+}
+
+.room-button.noAck:hover::before {
+    opacity: 1;
+}
+
+.room-button.noAck:hover .delete-icon-full {
+    opacity: 1;
+}
+
+.room-button.noAck:hover img,
+.room-button.noAck:hover span {
+    filter: blur(2px);
+    opacity: 0.8;
 }
