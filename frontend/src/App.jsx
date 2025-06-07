@@ -1,8 +1,8 @@
 import './App.css'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import LoginPage from './pages/LoginPage'
-import MainPage2 from './pages/MainPage2.jsx'
-import RoomDetail2 from "./pages/RoomDetail2.jsx";
+import MainPage from './pages/MainPage.jsx'
+import RoomDetail from "./pages/RoomDetail.jsx";
 import RulesManager from "./pages/RulesManager.jsx";
 import Header from "./components/Header.jsx";
 import {AuthProvider} from "./contexts/AuthContext.jsx";
@@ -27,7 +27,7 @@ const AppContent = () => {
                             path="/home"
                             element={
                                 <ProtectedRoute>
-                                    <MainPage2/>
+                                    <MainPage/>
                                 </ProtectedRoute>
                             }
                         />
@@ -35,7 +35,7 @@ const AppContent = () => {
                             path="/room/:id"
                             element={
                                 <ProtectedRoute>
-                                    <RoomDetail2/>
+                                    <RoomDetail/>
                                 </ProtectedRoute>
                             }
                         />

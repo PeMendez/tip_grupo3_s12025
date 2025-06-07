@@ -6,8 +6,15 @@
   <component name="ChangeListManager">
     <list default="true" id="09bf219a-ddab-407c-b6b8-1beb0e5da310" name="Changes" comment="fix visuales">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/DeleteModal.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/DeleteModal.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/grid/AddModeView.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/grid/DefaultModeView.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/grid/EditModeView.jsx" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/components/grid/GridView.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/grid/GridView.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/MainPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/MainPage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/MainPage2.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/RoomDetail.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/RoomDetail.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/RoomDetail2.jsx" beforeDir="false" />
     </list>
     <list id="c93fa67c-d594-4956-a819-2b86e3ca1c3c" name="Changes by Martin" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -156,7 +163,7 @@
       <workItem from="1747434944374" duration="3680000" />
       <workItem from="1747483381170" duration="29234000" />
       <workItem from="1749070737973" duration="10729000" />
-      <workItem from="1749249788911" duration="19085000" />
+      <workItem from="1749249788911" duration="20261000" />
     </task>
     <task id="LOCAL-00001" summary="fix visuales">
       <option name="closed" value="true" />
