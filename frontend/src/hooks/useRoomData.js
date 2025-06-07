@@ -6,14 +6,21 @@ const useRoomData = (roomId) => {
     const [roomName, setRoomName] = useState("");
     const [devices, setDevices] = useState([]);
     const [availableDevices, setAvailableDevices] = useState([]);
+    const [deviceAck, setDeviceAck] = useState([])
     const [error, setError] = useState(null);
     const token = localStorage.getItem('token');
 
     const fetchRoom = useCallback(async () => {
         try {
-            const room = await getRoomDetails(roomId, token);
+            const {room, ack} = await getRoomDetails(roomId, token);
             setRoomName(room.name || "Habitación sin nombre");
             setDevices(room.deviceList || []);
+            setDeviceAck(
+                ack ? Object.entries(ack).map(([deviceId, status]) => ({
+                    deviceId: parseInt(deviceId),
+                    status
+                })) : []
+            );
         } catch (err) {
             console.error(err);
             setError("Error al cargar detalles de la habitación");
@@ -23,7 +30,6 @@ const useRoomData = (roomId) => {
     const fetchAvailableDevices = useCallback(async () => {
         try {
             const devices = await getUnconfiguredDevices(token);
-            console.log(devices)
             setAvailableDevices(devices || []);
         } catch (err) {
             console.error(err);
@@ -46,7 +52,8 @@ const useRoomData = (roomId) => {
         error,
         fetchRoom,
         fetchAvailableDevices,
-        setDevices
+        setDevices,
+        deviceAck
     };
 };
 

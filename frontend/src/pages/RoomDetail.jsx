@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import useRoomData from "../hooks/useRoomData.js";
 import useDeviceData from "../hooks/useDeviceData.js";
@@ -21,7 +21,8 @@ const RoomDetail = () => {
         availableDevices,
         fetchRoom,
         setDevices,
-        fetchAvailableDevices
+        fetchAvailableDevices,
+        deviceAck
     } = useRoomData(id);
 
     const {
@@ -31,7 +32,7 @@ const RoomDetail = () => {
         toast,
         setToast,
         setBrightness
-    } = useDeviceData(id, fetchRoom, setDevices, fetchAvailableDevices);
+    } = useDeviceData(id, fetchRoom, setDevices, fetchAvailableDevices, deviceAck);
 
     useEffect(() => {
         const titles = {
@@ -62,6 +63,10 @@ const RoomDetail = () => {
         }
     };
 
+    const getAckForDevice = (deviceId) => {
+        return deviceAck.find(item => item.deviceId === deviceId).status
+    };
+
     const handleClose = () => {
         navigate('/home');
     };
@@ -79,7 +84,10 @@ const RoomDetail = () => {
                 ) : (
                     <GridView
                         type="device"
-                        items={availableDevices}
+                        items={availableDevices.map(device => ({
+                            ...device,
+                            ack: getAckForDevice(device.id)
+                        }))}
                         onItemClick={(device) => {
                             handleAddDevice(device);
                             setMode('view');
@@ -118,7 +126,10 @@ const RoomDetail = () => {
                     </div>
                     <GridView
                         type="device"
-                        items={devices}
+                        items={devices.map(device => ({
+                            ...device,
+                            ackStatus: getAckForDevice(device.id)
+                        }))}
                         onItemClick={handleDeviceClick}
                         getIcon={(device) => getDeviceIcon(device.type)}
                         toggleLight={toggleLight}

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
 import BackOrCloseButton from "../BackOrCloseButton";
 import TextButton from "../TextButton";
 import DeleteModal from "../DeleteModal";
@@ -40,6 +40,10 @@ const GridView = ({
         setItemToDelete(null);
     };
 
+    useEffect(() => {
+        console.log(items)
+    }, []);
+
     return (
         <div className="main-container">
             <BackOrCloseButton type="arrow" onClick={onClose} />
@@ -48,7 +52,7 @@ const GridView = ({
                 {items.map((item, index) => (
                     <div
                         key={index}
-                        className={`room-button ${editMode ? ' edit-mode' : ''}`}
+                        className={`room-button${editMode ? ' edit-mode' : ''}${!editMode && type === 'device' && item.ackStatus ? ' ack' : ''}${!editMode && type === 'device' && !item.ackStatus ? ' noAck' : ''}`}
                         onClick={() => handleItemClick(item)}
                     >
                         {type === 'device' ? (
@@ -71,6 +75,11 @@ const GridView = ({
                             {editMode && (
                                 <div className="delete-icon-full">🗑️</div>
                             )}
+
+                            {!editMode && !item.ackStatus && (
+                            <div className="delete-icon-full">🔌</div>
+                            )}
+
                         </div>
                      ))}
 
