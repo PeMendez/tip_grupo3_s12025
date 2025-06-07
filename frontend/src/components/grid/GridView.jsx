@@ -23,7 +23,7 @@ const GridView = ({
 
     const handleItemClick = (item) => {
         if (editMode) {
-            setItemToDelete(item);
+            setItemToDelete(item.id);
         } else {
             onItemClick(item);
         }
@@ -84,7 +84,7 @@ const GridView = ({
                     device={itemToDelete}
                 onConfirm={handleConfirmDelete}
                 onCancel={() => setItemToDelete(null)}
-                    message={`¿Estás seguro que querés eliminar la ${type === 'room' ? 'habitación' : 'dispositivo'} "${itemToDelete.name}"?`}
+                    message={`¿Estás seguro que querés eliminar ${type === 'room' ? 'la habitación' : 'el dispositivo'} "${itemToDelete.name}"?`}
                 />
             )}
             </div>
