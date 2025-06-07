@@ -214,7 +214,7 @@ const RulesManager = ({ isDeviceContext = false }) => {
                                         )}
                                     </div>
                                 ))}
-                                {deviceCount>2 ?
+                                {deviceCount>=2 ?
                                     (<div className="add-device-icon">
                                         <TextButton handleClick={()=> setShowPopup(true)} text="Agregar..."/>
                                     </div>) :

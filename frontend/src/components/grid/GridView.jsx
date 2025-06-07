@@ -27,7 +27,7 @@ const GridView = ({
             setNameToDelete(item.name);
 
             if (type === 'device') {
-                setItemToDelete(item.id);
+                setItemToDelete(item);
             } else if (type === 'room') {
                 setItemToDelete(item);
             }

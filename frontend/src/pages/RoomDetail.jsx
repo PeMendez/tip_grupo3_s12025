@@ -101,6 +101,7 @@ const RoomDetail = () => {
                 items={devices}
                 editMode={true}
                 onDelete={handleDeleteDevice}
+                onItemClick={ (device) => {console.log("No se que va aca pero si no se lo pasas no borra device.")} }
                 onAdd={() => setMode('add')}
                 onClose={() => setMode('view')}
                 getIcon={(device) => getDeviceIcon(device.type)}
