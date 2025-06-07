@@ -3,6 +3,7 @@ import BackOrCloseButton from "../BackOrCloseButton";
 import TextButton from "../TextButton";
 import DeleteModal from "../DeleteModal";
 import { FiPlus } from 'react-icons/fi';
+import DeviceCard from '../../components/grid/DeviceCard.jsx';
 import './styles/gridView.css'
 
 const GridView = ({
@@ -14,16 +15,24 @@ const GridView = ({
                       editMode,
                       onDelete,
                       getImage,
-                      getIcon
+                      toggleLight,
+                      setBrightness,
+                      addMode
                   }) => {
     const [itemToDelete, setItemToDelete] = useState(null);
+    const [nameItemToDelete, setNameToDelete] = useState(null)
 
     const handleItemClick = (item) => {
         if (editMode) {
-            setItemToDelete(item);
-        } else {
-            onItemClick(item);
+            setNameToDelete(item.name);
+
+            if (type === 'device') {
+                setItemToDelete(item.id);
+            } else if (type === 'room') {
+                setItemToDelete(item);
+            }
         }
+        onItemClick(item);
     };
 
     const handleConfirmDelete = () => {
@@ -35,51 +44,56 @@ const GridView = ({
         <div className="main-container">
             <BackOrCloseButton type="arrow" onClick={onClose} />
 
-            <div className={type === 'room' ? 'room-grid' : 'room2-grid'}>
+            <div className={'room-grid'}>
                 {items.map((item, index) => (
                     <div
                         key={index}
-                        className={`${type === 'room' ? 'room' : 'device'}-button ${editMode ? 'edit-mode' : ''}`}
+                        className={`room-button ${editMode ? ' edit-mode' : ''}`}
                         onClick={() => handleItemClick(item)}
                     >
-                        {type === 'room' ? (
-                            <>
-                                <img src={getImage(item)} alt={item.name} />
-                                <span>{item.name}</span>
-                            </>
+                        {type === 'device' ? (
+                        <DeviceCard
+                            key={index}
+                            device={item}
+                            toggleLight={toggleLight}
+                            setBrightness={setBrightness}
+                            onClick={() => handleItemClick(item)}
+                            editMode={editMode}
+                            addMode={addMode}
+                        />
                         ) : (
                             <>
-                                <div className="device-icon">{getIcon(item.type)}</div>
+                                <img src={getImage(item)} alt={item.name}/>
                                 <span>{item.name}</span>
-                            </>
+                                </>
                         )}
-                        {editMode && (
-                            <div className="delete-icon-full">🗑️</div>
-                        )}
-                    </div>
-                ))}
 
-                {onAdd && (
-                    <div className={`add-${type}-icon`}>
-                        {type === 'room' ? (
-                            <TextButton handleClick={onAdd} text="Nueva" />
-                        ) : (
-                            <button onClick={onAdd}>
-                                <FiPlus size={24} className="icon" />
-                            </button>
-                        )}
-                    </div>
-                )}
-            </div>
+                            {editMode && (
+                                <div className="delete-icon-full">🗑️</div>
+                            )}
+                        </div>
+                     ))}
 
-            {itemToDelete && (
-                <DeleteModal
+                        {onAdd && (
+                            <div className={`add-room-icon`}>
+                                {type === 'room' ? (
+                                    <TextButton handleClick={onAdd} text="Nueva"/>
+                                ) : (
+                                    <TextButton handleClick={onAdd} text={<FiPlus size={24} className="icon"/>}/>
+                                )}
+                            </div>
+                        )}
+
+
+                {itemToDelete && (
+                    <DeleteModal
                     device={itemToDelete}
-                    onConfirm={handleConfirmDelete}
-                    onCancel={() => setItemToDelete(null)}
-                    message={`¿Estás seguro que querés eliminar la ${type === 'room' ? 'habitación' : 'dispositivo'} "${itemToDelete.name}"?`}
+                onConfirm={handleConfirmDelete}
+                onCancel={() => setItemToDelete(null)}
+                    message={`¿Estás seguro que querés eliminar ${type === 'room' ? 'la habitación' : 'el dispositivo'} "${nameItemToDelete}"?`}
                 />
             )}
+            </div>
         </div>
     );
 };

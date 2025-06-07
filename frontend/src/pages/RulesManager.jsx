@@ -8,6 +8,8 @@ import TextButton from "../components/TextButton.jsx";
 import RoundButton from "../components/RoundButton.jsx";
 import RuleFormPopup from "../components/RuleFormPopup.jsx";
 import {useTitle} from "../contexts/TitleContext.jsx";
+import '../components/grid/styles/gridView.css'
+
 import {
     attributeTranslations,
     operatorTranslations,
@@ -148,7 +150,7 @@ const RulesManager = ({ isDeviceContext = false }) => {
                                     setShowDeletePopup(true);
                                 }}
                             >
-                                <div className="room-button">
+                                <div className={`room-button ${editMode ? ' edit-mode' : ''}`}>
                                     <span>{rule.name}</span>
                                     <div className="delete-icon-full">🗑️</div>
                                 </div>
@@ -239,7 +241,7 @@ const RulesManager = ({ isDeviceContext = false }) => {
             {showDeletePopup && (
                 <div className="modal-backdrop" onClick={() => setShowDeletePopup(false)}>
                     <div className="modal" onClick={(e) => e.stopPropagation()}>
-                        <p>¿Eliminar "{ruleToDelete?.name}"?</p>
+                        <p>¿Estás seguro que querés eliminar la regla "{ruleToDelete?.name}"?</p>
                         <div className="modal-actions">
                             <TextButton handleClick={handleConfirmDelete} text="Confirmar"/>
                             <TextButton handleClick={ () => setShowDeletePopup(false) } text="Cancelar"/>

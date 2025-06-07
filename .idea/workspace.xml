@@ -5,12 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="09bf219a-ddab-407c-b6b8-1beb0e5da310" name="Changes" comment="fix visuales">
-      <change afterPath="$PROJECT_DIR$/frontend/src/components/grid/styles/gridView.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/components/styles/deleteModal.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/DeleteModal.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/DeleteModal.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/grid/GridView.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/grid/GridView.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/styles/mainPage.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/styles/mainPage.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/RulesManager.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/RulesManager.jsx" afterDir="false" />
     </list>
     <list id="c93fa67c-d594-4956-a819-2b86e3ca1c3c" name="Changes by Martin" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -159,7 +155,7 @@
       <workItem from="1747434944374" duration="3680000" />
       <workItem from="1747483381170" duration="29234000" />
       <workItem from="1749070737973" duration="10729000" />
-      <workItem from="1749249788911" duration="6811000" />
+      <workItem from="1749249788911" duration="22329000" />
     </task>
     <task id="LOCAL-00001" summary="fix visuales">
       <option name="closed" value="true" />
