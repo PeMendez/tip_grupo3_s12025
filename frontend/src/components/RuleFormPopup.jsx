@@ -141,9 +141,11 @@ const RuleFormPopup = ({ onClose, onCreate, device: initialDevice }) => { // Ren
         onClose(); //
     };
 
+/*
     console.log('Datos para el desplegable de Acciones:', JSON.stringify(deviceActions, null, 2));
     console.log('Estado de carga para Acciones:', loadingActions);
     console.log('Dispositivo de Acción seleccionado:', actionDevice ? actionDevice.name : 'Ninguno');
+*/
 
 
     // Render
@@ -156,6 +158,7 @@ const RuleFormPopup = ({ onClose, onCreate, device: initialDevice }) => { // Ren
                     placeholder="Nombre de la regla" //
                     value={name} //
                     onChange={e => setName(e.target.value)} //
+                    data-testid = "nombreRegla"
                 />
                 {formErrors.name && <span className="error">{formErrors.name}</span>} {/* */}
 
@@ -169,6 +172,8 @@ const RuleFormPopup = ({ onClose, onCreate, device: initialDevice }) => { // Ren
                             setConditionDevice(selectedDev); //
                             setCond(prev => ({ ...prev, deviceId: selectedDev?.id || '', attribute: '', operator: '', value: '' })); // Resetea al cambiar dispositivo
                         }}
+                        data-testid = "condDevice"
+
                     >
                         <option value="">Seleccionar</option> {/* */}
                         {devices.map(d => ( //
@@ -277,8 +282,8 @@ const RuleFormPopup = ({ onClose, onCreate, device: initialDevice }) => { // Ren
                 </div>
 
                 <div className="modal-rule-actions"> {/* */}
-                    <TextButton text={"Crear"} handleClick={handleSubmit}/> {/* */}
-                    <TextButton text={"Cancelar"} handleClick={onClose}/> {/* */}
+                    <TextButton text={"Crear"} handleClick={handleSubmit} data-testid="crear"/> {/* */}
+                    <TextButton text={"Cancelar"} handleClick={onClose} data-testid="cancelar"/> {/* */}
                 </div>
             </div>
         </div>

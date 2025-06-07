@@ -66,6 +66,7 @@ class RoomController(private val roomService: RoomService, private val deviceSer
         val room = roomService.removeDeviceFromRoom(deviceId, roomId)
         deviceService.deleteDevice(deviceId)
         return ResponseEntity.ok(room.toDTO())
+        //TODO que al eliminar device se borren sus reglas asociadas.
     }
 
 
