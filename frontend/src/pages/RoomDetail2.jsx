@@ -29,7 +29,8 @@ const RoomDetail2 = () => {
         handleAddDevice,
         handleDeleteDevice,
         toast,
-        setToast
+        setToast,
+        setBrightness
     } = useDeviceData(id, fetchRoom, setDevices, fetchAvailableDevices);
 
     useEffect(() => {
@@ -79,12 +80,11 @@ const RoomDetail2 = () => {
                     <GridView
                         type="device"
                         items={availableDevices}
-                        onItemClick={(device) => {
-                            handleAddDevice(device);
-                            setMode('view');
-                        }}
+                        onItemClick={(device) =>handleAddDevice(device)}
                         onClose={() => setMode('view')}
                         getIcon={(device) => getDeviceIcon(device.type)}
+                        addMode={true}
+                        editMode={false}
                     />
                 )}
             </div>
@@ -117,6 +117,9 @@ const RoomDetail2 = () => {
                         items={devices}
                         onItemClick={handleDeviceClick}
                         getIcon={(device) => getDeviceIcon(device.type)}
+                        toggleLight={toggleLight}
+                        setBrightness={setBrightness}
+                        onClose={handleClose}
                     />
                 </>
             ) : (
