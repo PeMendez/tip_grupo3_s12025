@@ -6,7 +6,8 @@ import {
 } from "../api/deviceService.js";
 import {
     deleteDevice,
-    addDeviceToRoom } from "../api/roomService.js"
+    addDeviceToRoom, factoryResetDevice
+} from "../api/roomService.js"
 import { connectWebSocket } from "../api/websocket.js";
 import warning from "../assets/warning.png"
 
@@ -176,11 +177,23 @@ const useDeviceData = (roomId, fetchRoom, setDevices) => {
         }
     }, [roomId, token, fetchRoom, setDevices]);
 
+    const handleFactoryReset = useCallback(async (deviceId) => {
+        try {
+            await factoryResetDevice(roomId,deviceId,token);
+            const { room } = await fetchRoom();
+            setDevices(room?.deviceList || []);
+        } catch (e) {
+            console.log("Error al resetear el dispositivo", e);
+            throw e;
+        }
+    }, [roomId, token, fetchRoom, setDevices]);
+
     return {
         toggleLight,
         setBrightness,
         handleAddDevice,
         handleDeleteDevice,
+        handleFactoryReset,
         showNotification,
         toast,
         setToast,

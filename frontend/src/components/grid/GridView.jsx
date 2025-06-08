@@ -14,6 +14,7 @@ const GridView = ({
                       onClose,
                       editMode,
                       onDelete,
+                      onResetFactory,
                       getImage,
                       toggleLight,
                       setBrightness,
@@ -31,11 +32,11 @@ const GridView = ({
         onItemClick(item);
     };
 
-    const handleConfirmDelete = () => {
-        if (type === 'device') {
-            onDelete(itemToDelete.id);
-        } else if (type === 'room') {
-            onDelete(itemToDelete);
+    const handleConfirmDelete = (factoryReset) => {
+        if (factoryReset && type === 'device') {
+            onResetFactory(itemToDelete.id);
+        } else {
+            onDelete(type === 'device' ? itemToDelete.id : itemToDelete);
         }
         setItemToDelete(null);
     };
@@ -103,9 +104,10 @@ const GridView = ({
                 {itemToDelete && (
                     <DeleteModal
                     device={itemToDelete}
-                onConfirm={handleConfirmDelete}
-                onCancel={() => setItemToDelete(null)}
-                    message={`¿Estás seguro que querés eliminar ${type === 'room' ? 'la habitación' : 'el dispositivo'} "${nameItemToDelete}"?`}
+                    onConfirm={handleConfirmDelete}
+                    onCancel={() => setItemToDelete(null)}
+                    type={type}
+                    message={`¿Estás seguro que querés  ${type === 'room' ? 'eliminar la habitación' : 'desconfigurar el dispositivo'} "${nameItemToDelete}"?`}
                 />
             )}
             </div>

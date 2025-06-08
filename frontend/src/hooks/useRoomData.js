@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { getRoomDetails } from "../api/roomService";
+import {getRoomDetails, getRoomDetailsEdit} from "../api/roomService";
 import {getUnconfiguredDevices } from "../api/deviceService.js"
 
 const useRoomData = (roomId) => {
@@ -21,7 +21,20 @@ const useRoomData = (roomId) => {
                     status
                 })) : []
             );
+            console.log(ack)
             return { room, ack };
+        } catch (err) {
+            console.error(err);
+            setError("Error al cargar detalles de la habitación");
+        }
+    }, [roomId, token]);
+
+    const fetchRoomEdit = useCallback(async () => {
+        try {
+            const {room} = await getRoomDetailsEdit(roomId, token);
+            setRoomName(room.name || "Habitación sin nombre");
+            setDevices(room.deviceList || []);
+            return { room };
         } catch (err) {
             console.error(err);
             setError("Error al cargar detalles de la habitación");
@@ -43,6 +56,10 @@ const useRoomData = (roomId) => {
     }, [fetchRoom]);
 
     useEffect(() => {
+        fetchRoomEdit();
+    }, [fetchRoomEdit]);
+
+    useEffect(() => {
         fetchAvailableDevices();
     }, [fetchAvailableDevices]);
 
@@ -52,6 +69,7 @@ const useRoomData = (roomId) => {
         availableDevices,
         error,
         fetchRoom,
+        fetchRoomEdit,
         fetchAvailableDevices,
         setDevices,
         deviceAck

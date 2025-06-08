@@ -21,6 +21,7 @@ const RoomDetail = () => {
         devices,
         availableDevices,
         fetchRoom,
+        fetchRoomEdit,
         setDevices,
         fetchAvailableDevices,
         deviceAck
@@ -30,10 +31,11 @@ const RoomDetail = () => {
         toggleLight,
         handleAddDevice,
         handleDeleteDevice,
+        handleFactoryReset,
         toast,
         setToast,
         setBrightness
-    } = useDeviceData(id, fetchRoom, setDevices, fetchAvailableDevices, deviceAck);
+    } = useDeviceData(id, fetchRoom, fetchRoomEdit, setDevices, fetchAvailableDevices, deviceAck);
 
     useEffect(() => {
         const titles = {
@@ -49,14 +51,16 @@ const RoomDetail = () => {
             setLoading(true);
             if (mode === 'add') {
                 await fetchAvailableDevices();
-            } else if (mode === 'edit' || mode === 'view') {
+            } else if (mode === 'edit') {
+                await fetchRoomEdit();
+            } else if (mode === 'view') {
                 await fetchRoom();
             }
             setLoading(false);
         };
 
         fetchData();
-    }, [mode, fetchAvailableDevices, fetchRoom]);
+    }, [mode, fetchAvailableDevices, fetchRoom, fetchRoomEdit]);
 
 
     const handleDeviceClick = (device) => {
@@ -122,6 +126,7 @@ const RoomDetail = () => {
                 items={devices}
                 editMode={true}
                 onDelete={handleDeleteDevice}
+                onResetFactory={handleFactoryReset}
                 onItemClick={ (device) => {console.log("No se que va aca pero si no se lo pasas no borra device.")} }
                 onAdd={() => setMode('add')}
                 onClose={() => setMode('view')}
