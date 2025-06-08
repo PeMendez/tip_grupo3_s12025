@@ -1,5 +1,4 @@
 import {useState, useCallback, useRef, useEffect} from "react";
-import { useNavigate } from "react-router-dom";
 import {
     smartOutletCommand,
     dimmerCommand
@@ -9,13 +8,11 @@ import {
     addDeviceToRoom, factoryResetDevice
 } from "../api/roomService.js"
 import { connectWebSocket } from "../api/websocket.js";
-import warning from "../assets/warning.png"
 
 const useDeviceData = (roomId, fetchRoom, setDevices) => {
     const [toast, setToast] = useState(null);
     const token = localStorage.getItem('token');
     const audioContextRef = useRef(null);
-    const navigate = useNavigate();
 
     const playAlarmSound = useCallback(() => {
         if (!audioContextRef.current) {
@@ -43,45 +40,6 @@ const useDeviceData = (roomId, fetchRoom, setDevices) => {
         }, 5000);
     }, []);
 
-    const showNotification = useCallback((title, message, options = {}) => {
-        const {
-            icon = "https://cdn-icons-png.flaticon.com/512/619/619153.png",
-            duration = 3000,
-            toastClass = '',
-            onClickRedirect = null
-        } = options;
-
-        if (Notification.permission === "granted") {
-            const notification = new Notification(title, {
-                body: message,
-                icon: icon
-            });
-
-            if (onClickRedirect) {
-                notification.onclick = () => {
-                    navigate(onClickRedirect);
-                    window.focus();
-                };
-            }
-        } else if (Notification.permission !== "denied") {
-            Notification.requestPermission().then(permission => {
-                if (permission === "granted") {
-                    new Notification(title, {
-                        body: message,
-                        icon: icon
-                    });
-                }
-            });
-        }
-
-        setToast({
-            message: message,
-            key: Date.now(),
-            duration: duration,
-            toastClass: toastClass,
-            onClick: onClickRedirect ? () => navigate(onClickRedirect) : null
-        });
-    }, [navigate]);
 
     const handleWebSocketMessage = useCallback((data) => {
         console.log('Llego mensaje ws: ', data);
@@ -114,21 +72,9 @@ const useDeviceData = (roomId, fetchRoom, setDevices) => {
                 String(device.id) === String(deviceId) ? { ...device, status } : device
             ));
 
-            if(status){
-                showNotification(
-                    "🚨 ¡Alarma activada!",
-                    "Se abrió una puerta sin autorización.",
-                    {
-                        icon: warning,
-                        duration: 5000,
-                        toastClass: 'alarm-toast',
-                        onClickRedirect: `/room/${roomId}`
-                    }
-                );
-                playAlarmSound();
-            }
+            playAlarmSound();
         }
-    }, [roomId, showNotification, playAlarmSound, setDevices]);
+    }, [roomId, playAlarmSound, setDevices]);
 
     useEffect(() => {
         connectWebSocket(handleWebSocketMessage);
