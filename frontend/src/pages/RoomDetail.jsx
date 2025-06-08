@@ -14,6 +14,7 @@ const RoomDetail = () => {
     const navigate = useNavigate()
     const [mode, setMode] = useState('view'); // 'view' | 'add' | 'edit'
     const { setHeaderTitle } = useTitle();
+    const [loading, setLoading] = useState(false);
 
     const {
         roomName,
@@ -44,16 +45,19 @@ const RoomDetail = () => {
     }, [mode, roomName, setHeaderTitle]);
 
     useEffect(() => {
-        if (mode === 'add') {
-            fetchAvailableDevices();
-        }
-    }, [mode, fetchAvailableDevices]);
+        const fetchData = async () => {
+            setLoading(true);
+            if (mode === 'add') {
+                await fetchAvailableDevices();
+            } else if (mode === 'edit' || mode === 'view') {
+                await fetchRoom();
+            }
+            setLoading(false);
+        };
 
-    useEffect(() => {
-        if (mode === 'edit') {
-            fetchRoom();
-        }
-    }, [mode, fetchRoom]);
+        fetchData();
+    }, [mode, fetchAvailableDevices, fetchRoom]);
+
 
     const handleDeviceClick = (device) => {
         if (mode !== 'view') return;
@@ -64,12 +68,24 @@ const RoomDetail = () => {
     };
 
     const getAckForDevice = (deviceId) => {
-        return deviceAck.find(item => item.deviceId === deviceId).status
+        const found = deviceAck.find(item => item.deviceId === deviceId);
+        return found ? found.status : true;
     };
 
     const handleClose = () => {
         navigate('/home');
     };
+
+    if (loading) {
+        return (
+            <div className="main-container">
+                <BackOrCloseButton type="arrow" onClick={handleClose} />
+                <div className="no-rooms">
+                    <p>Cargando dispositivos...</p>
+                </div>
+            </div>
+        );
+    }
 
     if (mode === 'add') {
         return (
@@ -84,10 +100,7 @@ const RoomDetail = () => {
                 ) : (
                     <GridView
                         type="device"
-                        items={availableDevices.map(device => ({
-                            ...device,
-                            ack: getAckForDevice(device.id)
-                        }))}
+                        items={availableDevices}
                         onItemClick={(device) => {
                             handleAddDevice(device);
                             setMode('view');

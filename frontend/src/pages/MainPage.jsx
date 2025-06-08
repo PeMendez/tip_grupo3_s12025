@@ -84,6 +84,7 @@ const MainPage = () => {
                 onItemClick={(room) => handleAddRoom(room.name)}
                 onClose={() => setMode('view')}
                 getImage={(room) => room.img}
+                addMode={true}
             />
         );
     }
@@ -95,6 +96,7 @@ const MainPage = () => {
                 items={rooms}
                 editMode={true}
                 onDelete={handleDeleteRoom}
+                onItemClick={(room) => console.log("solo para que no rompa")}
                 onAdd={() => setMode('add')}
                 onClose={() => setMode('view')}
                 getImage={(room) => roomImages[room.name] || salaImg}

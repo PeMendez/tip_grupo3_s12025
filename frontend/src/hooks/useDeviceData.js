@@ -168,8 +168,8 @@ const useDeviceData = (roomId, fetchRoom, setDevices) => {
     const handleDeleteDevice = useCallback(async (deviceId) => {
         try {
             await deleteDevice(roomId, deviceId, token);
-            const updatedRoom = await fetchRoom();
-            setDevices(updatedRoom.deviceList || []);
+            const { room }  = await fetchRoom();
+            setDevices(room?.deviceList || []);
         } catch (err) {
             console.error("Error al eliminar dispositivo", err);
             throw err;

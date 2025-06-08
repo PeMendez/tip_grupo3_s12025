@@ -21,6 +21,7 @@ const useRoomData = (roomId) => {
                     status
                 })) : []
             );
+            return { room, ack };
         } catch (err) {
             console.error(err);
             setError("Error al cargar detalles de la habitación");

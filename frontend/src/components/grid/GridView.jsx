@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import BackOrCloseButton from "../BackOrCloseButton";
 import TextButton from "../TextButton";
 import DeleteModal from "../DeleteModal";
@@ -20,47 +20,53 @@ const GridView = ({
                       addMode
                   }) => {
     const [itemToDelete, setItemToDelete] = useState(null);
-    const [nameItemToDelete, setNameToDelete] = useState(null)
+    const [nameItemToDelete, setNameToDelete] = useState(null);
 
     const handleItemClick = (item) => {
         if (editMode) {
             setNameToDelete(item.name);
+            setItemToDelete(item);
 
-            if (type === 'device') {
-                setItemToDelete(item);
-            } else if (type === 'room') {
-                setItemToDelete(item);
-            }
         }
         onItemClick(item);
     };
 
     const handleConfirmDelete = () => {
-        onDelete(itemToDelete.id);
+        if (type === 'device') {
+            onDelete(itemToDelete.id);
+        } else if (type === 'room') {
+            onDelete(itemToDelete);
+        }
         setItemToDelete(null);
     };
 
-    useEffect(() => {
-        console.log(items)
-    }, []);
+    const getItemClass = (item) => {
+        if (editMode) return 'room-button edit-mode';
+        if (type === 'device') {
+            if (item.ackStatus === true) return 'room-button ack';
+            if (item.ackStatus === false) return 'room-button noAck';
+        }
+        return 'room-button';
+    };
 
     return (
         <div className="main-container">
-            <BackOrCloseButton type="arrow" onClick={onClose} />
-
             <div className={'room-grid'}>
+                {((type === 'room' && (editMode || addMode)) || type === 'device') && (
+                    <BackOrCloseButton type="arrow" onClick={onClose} />
+                )}
                 {items.map((item, index) => (
                     <div
                         key={index}
-                        className={`room-button${editMode ? ' edit-mode' : ''}${!editMode && type === 'device' && item.ackStatus ? ' ack' : ''}${!editMode && type === 'device' && !item.ackStatus ? ' noAck' : ''}`}
+                        className={getItemClass(item)}
                         onClick={() => handleItemClick(item)}
                     >
                         {type === 'device' ? (
                         <DeviceCard
                             key={index}
                             device={item}
-                            toggleLight={toggleLight}
-                            setBrightness={setBrightness}
+                            toggleLight={item.ackStatus === true ? toggleLight : () => {}}
+                            setBrightness={item.ackStatus === true ? setBrightness : () => {}}
                             onClick={() => handleItemClick(item)}
                             editMode={editMode}
                             addMode={addMode}
