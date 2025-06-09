@@ -29,6 +29,11 @@ class DeviceController(
         return deviceService.getUnconfiguredDevices()
     }
 
+    @GetMapping("/configured")
+    fun getConfiguredDevices(): List<DeviceDTO> {
+        return deviceService.getConfiguredDevices()
+    }
+
     @GetMapping("/configuredCount")
     fun getConfiguredDevicesCount(): Long {
         return deviceService.countConfiguredDevices()

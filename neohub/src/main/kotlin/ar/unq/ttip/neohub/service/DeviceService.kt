@@ -103,6 +103,10 @@ class DeviceService(
         return repository.findByRoomIsNull().map { it.toDTO() }
     }
 
+    fun getConfiguredDevices(): List<DeviceDTO> {
+        return repository.findByRoomIsNotNull().map {it.toDTO() }
+    }
+
     fun countConfiguredDevices(): Long{
         val count = repository.countConfiguredDevices()
         println("countConfiguredDevices: $count")
