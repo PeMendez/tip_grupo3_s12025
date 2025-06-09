@@ -140,7 +140,6 @@ const useDeviceData = (roomId, fetchRoom, setDevices) => {
         handleAddDevice,
         handleDeleteDevice,
         handleFactoryReset,
-        showNotification,
         toast,
         setToast,
         playAlarmSound

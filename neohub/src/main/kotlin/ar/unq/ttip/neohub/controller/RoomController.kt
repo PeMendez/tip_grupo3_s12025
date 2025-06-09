@@ -5,6 +5,7 @@ import ar.unq.ttip.neohub.dto.RoomDTO
 import ar.unq.ttip.neohub.dto.toDTO
 import ar.unq.ttip.neohub.service.DeviceService
 import ar.unq.ttip.neohub.service.RoomService
+import ar.unq.ttip.neohub.service.RuleService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -13,7 +14,11 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/room")
-class RoomController(private val roomService: RoomService, private val deviceService: DeviceService) {
+class RoomController(
+    private val roomService: RoomService,
+    private val deviceService: DeviceService,
+    private val ruleService: RuleService
+) {
 
     @GetMapping("/{roomId}")
     fun getRoomDetails(
@@ -44,6 +49,7 @@ class RoomController(private val roomService: RoomService, private val deviceSer
         @PathVariable deviceId: Long // PARA AGREGARLO A UN ROOM, YA TIENE QUE EXISTIR.
     ): ResponseEntity<RoomDTO> {
         val room = roomService.addDeviceToRoom(roomId, deviceId)
+        ruleService.enableRulesForDevice(deviceId)
         return ResponseEntity.ok(room.toDTO())
     }
 
@@ -53,6 +59,7 @@ class RoomController(private val roomService: RoomService, private val deviceSer
         @PathVariable roomId: Long,
         @PathVariable deviceId: Long
     ): ResponseEntity<RoomDTO> {
+        ruleService.disableRulesForDevice(deviceId)
         val room = roomService.removeDeviceFromRoom(deviceId, roomId)
         return ResponseEntity.ok(room.toDTO())
     }
@@ -63,10 +70,10 @@ class RoomController(private val roomService: RoomService, private val deviceSer
         @PathVariable roomId: Long,
         @PathVariable deviceId: Long
     ): ResponseEntity<RoomDTO> {
+        ruleService.deleteAllRulesForDevice(deviceId)
         val room = roomService.removeDeviceFromRoom(deviceId, roomId)
         deviceService.deleteDevice(deviceId)
         return ResponseEntity.ok(room.toDTO())
-        //TODO que al eliminar device se borren sus reglas asociadas.
     }
 
 
