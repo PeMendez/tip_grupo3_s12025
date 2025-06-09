@@ -20,7 +20,7 @@ class RoomService(
     private val mqttService: MqttService,
     private val deviceService: DeviceService,
 ) {
-    private val ackTimeoutMillis: Long = 5000
+    private val ackTimeoutMillis: Long = 2400
 
     fun getRoomDetails(roomId: Long): Room {
         return roomRepository.findById(roomId)
@@ -38,7 +38,7 @@ class RoomService(
 
         return futures.mapValues { (_, future) ->
             try {
-                future.get(5, TimeUnit.SECONDS) // Timeout de 5 segundos
+                future.get(ackTimeoutMillis, TimeUnit.MILLISECONDS) // Timeout de 5 segundos
             } catch (e: TimeoutException) {
                 false
             }
