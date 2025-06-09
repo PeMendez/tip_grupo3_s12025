@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getAllDevices } from '../api/deviceService.js'; //
+import {getAllDevicesConfigured} from '../api/deviceService.js'; //
 import './styles/rule.css'; //
 import TextButton from "./TextButton.jsx"; //
 
@@ -86,7 +86,7 @@ const RuleFormPopup = ({ onClose, onCreate, device: initialDevice }) => { // Ren
     useEffect(() => { //
         const fetchDevices = async () => { //
             try { //
-                const devicesData = await getAllDevices(token); //
+                const devicesData = await getAllDevicesConfigured(token); //
                 setDevices(devicesData); //
             } catch (err) { //
                 console.log('No se pudieron obtener los dispositivos disponibles.', err); //

@@ -25,7 +25,7 @@ interface HomeRepository : JpaRepository<Home, Long> {
     JOIN rc.device d
     JOIN d.room ro
     JOIN ro.home h
-    WHERE h.user.id = :userId
+    WHERE h.user.id = :userId and r.isEnabled
 """)
     fun findRulesByUser(@Param("userId") userId: Long): List<Rule>
 }

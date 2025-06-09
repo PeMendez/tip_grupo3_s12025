@@ -103,3 +103,17 @@ export const getAllDevices = async (token) => {
         throw new Error('No se pudieron obtener los dispositivos.');
     }
 };
+
+export const getAllDevicesConfigured = async (token) => {
+    try {
+        const response = await axios.get(`${API_URL}/configured`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return response.data;
+    } catch (e) {
+        console.log("Error al obtener los dispositivos configurados:", e);
+        throw new Error("No se pudieron obtener los dispositivos configurados");
+    }
+}
