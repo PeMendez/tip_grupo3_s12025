@@ -225,7 +225,9 @@ class MqttService(
 
     private fun evaluateRulesForDevice(device: Device) {
         // Obtener las reglas asociadas al dispositivo
-        val rulesDTOs = ruleService.getRulesForDevice(device.id) // Debes llamar al service, no al repo directamente
+        val rulesDTOs = ruleService.getEnableRulesForDevice(device.id)
+        if (rulesDTOs.isEmpty()) return
+
         val rules = rulesDTOs.map { it.toEntity(deviceRepository) } // Conversión de DTO a entidad
 
         // Evaluar cada regla

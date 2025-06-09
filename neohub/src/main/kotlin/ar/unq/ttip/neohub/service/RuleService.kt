@@ -72,4 +72,45 @@ class RuleService(
         val rules = ruleRepository.findRulesByDeviceId(deviceId)
         return rules.map { it.toDTO() }
     }
+
+    fun getEnableRulesForDevice(deviceId: Long): List<RuleDTO> {
+        val rules = ruleRepository.findRulesByDeviceId(deviceId).filter { it.isEnabled }
+        return rules.map { it.toDTO() }
+    }
+
+    @Transactional
+    fun deleteAllRulesForDevice(deviceId: Long) {
+        val rules = ruleRepository.findRulesByDeviceId(deviceId)
+        ruleRepository.deleteAll(rules)
+    }
+
+    @Transactional
+    fun disableRulesForDevice(deviceId: Long) {
+        val rules = ruleRepository.findRulesByDeviceId(deviceId)
+        rules.forEach { it.isEnabled = false }
+        ruleRepository.saveAll(rules)
+    }
+
+    @Transactional
+    fun enableRulesForDevice(deviceId: Long) {
+        val rules = ruleRepository.findRulesByDeviceId(deviceId)
+
+        rules.forEach { rule ->
+            if (allDevicesAreAvailable(rule, deviceId)) {
+                rule.isEnabled = true
+                ruleRepository.save(rule)
+            }
+        }
+    }
+
+    fun allDevicesAreAvailable(rule: Rule, deviceId: Long): Boolean {
+        val allDeviceIds = (rule.actions.map { it.device.id } + rule.conditions.map { it.device.id }).toSet()
+        val otherDeviceIds = allDeviceIds.filter { it != deviceId }
+
+        return otherDeviceIds.all { id ->
+            deviceRepository.findById(id)
+                .map { it.room != null } //usé el id de room porque en los device no saben responder si están ok
+                .orElse(false)
+        }
+    }
 }
