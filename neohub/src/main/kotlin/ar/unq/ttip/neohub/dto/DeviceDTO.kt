@@ -9,6 +9,7 @@ data class DeviceDTO(
     val name: String,
     val type: String,
     val topic : String,
+    val macAddress : String? = null,
     val roomId : Long?,
     val temperature: Double? = null,
     val status: Boolean? = null,

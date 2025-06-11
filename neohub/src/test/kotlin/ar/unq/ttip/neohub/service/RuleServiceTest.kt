@@ -27,7 +27,6 @@ class RuleServiceIntegrationTest @Autowired constructor(
     private val deviceRepository: DeviceRepository,
     private val ruleRepository: RuleRepository
 ) {
-
     @Test
     fun `crear regla valida`() {
         // Crear y guardar dispositivos

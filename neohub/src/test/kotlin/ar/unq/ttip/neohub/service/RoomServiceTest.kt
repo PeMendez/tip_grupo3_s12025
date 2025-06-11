@@ -30,16 +30,19 @@ class RoomServiceTest {
     lateinit var roomService: RoomService
 
     private var user = User(21,"carlos","sdasdada")
-    var home: Home = Home(user=user)
+    var home: Home = Home(name = "home", accessKey = "123")
 
     @BeforeEach
     fun init(){
         authService.register(
             RegisterRequest(user.username
             ,user.password
-            ,user.password)
-        )
-        home = homeService.newHome(Home(user=user))
+            ,user.password
+            ,"CREATE"
+            ,"homeName"
+            ,"key123"
+        ))
+        //home = homeService.newHome(Home(user=user))
     }
 
     @Transactional
@@ -56,18 +59,21 @@ class RoomServiceTest {
             name = "Lamp",
             type = "smart_outlet",
             roomId = null,
+            macAddress = "ABC123",
             topic = "neohub/unconfigured"
         )
-        val newDevice = deviceService.saveDevice(deviceDTO.toEntity(deviceFactory))
+        val newDevice = deviceDTO.toEntity(deviceFactory)
+        newDevice.macAddress= "ABC123"
+        val newDeviceDTO = deviceService.saveDevice(newDevice)
         // Verificar que el dispositivo no está asociado a ninguna sala inicialmente
-        assertNull(newDevice.roomId)
+        assertNull(newDeviceDTO.roomId)
 
         // Agregar el dispositivo a la sala
-        roomService.addDeviceToRoom(room.id, newDevice.id)
+        roomService.addDeviceToRoom(room.id, newDeviceDTO.id)
         val updatedRoom = roomService.getRoomDetails(room.id)
 
         // Verificar que el dispositivo está en la sala
-        val addedDevice = updatedRoom.deviceList.first { it.name == newDevice.name }
+        val addedDevice = updatedRoom.deviceList.first { it.name == newDeviceDTO.name }
         assertTrue(updatedRoom.deviceList.contains(addedDevice))
         assertEquals(room.id, addedDevice.room!!.id)
 

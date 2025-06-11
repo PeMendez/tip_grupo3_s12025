@@ -57,7 +57,6 @@ class DeviceController(
     ): ResponseEntity<Void>{
         //editar la clase DeviceMessageRequest si necesitamos que mande mas cosas
         deviceService.sendCommand(deviceId, messageRequest.message, messageRequest.parameter)
-        println("Respondiendo la request")
         return ResponseEntity.ok().build()
     }
 }

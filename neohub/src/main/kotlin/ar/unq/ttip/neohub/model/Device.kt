@@ -35,6 +35,7 @@ abstract class Device(
             type = type.toString(),
             topic = topic,
             roomId = room?.id,
+            macAddress = macAddress
         )
     }
 
