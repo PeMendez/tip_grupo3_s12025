@@ -6,8 +6,6 @@ data class HomeDTO(
     val id: Long,
     val rooms: List<RoomDTO>
 )
-
-
 fun Home.toDTO(): HomeDTO {
     return HomeDTO(
         id = this.id,

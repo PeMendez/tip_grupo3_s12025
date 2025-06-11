@@ -14,6 +14,7 @@ import org.eclipse.paho.client.mqttv3.MqttClient
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions
 import org.eclipse.paho.client.mqttv3.MqttException
 import org.eclipse.paho.client.mqttv3.MqttMessage
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
 import java.util.*
@@ -27,9 +28,12 @@ class MqttService(
     private val ruleService: RuleService,
     private val deviceRepository: DeviceRepository,
     private val notificationService: PushNotificationService,
-    private val objectMapper: ObjectMapper=jacksonObjectMapper()
+    private val objectMapper: ObjectMapper=jacksonObjectMapper(),
+    @Value("\${mqtt.broker.url}") private val brokerUrl: String,
 ) {
-    private val brokerUrl = System.getenv("MQTT_BROKER_URL")
+    /*@Value("\${mqtt.broker.url}")
+    private var brokerUrl: String = System.getenv("MQTT_BROKER_URL")*/
+    //private val brokerUrl =  environment.getProperty("MQTT_BROKER_URL")// = System.getenv("MQTT_BROKER_URL")
     private val clientId = "NeoHub-API-" + UUID.randomUUID().toString().substring(0, 8)
     private val mqttClient: MqttClient = MqttClient(brokerUrl, clientId, null)
     private val subscribedTopics = mutableSetOf<String>()

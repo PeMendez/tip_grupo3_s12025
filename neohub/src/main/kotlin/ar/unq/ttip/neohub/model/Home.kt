@@ -26,8 +26,19 @@ data class Home(
         room.home = this
     }
 
-    fun addUser(userHome: UserHome) {
+    fun addUserHome(userHome: UserHome) {
         userHomes.add(userHome)
         userHome.home = this
+    }
+
+    fun getAdmins(): List<User> {
+        return userHomes.filter { it.role == Role.ADMIN }.mapNotNull { it.user }
+    }
+
+    fun getUsers(): List<User> {
+        return userHomes.mapNotNull { it.user }
+    }
+    override fun toString(): String {
+        return "Home($name, $accessKey)"
     }
 }

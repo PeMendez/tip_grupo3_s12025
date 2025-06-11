@@ -4,6 +4,7 @@ import ar.unq.ttip.neohub.dto.LoginRequest
 import ar.unq.ttip.neohub.dto.LoginResponse
 import ar.unq.ttip.neohub.dto.RegisterRequest
 import ar.unq.ttip.neohub.model.Home
+import ar.unq.ttip.neohub.model.Role
 import ar.unq.ttip.neohub.model.User
 import ar.unq.ttip.neohub.model.UserHome
 import ar.unq.ttip.neohub.repository.HomeRepository
@@ -47,9 +48,10 @@ class AuthService(
                     name = request.homeName ?: throw IllegalArgumentException("El nombre de la home es requerido"),
                     accessKey = request.accessKey ?: throw IllegalArgumentException("La clave de acceso es requerida")
                 )
-                homeRepository.save(newHome)
 
-                val userHome = UserHome(user = newUser, home = newHome, role = "admin")
+                val userHome = UserHome(user = newUser, home = newHome, role = Role.ADMIN)
+                newHome.addUserHome(userHome)
+                homeRepository.save(newHome)
                 userHomeRepository.save(userHome)
             }
 
@@ -61,13 +63,14 @@ class AuthService(
                     throw IllegalArgumentException("Clave de acceso incorrecta")
                 }
 
-                val userHome = UserHome(user = newUser, home = home, role = "user")
+                val userHome = UserHome(user = newUser, home = home, role = Role.USER)
+                home.addUserHome(userHome)
+                homeRepository.save(home)
                 userHomeRepository.save(userHome)
             }
 
             else -> throw IllegalArgumentException("Acción no válida")
         }
-
         val token = jwtService.generateToken(newUser.username)
         return LoginResponse(token)
     }

@@ -5,13 +5,16 @@ import nl.martijndwars.webpush.Notification
 import nl.martijndwars.webpush.PushService
 import nl.martijndwars.webpush.Utils
 import org.bouncycastle.jce.provider.BouncyCastleProvider
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import java.security.Security
 
 @Service
 class PushNotificationService() {
-    private val vapidPublicKey = System.getenv("VAPID_PUBLIC_KEY")
-    private val vapidPrivateKey = System.getenv("VAPID_PRIVATE_KEY")
+    @Value("\${vapid.public.key}") lateinit var vapidPublicKey: String
+    @Value("\${vapid.private.key}") lateinit var vapidPrivateKey: String
+    //private val vapidPublicKey = environment.getProperty("VAPID_PUBLIC_KEY")
+    //private val vapidPrivateKey = environment.getProperty("VAPID_PRIVATE_KEY")
     private val subscriptions = mutableListOf<PushSubscriptionDto>()
 
     init {

@@ -7,7 +7,9 @@ import ar.unq.ttip.neohub.model.ruleEngine.Rule
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
+import org.springframework.stereotype.Repository
 
+@Repository
 interface HomeRepository : JpaRepository<Home, Long> {
     fun findByName(name: String): Home?
 

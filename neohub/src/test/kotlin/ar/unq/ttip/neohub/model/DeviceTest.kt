@@ -11,7 +11,6 @@ import org.springframework.test.context.ActiveProfiles
 @SpringBootTest
 @ActiveProfiles("test")
 class DeviceTest {
-    private val user = User(21,"carlos","sdasdada")
     private val home = Home(1,"myHome", accessKey = "123")
 
     @Test
@@ -23,7 +22,6 @@ class DeviceTest {
         assert(device.room == null)
 
         // Asocia el dispositivo a una sala
-        //roomService.addDeviceToRoom(room.id,device.toDTO())
         room.addDevice(device)
 
         assert(device.room == room)
