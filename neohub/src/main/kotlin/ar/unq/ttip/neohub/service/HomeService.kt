@@ -16,40 +16,50 @@ class HomeService(
     private val roomRepository: RoomRepository,
     private val roomService: RoomService
 ){
-    fun getHomeByUser(user: User): Home? {
-        return homeRepository.findByUser(user)
+    fun getHomeForUser(userId: Long): Home {
+        val homes = homeRepository.findByUserId(userId)
+        if (homes.isEmpty()) {
+            throw IllegalArgumentException("El usuario no está asociado a ninguna home.")
+        }
+        return homes.first() // Retornar la primera en caso de que haya múltiples
+    }
+
+    fun getAdminHomeForUser(userId: Long): Home {
+        val adminHomes = homeRepository.findAdminHomeByUserId(userId)
+        if (adminHomes.isEmpty()) {
+            throw IllegalArgumentException("El usuario no es admin de ninguna home.")
+        }
+        return adminHomes.first() // Retornar la primera en caso de que haya múltiples
     }
 
     fun getRooms(user: User): List<Room> {
-        val home = homeRepository.findByUser(user)
-            ?: throw IllegalArgumentException("El usuario no tiene un hogar asignado")
+        val home = getHomeForUser(user.id)
         return home.rooms
     }
 
     fun getDevicesByTypesInHome(types: List<DeviceType>, userId: Long): List<DeviceDTO> {
-        return homeRepository.findByUserIdAndTypeIn(userId, types).map { it.toDTO() }
+        val home = getHomeForUser(userId)
+        return homeRepository.findDevicesByHomeIdAndType(home.id, types).map { it.toDTO() }
     }
 
     fun getRulesInHome(userId: Long): List<RuleDTO>{
-        return homeRepository.findRulesByUser(userId).map { it.toDTO() }
+        val home = getHomeForUser(userId)
+        val homeId = home.id
+        return homeRepository.findRulesByHomeId(homeId).map { it.toDTO() }
     }
 
     @Transactional
     fun addRoomToHome(user: User, roomName: String): Room {
-        val home = homeRepository.findByUser(user)
-            ?: throw IllegalArgumentException("El usuario no tiene un hogar asignado")
+        val home = getHomeForUser(user.id)
         val room = Room(name = roomName, home = home)
         return roomRepository.save(room)
     }
 
     @Transactional
     fun removeRoomFromHome(user: User, roomId: Long) {
-        val home = homeRepository.findByUser(user)
-            ?: throw IllegalArgumentException("El usuario no tiene un hogar asignado")
-
+        val home = getHomeForUser(user.id)
         val room = roomRepository.findById(roomId)
             .orElseThrow { IllegalArgumentException("Habitación no encontrada") }
-
         if (room.home?.id != home.id) {
             throw IllegalAccessException("La habitación no pertenece a este hogar")
         }
@@ -58,7 +68,6 @@ class HomeService(
         devices.forEach { device ->
             roomService.removeDeviceFromRoom(device.id,roomId)
         }
-
         roomRepository.delete(room)
     }
 
