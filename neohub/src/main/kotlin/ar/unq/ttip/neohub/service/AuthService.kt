@@ -5,7 +5,9 @@ import ar.unq.ttip.neohub.dto.LoginResponse
 import ar.unq.ttip.neohub.dto.RegisterRequest
 import ar.unq.ttip.neohub.model.Home
 import ar.unq.ttip.neohub.model.User
+import ar.unq.ttip.neohub.model.UserHome
 import ar.unq.ttip.neohub.repository.HomeRepository
+import ar.unq.ttip.neohub.repository.UserHomeRepository
 import ar.unq.ttip.neohub.repository.UserRepository
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -18,7 +20,8 @@ class AuthService(
     private val jwtService: JwtService,
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
-    private val homeRepository: HomeRepository
+    private val homeRepository: HomeRepository,
+    private val userHomeRepository: UserHomeRepository
 ) {
 
     fun login(request: LoginRequest): LoginResponse {
@@ -37,8 +40,33 @@ class AuthService(
         val newUser = User(username = request.username, password = encodedPassword)
         userRepository.save(newUser)
 
-        val newHome = Home(user = newUser)
-        homeRepository.save(newHome)
+        when (request.action) {
+            "CREATE" -> {
+                // Crear una nueva home y asignar al usuario como admin
+                val newHome = Home(
+                    name = request.homeName ?: throw IllegalArgumentException("El nombre de la home es requerido"),
+                    accessKey = request.accessKey ?: throw IllegalArgumentException("La clave de acceso es requerida")
+                )
+                homeRepository.save(newHome)
+
+                val userHome = UserHome(user = newUser, home = newHome, role = "admin")
+                userHomeRepository.save(userHome)
+            }
+
+            "JOIN" -> {
+                // Unirse a una home existente
+                val home = homeRepository.findByName(request.homeName!!)
+                    ?: throw IllegalArgumentException("La home no existe")
+                if (home.accessKey != request.accessKey) {
+                    throw IllegalArgumentException("Clave de acceso incorrecta")
+                }
+
+                val userHome = UserHome(user = newUser, home = home, role = "user")
+                userHomeRepository.save(userHome)
+            }
+
+            else -> throw IllegalArgumentException("Acción no válida")
+        }
 
         val token = jwtService.generateToken(newUser.username)
         return LoginResponse(token)
