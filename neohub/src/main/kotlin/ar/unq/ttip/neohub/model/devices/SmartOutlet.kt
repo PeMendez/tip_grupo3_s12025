@@ -15,17 +15,21 @@ class SmartOutlet(
     var isOn: Boolean = false
 
     fun turnOn(){
-        isOn = true
+        setOutletStatus("true")
         println("$name turned on")
     }
 
     fun turnOff(){
-        isOn = false
+        setOutletStatus("false")
         println("$name turned off")
     }
 
     fun toggle(){
-        isOn = !isOn
+        if (isOn) {
+            setOutletStatus("false")
+        } else{
+            setOutletStatus("true")
+        }
         println("$name toggled to ${if (isOn) "ON" else "OFF"}")
     }
 
