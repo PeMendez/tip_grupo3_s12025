@@ -4,7 +4,6 @@ import ar.unq.ttip.neohub.dto.DeviceDTO
 import ar.unq.ttip.neohub.dto.toEntity
 import ar.unq.ttip.neohub.model.Home
 import ar.unq.ttip.neohub.model.Room
-import ar.unq.ttip.neohub.model.User
 import ar.unq.ttip.neohub.model.devices.DeviceFactory
 import ar.unq.ttip.neohub.model.devices.DeviceType
 import ar.unq.ttip.neohub.model.devices.SmartOutlet
@@ -29,7 +28,6 @@ class DeviceServiceTest {
     lateinit var deviceFactory: DeviceFactory
     @Autowired
     lateinit var objectMapper: ObjectMapper
-    private val user = User(21, "carlos", "sdasdada")
     private val home = Home(1, "myHome", accessKey = "123")
     private var deviceService = DeviceService(mqttServiceMock, repositoryMock, factoryMock)
 
