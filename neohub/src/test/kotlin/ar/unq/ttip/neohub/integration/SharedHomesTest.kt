@@ -95,7 +95,7 @@ class SharedHomesTest (
         assertEquals("Access denied to device with ID ${adminDevice.id}.", exception.message)
 
         // Verificar que el admin puede ver su propio dispositivo
-        val fetchedAdminDevice = deviceService.getDeviceById(adminDevice.id!!)
+        val fetchedAdminDevice = deviceService.getDeviceById(adminDevice.id)
         assertEquals(adminDevice.name, fetchedAdminDevice.name)
     }
 }
