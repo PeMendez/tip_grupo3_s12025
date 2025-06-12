@@ -33,7 +33,7 @@ class DeviceServiceTest {
     @Test
     fun `desregistrar un dispositivo deberia delegar al MqttService`() {
         // Arrange
-        val deviceDTO = DeviceDTO(id = 1, name = "Lamp", type = DeviceType.SMART_OUTLET.toString(), roomId = null, topic = "neohub/unconfigured")
+        val deviceDTO = DeviceDTO(id = 1, name = "Lamp", type = DeviceType.SMART_OUTLET.toString(), roomId = null, topic = "neohub/unconfigured", ownerId = 11)
         val device = SmartOutlet(name = "Lamp")
 
         `when`(repositoryMock.findById(deviceDTO.id)).thenReturn(Optional.of(device))
@@ -48,12 +48,12 @@ class DeviceServiceTest {
     @Test
     fun `publicar un mensaje a un dispositivo deberia delegar al MqttService y configurar correctamente el topico`() {
         // Arrange
-        val deviceDTO = DeviceDTO(id = 1, name = "Lamp", type = DeviceType.SMART_OUTLET.toString(), roomId = 2, macAddress = "ABC123", topic = "neohub/unconfigured")
+        val deviceDTO = DeviceDTO(id = 1, name = "Lamp", type = DeviceType.SMART_OUTLET.toString(), roomId = 2, macAddress = "ABC123", topic = "neohub/unconfigured", ownerId = 11)
         val room = Room(home = home, name = "LivingRoom")
         val device = deviceDTO.toEntity(deviceFactory)
         room.addDevice(device)
         device.macAddress = "ABC123"
-        device.configureTopic()
+        device.configure()
 
         val expectedTopic = "neohub/LivingRoom/" + DeviceType.SMART_OUTLET.toString() +  "/Lamp/command"
 

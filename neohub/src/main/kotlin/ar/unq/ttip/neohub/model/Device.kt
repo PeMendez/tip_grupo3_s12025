@@ -17,10 +17,15 @@ abstract class Device(
     @JoinColumn(name = "room_id")
     var room: Room? = null, //al instanciarse un nuevo device, no está en ningún room
 
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+    var owner: User? = null,
+
     var macAddress: String? = null,
+
 )
 {
-    fun configureTopic() {
+    fun configure() {
         topic = if (room == null) {
             "neohub/unconfigured"
         } else {
@@ -35,6 +40,7 @@ abstract class Device(
             type = type.toString(),
             topic = topic,
             roomId = room?.id,
+            ownerId = owner?.id,
             macAddress = macAddress
         )
     }

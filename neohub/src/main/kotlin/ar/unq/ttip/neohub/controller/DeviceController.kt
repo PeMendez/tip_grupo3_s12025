@@ -4,6 +4,8 @@ import ar.unq.ttip.neohub.dto.DeviceDTO
 import ar.unq.ttip.neohub.dto.DeviceMessageRequest
 import ar.unq.ttip.neohub.service.DeviceService
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -21,6 +23,13 @@ class DeviceController(
     @GetMapping("/devices")
     fun getAllDevices(): List<DeviceDTO> {
         return deviceService.getAllDevices()
+    }
+
+    @GetMapping("/user_devices")
+    fun getAllUserDevices(
+        @AuthenticationPrincipal userDetails: UserDetails,
+    ): List<DeviceDTO> {
+        return emptyList()
     }
 
     // Endpoint para obtener dispositivos desconfigurados
