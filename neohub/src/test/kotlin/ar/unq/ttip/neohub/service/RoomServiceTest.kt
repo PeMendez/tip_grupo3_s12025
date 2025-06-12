@@ -1,15 +1,12 @@
 package ar.unq.ttip.neohub.service
 
 import ar.unq.ttip.neohub.dto.*
-import ar.unq.ttip.neohub.model.Home
 import ar.unq.ttip.neohub.model.Room
-import ar.unq.ttip.neohub.model.User
 import ar.unq.ttip.neohub.model.devices.DeviceFactory
 import jakarta.transaction.Transactional
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -60,6 +57,7 @@ class RoomServiceTest {
             type = "smart_outlet",
             roomId = null,
             macAddress = "ABC123",
+            ownerId = user.id,
             topic = "neohub/unconfigured"
         )
         val newDevice = deviceDTO.toEntity(deviceFactory)

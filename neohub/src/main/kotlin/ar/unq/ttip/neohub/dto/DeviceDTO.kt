@@ -11,6 +11,7 @@ data class DeviceDTO(
     val topic : String,
     val macAddress : String? = null,
     val roomId : Long?,
+    val ownerId : Long?,
     val temperature: Double? = null,
     val status: Boolean? = null,
     val brightness: Int? = null

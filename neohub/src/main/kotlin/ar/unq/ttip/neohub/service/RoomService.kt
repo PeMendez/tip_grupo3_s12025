@@ -4,7 +4,6 @@ import ar.unq.ttip.neohub.dto.RoomDTO
 import ar.unq.ttip.neohub.dto.toDTO
 import ar.unq.ttip.neohub.dto.toEntity
 import ar.unq.ttip.neohub.model.Room
-import ar.unq.ttip.neohub.repository.DeviceRepository
 import ar.unq.ttip.neohub.repository.HomeRepository
 import ar.unq.ttip.neohub.repository.RoomRepository
 import jakarta.transaction.Transactional
@@ -15,7 +14,6 @@ import java.util.concurrent.TimeoutException
 @Service
 class RoomService(
     private val roomRepository: RoomRepository,
-    private val deviceRepository: DeviceRepository,
     private val homeRepository: HomeRepository,
     private val mqttService: MqttService,
     private val deviceService: DeviceService,
@@ -48,14 +46,16 @@ class RoomService(
 
     @Transactional
     fun addDeviceToRoom(roomId: Long, deviceId: Long): Room {
-        val room = roomRepository.findById(roomId).orElseThrow { RuntimeException("Room not found") }
-        val device = deviceRepository.findById(deviceId).orElseThrow { RuntimeException("Device not found") }
+        //val room = roomRepository.findById(roomId).orElseThrow { RuntimeException("Room not found") }
+        val room = getRoomDetails(roomId)
+        //val device = deviceRepository.findById(deviceId).orElseThrow { RuntimeException("Device not found") }
+        val device = deviceService.getDeviceEntityById(deviceId)
 
         room.addDevice(device)
 
         mqttService.publishConfiguration(device)
 
-        deviceRepository.save(device)
+        deviceService.saveDevice(device)
         roomRepository.save(room)
         deviceService.registerDeviceOnMqtt(device)
         return room
@@ -65,8 +65,7 @@ class RoomService(
     fun removeDeviceFromRoom(deviceId: Long, roomId: Long) : Room {
         val targetRoom = roomRepository.findById(roomId)
             .orElseThrow { RuntimeException("Room not found") }
-        val targetDevice = deviceRepository.findById(deviceId)
-            .orElseThrow { RuntimeException("Device not found") }
+        val targetDevice = deviceService.getDeviceEntityById(deviceId)
 
         // Eliminar el dispositivo de la lista del cuarto
 
@@ -75,7 +74,7 @@ class RoomService(
 
         targetRoom.removeDevice(targetDevice)
         // Desregistrar el dispositivo
-        deviceRepository.save(targetDevice)
+        deviceService.saveDevice(targetDevice)
         return roomRepository.save(targetRoom)
     }
 
