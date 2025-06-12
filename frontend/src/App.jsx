@@ -4,6 +4,7 @@ import LoginPage from './pages/LoginPage'
 import MainPage from './pages/MainPage.jsx'
 import RoomDetail from "./pages/RoomDetail.jsx";
 import RulesManager from "./pages/RulesManager.jsx";
+import Profile from "./pages/Profile.jsx";
 import Header from "./components/Header.jsx";
 import {AuthProvider} from "./contexts/AuthContext.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
@@ -52,6 +53,14 @@ const AppContent = () => {
                             element={
                                 <ProtectedRoute>
                                     <RulesManager isDeviceContext={true}/>
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/profile"
+                            element={
+                                <ProtectedRoute>
+                                    <Profile/>
                                 </ProtectedRoute>
                             }
                         />

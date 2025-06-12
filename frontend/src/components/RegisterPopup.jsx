@@ -34,7 +34,7 @@ function RegisterPopup({ onClose, onSuccessRegister }) {
                 password: password,
                 confirmPassword: confirmPassword,
                 action: action,
-                homeName: action === homeName,
+                homeName: homeName,
                 accessKey: action === 'CREATE' ? generateRandomKey() : accessKey
             });
             onSuccessRegister(response);

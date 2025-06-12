@@ -14,6 +14,7 @@ fun toDTO(user: User): UserDTO{
         homes = user.userHomes.map{ HomeDTO(
             it.home!!.id,
             it.home!!.name,
+            it.home!!.accessKey,
             it.home!!.rooms.map { room -> room.toDTO() },
         )}
     )
