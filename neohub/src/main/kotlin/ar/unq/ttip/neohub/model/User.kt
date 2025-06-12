@@ -18,7 +18,7 @@ data class User(
 
     val enabled: Boolean = true,
 
-    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.EAGER, orphanRemoval = true)
     @JsonManagedReference
     val userHomes: MutableList<UserHome> = mutableListOf()
 ) {

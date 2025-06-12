@@ -171,5 +171,4 @@ class AuthServiceTest @Autowired constructor(
         assertTrue(userHomes.isEmpty())
     }
 
-
 }

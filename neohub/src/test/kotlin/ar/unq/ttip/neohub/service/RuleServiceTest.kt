@@ -64,7 +64,6 @@ class RuleServiceIntegrationTest @Autowired constructor(
         val savedRule = ruleRepository.findById(result.id).orElseThrow()
         assertEquals("Temperature Control", savedRule.name)
     }
-
     @Test
     fun `no se puede crear regla con atributo invalido`() {
         // Crear y guardar dispositivo
@@ -95,7 +94,6 @@ class RuleServiceIntegrationTest @Autowired constructor(
             exception.message
         )
     }
-
     @Test
     fun `no se puede crear regla con operador invalido`() {
         // Crear y guardar dispositivo
@@ -126,7 +124,6 @@ class RuleServiceIntegrationTest @Autowired constructor(
             exception.message
         )
     }
-
     @Test
     fun `no se puede crear regla con atributo no soportado por el dispositivo`() {
         // Crear y guardar dispositivo
@@ -193,6 +190,4 @@ class RuleServiceIntegrationTest @Autowired constructor(
             exception.message
         )
     }
-
-
 }
