@@ -62,11 +62,6 @@ const RoomDetail = () => {
         fetchData();
     }, [mode, fetchAvailableDevices, fetchRoom, fetchRoomEdit]);
 
-    useEffect(() => {
-        console.log("Devices updated:", devices);
-    }, [devices]);
-
-
     const handleDeviceClick = (device) => {
         if (mode !== 'view') return;
 
