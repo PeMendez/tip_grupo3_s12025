@@ -24,10 +24,9 @@ class DeviceServiceTest {
     private val repositoryMock = mock(DeviceRepository::class.java)
     private val factoryMock = mock(DeviceFactory::class.java)
 
-    @Autowired
-    lateinit var deviceFactory: DeviceFactory
-    @Autowired
-    lateinit var objectMapper: ObjectMapper
+    @Autowired lateinit var deviceFactory: DeviceFactory
+    @Autowired lateinit var objectMapper: ObjectMapper
+
     private val home = Home(1, "myHome", accessKey = "123")
     private var deviceService = DeviceService(mqttServiceMock, repositoryMock, factoryMock)
 
@@ -52,8 +51,7 @@ class DeviceServiceTest {
         val deviceDTO = DeviceDTO(id = 1, name = "Lamp", type = DeviceType.SMART_OUTLET.toString(), roomId = 2, macAddress = "ABC123", topic = "neohub/unconfigured")
         val room = Room(home = home, name = "LivingRoom")
         val device = deviceDTO.toEntity(deviceFactory)
-        room.deviceList.add(device)
-        device.room = room
+        room.addDevice(device)
         device.macAddress = "ABC123"
         device.configureTopic()
 
@@ -78,4 +76,5 @@ class DeviceServiceTest {
         verify(mqttServiceMock).publish(expectedTopic, command)
     }
 }
+
 

@@ -8,19 +8,23 @@ import ar.unq.ttip.neohub.model.devices.DeviceFactory
 import jakarta.transaction.Transactional
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 
 @ActiveProfiles("test")
 @SpringBootTest
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class RoomServiceTest {
+    @Autowired
+    private lateinit var userService: UserService
     @Autowired
     private lateinit var authService: AuthService
     @Autowired
     private lateinit var deviceFactory: DeviceFactory
-
     @Autowired
     private lateinit var deviceService: DeviceService
     @Autowired
@@ -29,29 +33,25 @@ class RoomServiceTest {
     @Autowired
     lateinit var roomService: RoomService
 
-    private var user = User(21,"carlos","sdasdada")
-    var home: Home = Home(name = "home", accessKey = "123")
-
-    @BeforeEach
-    fun init(){
+    @BeforeAll
+    fun setup(){
         authService.register(
-            RegisterRequest(user.username
-            ,user.password
-            ,user.password
+            RegisterRequest("admin"
+            ,"clave"
+            ,"clave"
             ,"CREATE"
             ,"homeName"
             ,"key123"
         ))
-        //home = homeService.newHome(Home(user=user))
     }
 
     @Transactional
     @Test
     fun `add device to room, remove it and check it no longer exists`() {
         // Crear un nuevo room asociado al home
-        val newHome = homeService.newHome(home)
-
-        val room = roomService.addNewRoom(home.id, Room(home = newHome, name = "LivingRoom").toDTO())
+        val user = userService.getUserByUsername("admin")
+        val newHome = homeService.getAdminHomeForUser(user.id)
+        val room = roomService.addNewRoom(newHome.id, Room(home = newHome, name = "LivingRoom").toDTO())
 
         // Crear un dispositivo inicial
         val deviceDTO = DeviceDTO(

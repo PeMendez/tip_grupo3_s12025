@@ -13,7 +13,7 @@ data class Home(
     @Column(nullable = false)
     val accessKey: String, // Clave para unirse a la home
 
-    @OneToMany(mappedBy = "home", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "home", cascade = [CascadeType.ALL], fetch = FetchType.EAGER, orphanRemoval = true)
     @JsonManagedReference
     val userHomes: MutableList<UserHome> = mutableListOf(),
 

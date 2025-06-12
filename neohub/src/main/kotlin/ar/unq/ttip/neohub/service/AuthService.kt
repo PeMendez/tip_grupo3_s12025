@@ -74,5 +74,4 @@ class AuthService(
         val token = jwtService.generateToken(newUser.username)
         return LoginResponse(token)
     }
-
 }
