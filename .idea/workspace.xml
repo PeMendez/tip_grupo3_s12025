@@ -5,10 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="09bf219a-ddab-407c-b6b8-1beb0e5da310" name="Changes" comment="fix visuales">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/api/authService.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/api/authService.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/RegisterPopup.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/RegisterPopup.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/styles/loginPopup.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/styles/loginPopup.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/neohub/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/resources/application.properties" afterDir="false" />
     </list>
     <list id="c93fa67c-d594-4956-a819-2b86e3ca1c3c" name="Changes by Martin" comment="" />
@@ -161,7 +157,7 @@
       <workItem from="1749249788911" duration="35626000" />
       <workItem from="1749336582186" duration="11251000" />
       <workItem from="1749404433717" duration="21151000" />
-      <workItem from="1749744447841" duration="5687000" />
+      <workItem from="1749744447841" duration="6620000" />
     </task>
     <task id="LOCAL-00001" summary="fix visuales">
       <option name="closed" value="true" />
