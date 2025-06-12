@@ -55,7 +55,7 @@ class DeviceController(
     }
 
     @PostMapping("/manual")
-    fun createManualDevice(@RequestBody message: String) {
+    fun createManualDevice(@RequestBody message: String): DeviceDTO {
         return deviceService.handleNewDevice(message)
     }
 

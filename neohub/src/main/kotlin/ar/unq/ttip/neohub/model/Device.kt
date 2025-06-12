@@ -21,8 +21,8 @@ abstract class Device(
     @JoinColumn(name = "owner_id")
     var owner: User? = null,
 
+    var visible: Boolean = true,
     var macAddress: String? = null,
-
 )
 {
     fun configure() {
