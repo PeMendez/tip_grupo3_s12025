@@ -19,23 +19,23 @@ const RoomDetail = () => {
     const {
         roomName,
         devices,
+        setDevices,
         availableDevices,
         fetchRoom,
         fetchRoomEdit,
-        setDevices,
         fetchAvailableDevices,
         deviceAck
     } = useRoomData(id);
 
     const {
         toggleLight,
+        setBrightness,
         handleAddDevice,
         handleDeleteDevice,
         handleFactoryReset,
         toast,
         setToast,
-        setBrightness
-    } = useDeviceData(id, fetchRoom, fetchRoomEdit, setDevices, fetchAvailableDevices, deviceAck);
+    } = useDeviceData(id,fetchRoom,setDevices);
 
     useEffect(() => {
         const titles = {
@@ -61,6 +61,10 @@ const RoomDetail = () => {
 
         fetchData();
     }, [mode, fetchAvailableDevices, fetchRoom, fetchRoomEdit]);
+
+    useEffect(() => {
+        console.log("Devices updated:", devices);
+    }, [devices]);
 
 
     const handleDeviceClick = (device) => {
