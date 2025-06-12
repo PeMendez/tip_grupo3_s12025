@@ -72,7 +72,7 @@ class HomeService(
     }
 
     @Transactional
-    fun newHome(home: Home): Home {
+    fun saveHome(home: Home): Home {
         return homeRepository.save(home)
     }
 }
