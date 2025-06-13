@@ -1,10 +1,10 @@
 import { useTitle } from "../contexts/TitleContext.jsx";
 import { useEffect, useState } from "react";
 import { getHome } from "../api/homeService2.js";
-import { useSnackbar } from 'notistack';
 import './styles/profile.css';
 import { FaCopy } from 'react-icons/fa';
 import TextButton from "../components/TextButton.jsx";
+import Toast from "../components/Toast.jsx";
 
 const Profile = () => {
     const { setHeaderTitle } = useTitle();
@@ -15,6 +15,10 @@ const Profile = () => {
         current: '',
         new: '',
         confirm: ''
+    });
+    const [toast, setToast] = useState({
+        show: false,
+        message: ''
     });
 
     useEffect(() => {
@@ -37,9 +41,21 @@ const Profile = () => {
         fetchHome();
     }, []);
 
+    const showToast = (message) => {
+        setToast({
+            show: true,
+            message: message
+        });
+
+        // Ocultar el toast después de 3 segundos
+        setTimeout(() => {
+            setToast(prev => ({...prev, show: false}));
+        }, 3000);
+    };
+
     const handleCopyKey = () => {
         navigator.clipboard.writeText(key);
-        alert("Clave copiada al portapapeles");
+        showToast("Clave copiada al portapapeles");
     };
 
     const handlePasswordChange = (e) => {
@@ -146,6 +162,13 @@ const Profile = () => {
                     </div>
                 </form>
             </section>
+            {toast.show && (
+                <Toast
+                    message={toast.message}
+                    onClose={() => setToast(prev => ({...prev, show: false}))}
+                    type='info'
+                />
+            )}
         </div>
     );
 };

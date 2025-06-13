@@ -5,78 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="09bf219a-ddab-407c-b6b8-1beb0e5da310" name="Changes" comment="fix visuales">
-      <change afterPath="$PROJECT_DIR$/frontend/src/pages/Profile.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/pages/styles/profile.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/Header.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Header.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/RegisterPopup.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/RegisterPopup.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/dto/HomeDTO.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/dto/HomeDTO.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/dto/UserDTO.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/dto/UserDTO.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/.package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/@remix-run/router/CHANGELOG.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/@remix-run/router/LICENSE.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/@remix-run/router/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/@remix-run/router/dist/history.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/@remix-run/router/dist/index.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/@remix-run/router/dist/router.cjs.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/@remix-run/router/dist/router.cjs.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/@remix-run/router/dist/router.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/@remix-run/router/dist/router.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/@remix-run/router/dist/router.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/@remix-run/router/dist/router.umd.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/@remix-run/router/dist/router.umd.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/@remix-run/router/dist/router.umd.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/@remix-run/router/dist/router.umd.min.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/@remix-run/router/dist/utils.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/@remix-run/router/history.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/@remix-run/router/index.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/@remix-run/router/package.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/@remix-run/router/router.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/@remix-run/router/utils.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router-dom/CHANGELOG.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router-dom/LICENSE.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router-dom/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router-dom/dist/dom.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router-dom/dist/index.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router-dom/dist/index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router-dom/dist/index.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router-dom/dist/main.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router-dom/dist/react-router-dom.development.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router-dom/dist/react-router-dom.development.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router-dom/dist/react-router-dom.production.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router-dom/dist/react-router-dom.production.min.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router-dom/dist/server.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router-dom/dist/server.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router-dom/dist/server.mjs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router-dom/dist/umd/react-router-dom.development.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router-dom/dist/umd/react-router-dom.development.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router-dom/dist/umd/react-router-dom.production.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router-dom/dist/umd/react-router-dom.production.min.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router-dom/package.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router-dom/server.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router-dom/server.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router-dom/server.mjs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router/CHANGELOG.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router/LICENSE.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router/dist/index.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router/dist/index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router/dist/index.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router/dist/lib/components.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router/dist/lib/context.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router/dist/lib/deprecations.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router/dist/lib/hooks.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router/dist/main.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router/dist/react-router.development.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router/dist/react-router.development.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router/dist/react-router.production.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router/dist/react-router.production.min.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router/dist/umd/react-router.development.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router/dist/umd/react-router.development.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router/dist/umd/react-router.production.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router/dist/umd/react-router.production.min.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/Toast.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Toast.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/styles/Toast.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/styles/Toast.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Profile.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/Profile.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/styles/profile.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/styles/profile.css" afterDir="false" />
     </list>
     <list id="c93fa67c-d594-4956-a819-2b86e3ca1c3c" name="Changes by Martin" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -124,7 +58,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "Spring Boot.NeohubApplication.executor": "Run",
-    "git-widget-placeholder": "feature/register",
+    "git-widget-placeholder": "feature/permissions",
     "javascript.nodejs.core.library.configured.version": "22.14.0",
     "javascript.nodejs.core.library.typings.version": "22.13.17",
     "kotlin-language-version-configured": "true",
@@ -228,7 +162,7 @@
       <workItem from="1749249788911" duration="35626000" />
       <workItem from="1749336582186" duration="11251000" />
       <workItem from="1749404433717" duration="21151000" />
-      <workItem from="1749744447841" duration="16998000" />
+      <workItem from="1749744447841" duration="21054000" />
     </task>
     <task id="LOCAL-00001" summary="fix visuales">
       <option name="closed" value="true" />
