@@ -17,6 +17,7 @@ class RoomService(
     private val homeRepository: HomeRepository,
     private val mqttService: MqttService,
     private val deviceService: DeviceService,
+    private val userService: UserService,
 ) {
     private val ackTimeoutMillis: Long = 2400
 
@@ -45,11 +46,12 @@ class RoomService(
 
 
     @Transactional
-    fun addDeviceToRoom(roomId: Long, deviceId: Long): Room {
-        //val room = roomRepository.findById(roomId).orElseThrow { RuntimeException("Room not found") }
+    fun addDeviceToRoom(roomId: Long, deviceId: Long, username: String): Room {
+        val user = userService.getUserByUsername(username)
         val room = getRoomDetails(roomId)
-        //val device = deviceRepository.findById(deviceId).orElseThrow { RuntimeException("Device not found") }
         val device = deviceService.getDeviceEntityById(deviceId)
+
+        device.owner = user
 
         room.addDevice(device)
 

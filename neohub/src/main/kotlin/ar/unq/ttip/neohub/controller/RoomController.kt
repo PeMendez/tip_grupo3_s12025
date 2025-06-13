@@ -48,7 +48,8 @@ class RoomController(
         @PathVariable roomId: Long,
         @PathVariable deviceId: Long // PARA AGREGARLO A UN ROOM, YA TIENE QUE EXISTIR.
     ): ResponseEntity<RoomDTO> {
-        val room = roomService.addDeviceToRoom(roomId, deviceId)
+        val username = userDetails.username
+        val room = roomService.addDeviceToRoom(roomId, deviceId, username)
         ruleService.enableRulesForDevice(deviceId)
         return ResponseEntity.ok(room.toDTO())
     }

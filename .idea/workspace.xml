@@ -6,11 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="09bf219a-ddab-407c-b6b8-1beb0e5da310" name="Changes" comment="fix visuales">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/Toast.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Toast.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/styles/Toast.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/styles/Toast.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Profile.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/Profile.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/styles/profile.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/styles/profile.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/controller/RoomController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/controller/RoomController.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/service/RoomService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/service/RoomService.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/neohub/src/test/kotlin/ar/unq/ttip/neohub/integration/SharedHomesTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/test/kotlin/ar/unq/ttip/neohub/integration/SharedHomesTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/neohub/src/test/kotlin/ar/unq/ttip/neohub/service/RoomServiceTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/test/kotlin/ar/unq/ttip/neohub/service/RoomServiceTest.kt" afterDir="false" />
     </list>
     <list id="c93fa67c-d594-4956-a819-2b86e3ca1c3c" name="Changes by Martin" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -162,7 +161,7 @@
       <workItem from="1749249788911" duration="35626000" />
       <workItem from="1749336582186" duration="11251000" />
       <workItem from="1749404433717" duration="21151000" />
-      <workItem from="1749744447841" duration="21054000" />
+      <workItem from="1749744447841" duration="24264000" />
     </task>
     <task id="LOCAL-00001" summary="fix visuales">
       <option name="closed" value="true" />
