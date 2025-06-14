@@ -6,42 +6,63 @@ import Toast from "../components/Toast.jsx";
 import { useAuth } from "../contexts/AuthContext.jsx";
 import './styles/deviceConfig.css'
 import TextButton from "../components/TextButton.jsx";
+import { updateDevice } from "../api/deviceService.js";
 
 const DeviceConfig = () => {
     const location = useLocation();
     const device = location.state?.device;
     const navigate = useNavigate();
     const { setHeaderTitle } = useTitle();
+    const token = localStorage.getItem("token");
     const { user } = useAuth();
     const username = user?.sub;
 
     const [toast, setToast] = useState({ show: false, message: '' });
-    const [newName, setNewName] = useState(device.name);
     const [editingName, setEditingName] = useState(false);
+    const [editName, setEditName] = useState(device.name);
+    const [savedName, setSavedName] = useState(device.name);
     const [isVisible, setIsVisible] = useState(device.visible);
 
     const isOwner = device.owner === username;
 
     useEffect(() => {
-        console.log(username)
-        setHeaderTitle(device.name);
-    }, [setHeaderTitle, device.name]);
+        setHeaderTitle(savedName);
+    }, [setHeaderTitle, savedName]);
 
-    const showToast = (message) => {
-        setToast({ show: true, message });
+    const showToast = (message, type) => {
+        setToast({ show: true, message, type: type });
         setTimeout(() => setToast({ show: false, message: '' }), 3000);
     };
 
-    const handleNameChange = () => {
-        // Lógica para guardar nuevo nombre en backend
-        showToast("Nombre actualizado");
-        setEditingName(false);
+    const handleNameChange = async () => {
+        try {
+            await updateDevice(device.id, {
+                name: editName,
+                visible: isVisible
+            }, token);
+
+            setSavedName(editName);
+            showToast("Nombre actualizado", "success");
+            setEditingName(false);
+        } catch (e) {
+            showToast("Error al actualizar nombre", "error");
+            console.error(e);
+        }
     };
 
-    const handleVisibilityToggle = () => {
-        setIsVisible(!isVisible);
-        // Lógica para guardar visibilidad en backend
-        showToast("Visibilidad actualizada");
+    const handleVisibilityToggle = async () => {
+        try {
+            const newVisibility = !isVisible;
+            setIsVisible(newVisibility);
+            await updateDevice(device.id, {
+                name: savedName,
+                visible: newVisibility
+            }, token);
+            showToast("Visibilidad actualizada" ,"success");
+        } catch (e) {
+            showToast("Error al actualizar visibilidad", "error");
+            console.error(e);
+        }
     };
 
     return (
@@ -57,14 +78,14 @@ const DeviceConfig = () => {
                         {editingName ? (
                             <input
                                 className="form-input"
-                                value={newName}
-                                onChange={(e) => setNewName(e.target.value)}
+                                value={editName}
+                                onChange={(e) => setEditName(e.target.value)}
                             />
-                    ) : (
-                        <span className="info-value">{device.name}</span>
-                    )}
-                    {isOwner && (
-                        <div className="edit-btn">
+                        ) : (
+                            <span className="info-value">{savedName}</span>
+                        )}
+                        {isOwner && (
+                            <div className="edit-btn">
                             {editingName ? (
                                 <TextButton text={"Guardar"} handleClick={handleNameChange}/>
                             ) : (
@@ -95,14 +116,14 @@ const DeviceConfig = () => {
                             </label>
                         </div>
                     </div>
-                        )}
-                    </section>
+                )}
+            </section>
 
-                {toast.show && (
-                    <Toast
+            {toast.show && (
+                <Toast
                     message={toast.message}
-                onClose={() => setToast({show: false, message: ''})}
-                type="info"
+                    onClose={() => setToast({show: false, message: ''})}
+                    type={toast.type}
             />
             )}
         </div>

@@ -9,7 +9,7 @@ import Header from "./components/Header.jsx";
 import {AuthProvider} from "./contexts/AuthContext.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import {TitleProvider, useTitle} from "./contexts/TitleContext.jsx";
-import DeviceConfig from "./pages/DeciveConfig.jsx";
+import DeviceConfig from "./pages/DeviceConfig.jsx";
 
 
 const AppContent = () => {

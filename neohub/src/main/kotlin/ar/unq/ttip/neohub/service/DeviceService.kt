@@ -3,6 +3,7 @@ package ar.unq.ttip.neohub.service
 import ar.unq.ttip.neohub.dto.DeviceCommand
 import ar.unq.ttip.neohub.dto.DeviceDTO
 import ar.unq.ttip.neohub.dto.DeviceData
+import ar.unq.ttip.neohub.dto.DeviceUpdateDTO
 import ar.unq.ttip.neohub.model.Device
 import ar.unq.ttip.neohub.model.devices.DeviceFactory
 import ar.unq.ttip.neohub.model.devices.DeviceType
@@ -11,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import jakarta.transaction.Transactional
 import org.springframework.context.event.EventListener
+import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
 
 @Service
@@ -119,5 +121,22 @@ class DeviceService(
         println("countConfiguredDevices: $count")
         return count
     }
+
+    fun updateDevice(deviceId: Long, update: DeviceUpdateDTO, username: String): DeviceDTO {
+        val device = repository.findById(deviceId).orElseThrow {
+            throw IllegalArgumentException("Dispositivo no encontrado")
+        }
+
+        if (device.owner!!.username != username) {
+            throw IllegalAccessException("No sos el dueño del dispositivo")
+        }
+
+        update.name?.let { device.name = it }
+        update.visible?.let { device.visible = it }
+
+        val updated = repository.save(device)
+        return updated.toDTO()
+    }
+
 }
 
