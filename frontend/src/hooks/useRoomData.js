@@ -10,7 +10,7 @@ const useRoomData = (roomId) => {
     const [error, setError] = useState(null);
     const token = localStorage.getItem('token');
 
-    const fetchRoom = useCallback(async () => {
+   /*const fetchRoom = useCallback(async () => {
         try {
             const {room, ack} = await getRoomDetails(roomId, token);
             setRoomName(room.name || "Habitación sin nombre");
@@ -27,11 +27,12 @@ const useRoomData = (roomId) => {
             console.error(err);
             setError("Error al cargar detalles de la habitación");
         }
-    }, [roomId, token]);
+    }, [roomId, token]);*/
 
     const fetchRoomRole = useCallback(async () => {
         try {
             const {room, ack} = await getRoomDetailsForRole(roomId, token);
+            console.log(room)
             setRoomName(room.name || "Habitación sin nombre");
             setDevices(room.deviceList || []);
             setDeviceAck(
@@ -70,9 +71,9 @@ const useRoomData = (roomId) => {
         }
     }, [token]);
 
-    useEffect(() => {
+   /* useEffect(() => {
         fetchRoom();
-    }, [fetchRoom]);
+    }, [fetchRoom]);*/
 
     useEffect(() => {
         fetchRoomEdit();
@@ -91,7 +92,7 @@ const useRoomData = (roomId) => {
         devices,
         availableDevices,
         error,
-        fetchRoom,
+        //fetchRoom,
         fetchRoomEdit,
         fetchAvailableDevices,
         setDevices,

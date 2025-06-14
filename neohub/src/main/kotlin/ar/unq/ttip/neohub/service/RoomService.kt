@@ -30,9 +30,8 @@ class RoomService(
     fun getRoomDetailsForRol(roomId: Long, username: String): Room {
         val room = roomRepository.findById(roomId)
             .orElseThrow { RuntimeException("Habitación no encontrada") }
-
         room.deviceList = room.deviceList.filter { device ->
-            device.visible || device.owner!!.username === username
+            device.visible || device.owner!!.username == username
         }.toMutableList()
 
         return room
@@ -43,7 +42,7 @@ class RoomService(
         val room = getRoomDetails(roomId)
 
         val visibleDevices = room.deviceList.filter { device ->
-            device.visible || device.owner!!.username === username
+            device.visible || device.owner!!.username == username
         }
 
         val futures = visibleDevices.associate { device ->
