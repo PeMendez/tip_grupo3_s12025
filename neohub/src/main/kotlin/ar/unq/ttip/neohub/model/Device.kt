@@ -41,7 +41,9 @@ abstract class Device(
             topic = topic,
             roomId = room?.id,
             ownerId = owner?.id,
-            macAddress = macAddress
+            owner = owner?.username,
+            macAddress = macAddress,
+            visible = visible,
         )
     }
 

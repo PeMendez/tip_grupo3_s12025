@@ -13,7 +13,8 @@ const DeviceCard = ({ device, toggleLight, setBrightness, editMode, onClick, add
         if(editMode || addMode) {
             onClick(device);
         } else {
-            navigate(`/rule/${device.id}`);
+            navigate(`/device/${device.id}`, { state: { device } });
+
         }
     };
 

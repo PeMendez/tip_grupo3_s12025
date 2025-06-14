@@ -9,6 +9,7 @@ import Header from "./components/Header.jsx";
 import {AuthProvider} from "./contexts/AuthContext.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import {TitleProvider, useTitle} from "./contexts/TitleContext.jsx";
+import DeviceConfig from "./pages/DeciveConfig.jsx";
 
 
 const AppContent = () => {
@@ -61,6 +62,14 @@ const AppContent = () => {
                             element={
                                 <ProtectedRoute>
                                     <Profile/>
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/device/:id"
+                            element={
+                                <ProtectedRoute>
+                                    <DeviceConfig/>
                                 </ProtectedRoute>
                             }
                         />

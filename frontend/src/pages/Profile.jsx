@@ -5,6 +5,8 @@ import './styles/profile.css';
 import { FaCopy } from 'react-icons/fa';
 import TextButton from "../components/TextButton.jsx";
 import Toast from "../components/Toast.jsx";
+import BackOrCloseButton from "../components/BackOrCloseButton.jsx";
+import {navigate} from "jsdom/lib/jsdom/living/window/navigation.js";
 
 const Profile = () => {
     const { setHeaderTitle } = useTitle();
@@ -81,8 +83,13 @@ const Profile = () => {
         });
     };
 
+    const handleClose = () => {
+        navigate('/home');
+    };
+
     return (
         <div className="profile-container">
+            <BackOrCloseButton type="arrow" onClick={handleClose} />
             <section className="section">
                 <h2 className="section-title">Información de la Casa</h2>
 
