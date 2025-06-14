@@ -94,4 +94,8 @@ class HomeService(
     fun saveHome(home: Home): Home {
         return homeRepository.save(home)
     }
+
+    fun getAllMembers(homeId: Long) : List<UserHomeDTO> {
+        return homeRepository.findAllMembersByHome(homeId).map { it.toDTO() }
+    }
 }

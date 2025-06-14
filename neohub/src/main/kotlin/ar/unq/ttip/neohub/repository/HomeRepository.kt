@@ -3,6 +3,7 @@ package ar.unq.ttip.neohub.repository
 import ar.unq.ttip.neohub.model.Device
 import ar.unq.ttip.neohub.model.Home
 import ar.unq.ttip.neohub.model.User
+import ar.unq.ttip.neohub.model.UserHome
 import ar.unq.ttip.neohub.model.devices.DeviceType
 import ar.unq.ttip.neohub.model.ruleEngine.Rule
 import org.springframework.data.jpa.repository.JpaRepository
@@ -42,16 +43,6 @@ interface HomeRepository : JpaRepository<Home, Long> {
         @Param("deviceTypes") deviceTypes: List<DeviceType>
     ): List<Device>
 
-    @Query("""
-    SELECT DISTINCT r
-    FROM Rule r
-    JOIN r.conditions rc
-    JOIN rc.device d
-    JOIN d.room ro
-    JOIN ro.home h
-    WHERE h.id = :homeId AND r.isEnabled = true
-""")
-    fun findRulesByHomeId(@Param("homeId") homeId: Long): List<Rule>
 
     @Query("""
     SELECT DISTINCT r
@@ -80,4 +71,11 @@ interface HomeRepository : JpaRepository<Home, Long> {
         @Param("username") username: String,
         @Param("isAdmin") isAdmin: Boolean
     ): List<Rule>
+
+    @Query("""
+        SELECT DISTINCT u
+        FROM UserHome u 
+        WHERE u.home.id = :homeId
+    """)
+    fun findAllMembersByHome(@Param("homeId") homeId: Long): List<UserHome>
 }

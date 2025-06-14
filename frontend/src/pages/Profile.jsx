@@ -1,12 +1,11 @@
 import { useTitle } from "../contexts/TitleContext.jsx";
 import { useEffect, useState } from "react";
-import { getHome } from "../api/homeService2.js";
+import {getAllMembers, getHome} from "../api/homeService2.js";
 import './styles/profile.css';
 import { FaCopy } from 'react-icons/fa';
 import TextButton from "../components/TextButton.jsx";
 import Toast from "../components/Toast.jsx";
 import BackOrCloseButton from "../components/BackOrCloseButton.jsx";
-import {navigate} from "jsdom/lib/jsdom/living/window/navigation.js";
 import {useAuth} from "../contexts/AuthContext.jsx";
 import { getUserRoleInCurrentHome } from "../api/userHomeService.js";
 
@@ -15,6 +14,7 @@ const Profile = () => {
     const [homeName, setHomeName] = useState('');
     const [key, setKey] = useState('');
     const [userRole, setUserRole] = useState('');
+    const [members, setMembers] = useState([])
     const [password, setPassword] = useState({
         current: '',
         new: '',
@@ -42,6 +42,9 @@ const Profile = () => {
 
                 const role = await getUserRoleInCurrentHome(home.id, token);
                 setUserRole(role);
+
+                const allMembers = await getAllMembers(token, home.id);
+                setMembers(allMembers);
 
             } catch (error) {
                 console.error("Error al obtener datos", error);
@@ -90,10 +93,6 @@ const Profile = () => {
         });
     };
 
-    const handleClose = () => {
-        navigate('/home');
-    };
-
     return (
         <div className="profile-container">
             <BackOrCloseButton type="arrow" /*onClick={handleClose}*/ />
@@ -115,7 +114,7 @@ const Profile = () => {
                                 className="copy-btn"
                                 aria-label="Copiar clave"
                             >
-                                <FaCopy className="copy-icon" />
+                                <FaCopy className="copy-icon"/>
                             </button>
                         </div>
                         <p className="caption">
@@ -123,6 +122,29 @@ const Profile = () => {
                         </p>
                     </div>
                 )}
+                <div className='info-home'>
+                    <h3 className="section-subtitle">Integrantes</h3>
+                    <div className='home-container'>
+                        {members.length > 0 ? (
+                            <ul className="members-list">
+                                {members.map((member, index) => (
+                                    <li key={index} className="member-item">
+                                        <div className="member-info">
+                                             <span className="member-name">
+                                                {member.user.username}
+                                             </span>
+                                        </div>
+                                        <span className={`member-role ${member.role.toLowerCase()}`}>
+                                                    {member.role}
+                                        </span>
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <p className="no-members">No hay miembros en esta casa</p>
+                        )}
+                    </div>
+                </div>
             </section>
 
             {/* Sección del Usuario */}

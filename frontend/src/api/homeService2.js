@@ -31,3 +31,17 @@ export const deleteRoom = async (token, roomId) => {
     });
     return response.data;
 };
+
+export const getAllMembers = async (token, homeId) => {
+    try {
+        const response = await axios.get(`${API_URL}/${homeId}/members`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        return response.data;
+    } catch (e) {
+        console.log(e)
+        throw e;
+    }
+}
