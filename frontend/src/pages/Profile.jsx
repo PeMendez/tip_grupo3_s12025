@@ -96,7 +96,7 @@ const Profile = () => {
 
     return (
         <div className="profile-container">
-            <BackOrCloseButton type="arrow" onClick={handleClose} />
+            <BackOrCloseButton type="arrow" /*onClick={handleClose}*/ />
             <section className="section">
                 <h2 className="section-title">Información de la Casa</h2>
 
