@@ -27,12 +27,16 @@ class RoomService(
     }
 
     @Transactional
-    fun getRoomDetailsForRol(roomId: Long, username: String): Room {
-        val room = roomRepository.findById(roomId)
-            .orElseThrow { RuntimeException("Habitación no encontrada") }
-        room.deviceList = room.deviceList.filter { device ->
-            device.visible || device.owner!!.username == username
-        }.toMutableList()
+    fun getRoomDetailsForUser(roomId: Long, username: String): Room {
+        val user = userService.getUserByUsername(username)
+        /*val room = roomRepository.findById(roomId)
+           .orElseThrow { RuntimeException("Habitación no encontrada") } */
+        val room = getRoomDetails(roomId)
+        if (!room.home!!.getAdmins().contains(user)) { //si no es admin
+            room.deviceList = room.deviceList.filter { device ->
+                device.visible || device.owner!!.username == username
+            }.toMutableList()
+        }
 
         return room
     }
@@ -82,8 +86,11 @@ class RoomService(
 
     @Transactional
     fun removeDeviceFromRoom(deviceId: Long, roomId: Long) : Room {
+/*
         val targetRoom = roomRepository.findById(roomId)
             .orElseThrow { RuntimeException("Room not found") }
+*/
+        val targetRoom = getRoomDetails(roomId)
         val targetDevice = deviceService.getDeviceEntityById(deviceId)
 
         // Eliminar el dispositivo de la lista del cuarto
@@ -106,6 +113,5 @@ class RoomService(
         homeRepository.save(home)
         return newRoom.toDTO()
     }
-
 
 }

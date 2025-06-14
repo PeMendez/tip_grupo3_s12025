@@ -81,7 +81,7 @@ class RoomController(
     fun getRoomDetailsForRol(
         @AuthenticationPrincipal userDetails: UserDetails,
         @PathVariable roomId: Long): ResponseEntity<RoomDTO> {
-        val room = roomService.getRoomDetailsForRol(roomId, userDetails.username)
+        val room = roomService.getRoomDetailsForUser(roomId, userDetails.username)
         return ResponseEntity.ok(room.toDTO())
     }
 
