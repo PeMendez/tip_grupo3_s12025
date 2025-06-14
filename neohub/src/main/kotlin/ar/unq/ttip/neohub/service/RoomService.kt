@@ -26,9 +26,27 @@ class RoomService(
             .orElseThrow { RuntimeException("Habitación no encontrada") }
     }
 
-    fun sendAckToDevices(roomId: Long): Map<Long, Boolean> {
+    @Transactional
+    fun getRoomDetailsForRol(roomId: Long, username: String): Room {
+        val room = roomRepository.findById(roomId)
+            .orElseThrow { RuntimeException("Habitación no encontrada") }
+
+        room.deviceList = room.deviceList.filter { device ->
+            device.visible || device.owner!!.username === username
+        }.toMutableList()
+
+        return room
+    }
+
+
+    fun sendAckToDevices(roomId: Long, username: String): Map<Long, Boolean> {
         val room = getRoomDetails(roomId)
-        val futures = room.deviceList.associate { device ->
+
+        val visibleDevices = room.deviceList.filter { device ->
+            device.visible || device.owner!!.username === username
+        }
+
+        val futures = visibleDevices.associate { device ->
             val future = mqttService.registerAckFuture(device.id)
             // mqttService.publish("${device.topic}/command", """{"command": "ack"}""")
             deviceService.sendCommand(device.id, "ack")
@@ -89,4 +107,6 @@ class RoomService(
         homeRepository.save(home)
         return newRoom.toDTO()
     }
+
+
 }

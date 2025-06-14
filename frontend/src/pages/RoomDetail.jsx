@@ -21,10 +21,10 @@ const RoomDetail = () => {
         devices,
         setDevices,
         availableDevices,
-        fetchRoom,
         fetchRoomEdit,
         fetchAvailableDevices,
-        deviceAck
+        deviceAck,
+        fetchRoomRole
     } = useRoomData(id);
 
     const {
@@ -35,7 +35,7 @@ const RoomDetail = () => {
         handleFactoryReset,
         toast,
         setToast,
-    } = useDeviceData(id,fetchRoom,setDevices);
+    } = useDeviceData(id,setDevices, fetchRoomRole);
 
     useEffect(() => {
         const titles = {
@@ -54,13 +54,13 @@ const RoomDetail = () => {
             } else if (mode === 'edit') {
                 await fetchRoomEdit();
             } else if (mode === 'view') {
-                await fetchRoom();
+                await fetchRoomRole();
             }
             setLoading(false);
         };
 
         fetchData();
-    }, [mode, fetchAvailableDevices, fetchRoom, fetchRoomEdit]);
+    }, [mode, fetchAvailableDevices, fetchRoomRole, fetchRoomEdit]);
 
     const handleDeviceClick = (device) => {
         if (mode !== 'view') return;

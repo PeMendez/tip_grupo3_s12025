@@ -33,7 +33,7 @@ class RoomController(
         @AuthenticationPrincipal userDetails: UserDetails,
         @PathVariable roomId: Long): ResponseEntity<AckResponse> {
         return try {
-            val ackStatus = roomService.sendAckToDevices(roomId)
+            val ackStatus = roomService.sendAckToDevices(roomId, userDetails.username)
             ResponseEntity.ok(AckResponse(success = true, data = ackStatus))
         } catch (e: Exception) {
             ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
@@ -77,6 +77,13 @@ class RoomController(
         return ResponseEntity.ok(room.toDTO())
     }
 
+    @GetMapping("/devices/{roomId}")
+    fun getRoomDetailsForRol(
+        @AuthenticationPrincipal userDetails: UserDetails,
+        @PathVariable roomId: Long): ResponseEntity<RoomDTO> {
+        val room = roomService.getRoomDetailsForRol(roomId, userDetails.username)
+        return ResponseEntity.ok(room.toDTO())
+    }
 
 }
 

@@ -95,3 +95,26 @@ export const factoryResetDevice = async (roomId, deviceId, token) => {
         throw error;
     }
 };
+
+export const getRoomDetailsForRole = async (roomId, token) => {
+    try {
+        const response = await axios.get(`${API_URL}/devices/${roomId}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        const ackResponse = await axios.get(`${API_URL}/${roomId}/ack`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        console.log(ackResponse)
+        return {
+            room: response.data,
+            ack: ackResponse.data.data
+        };
+    } catch (error) {
+        console.error('Error al obtener detalles de la habitación:', error);
+        throw error;
+    }
+};
