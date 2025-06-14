@@ -35,7 +35,7 @@ const RoomDetail = () => {
         handleFactoryReset,
         toast,
         setToast,
-    } = useDeviceData(id,setDevices, fetchRoomRole);
+    } = useDeviceData(id, fetchRoomRole, setDevices);
 
     useEffect(() => {
         const titles = {
