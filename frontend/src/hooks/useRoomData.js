@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import {getRoomDetails, getRoomDetailsEdit, getRoomDetailsForRole} from "../api/roomService";
+import { getRoomDetailsEdit, getRoomDetailsForRole} from "../api/roomService";
 import {getUnconfiguredDevices } from "../api/deviceService.js"
 
 const useRoomData = (roomId) => {
@@ -32,7 +32,6 @@ const useRoomData = (roomId) => {
     const fetchRoomRole = useCallback(async () => {
         try {
             const {room, ack} = await getRoomDetailsForRole(roomId, token);
-            console.log(room)
             setRoomName(room.name || "Habitación sin nombre");
             setDevices(room.deviceList || []);
             setDeviceAck(
@@ -41,7 +40,6 @@ const useRoomData = (roomId) => {
                     status
                 })) : []
             );
-            console.log(ack)
             return { room, ack };
         } catch (err) {
             console.error(err);

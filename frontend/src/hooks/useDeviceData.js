@@ -82,7 +82,6 @@ const useDeviceData = (roomId, fetchRoom, setDevices) => {
 
     const toggleLight = useCallback(async (device) => {
         try {
-            console.log(device, token)
             await smartOutletCommand(device, !device.status, token);
         } catch (error) {
             console.error("Error completo:", {
