@@ -1,7 +1,9 @@
 import {test} from "vitest";
-import {render, screen, fireEvent, waitFor} from '@testing-library/react';
+import {render, screen, fireEvent, waitFor, renderHook} from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import RuleFormPopup from './RuleFormPopup';
+import {getAllDevicesConfigured} from "../api/deviceService.js";
+import useDeviceAttributes from "../hooks/useDeviceAttributes.js";
 
 describe('RuleFormPopup Component', () => {
     it('muestra errores al intentar enviar el formulario sin nombre de regla', () => {
@@ -106,8 +108,8 @@ describe('RuleFormPopup Component', () => {
         vi.mock('../api/deviceService.js', () => ({
             getAllDevicesConfigured: vi.fn(() =>
                 Promise.resolve([
-                    { id: 1, name: 'Sensor de Temperatura', type: 'temperature_sensor' },
-                    { id: 2, name: 'Lámpara Inteligente', type: 'dimmer' },
+                    { id: 1, name: 'Sensor de Temperatura', type: 'TEMPERATURE_SENSOR' },
+                    { id: 2, name: 'Lámpara Inteligente', type: 'DIMMER' },
                 ])
             ),
         }));
@@ -126,6 +128,9 @@ describe('RuleFormPopup Component', () => {
 
         // Renderizar el componente
         render(<RuleFormPopup onClose={onClose} onCreate={onCreate}/>);
+
+        const {result} = renderHook(useDeviceAttributes)
+        console.log(result.current.attributes)
 
         //Esperar que se carguen los dispositivos
         await waitFor(() => {
@@ -170,6 +175,7 @@ describe('RuleFormPopup Component', () => {
     });
 
     it('regla creada correctamente con sensor temp y dimmer', async () => {
+        console.log("Arrange");
         const onClose = vi.fn();
         const onCreate = vi.fn();
 
@@ -229,6 +235,9 @@ describe('RuleFormPopup Component', () => {
 
         // Renderizar el componente
         render(<RuleFormPopup onClose={onClose} onCreate={onCreate}/>);
+
+        console.log("Act");
+
 
         //Esperar que se carguen los dispositivos
         await waitFor(() => {
