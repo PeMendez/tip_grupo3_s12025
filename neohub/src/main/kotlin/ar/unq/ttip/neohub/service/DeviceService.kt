@@ -5,6 +5,7 @@ import ar.unq.ttip.neohub.dto.DeviceDTO
 import ar.unq.ttip.neohub.dto.DeviceData
 import ar.unq.ttip.neohub.dto.DeviceUpdateDTO
 import ar.unq.ttip.neohub.model.Device
+import ar.unq.ttip.neohub.model.Role
 import ar.unq.ttip.neohub.model.devices.DeviceFactory
 import ar.unq.ttip.neohub.model.devices.DeviceType
 import ar.unq.ttip.neohub.repository.DeviceRepository
@@ -112,8 +113,15 @@ class DeviceService(
         return repository.findByRoomIsNull().map { it.toDTO() }
     }
 
-    fun getConfiguredDevices(): List<DeviceDTO> {
-        return repository.findByRoomIsNotNull().map {it.toDTO() }
+    fun getConfiguredDevices(role: String, username: String): List<DeviceDTO> {
+
+        if(role == "ADMIN"){
+            return repository.findByRoomIsNotNull().map {it.toDTO() }
+        } else {
+            return repository.findByRoomIsNotNull().filter { device ->
+                device.visible || device.owner!!.username == username
+            }.map {it.toDTO() }
+        }
     }
 
     fun countConfiguredDevices(): Long{

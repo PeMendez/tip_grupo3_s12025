@@ -104,9 +104,9 @@ export const getAllDevices = async (token) => {
     }
 };
 
-export const getAllDevicesConfigured = async (token) => {
+export const getAllDevicesConfigured = async (token, role) => {
     try {
-        const response = await axios.get(`${API_URL}/configured`, {
+        const response = await axios.get(`${API_URL}/configured/${role}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },

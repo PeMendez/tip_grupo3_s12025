@@ -39,9 +39,12 @@ class DeviceController(
         return deviceService.getUnconfiguredDevices()
     }
 
-    @GetMapping("/configured")
-    fun getConfiguredDevices(): List<DeviceDTO> {
-        return deviceService.getConfiguredDevices()
+    @GetMapping("/configured/{role}")
+    fun getConfiguredDevices(
+        @AuthenticationPrincipal userDetails: UserDetails,
+        @PathVariable role: String,
+    ): List<DeviceDTO> {
+        return deviceService.getConfiguredDevices(role, userDetails.username)
     }
 
     @GetMapping("/configuredCount")
