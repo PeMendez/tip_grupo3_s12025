@@ -65,16 +65,25 @@ const DeviceConfig = () => {
         }
     };
 
+    const handleCancel = () => {
+        setEditName(savedName);
+        setEditingName(false);
+    };
+
+
     return (
-        <div className="profile-container">
-            <BackOrCloseButton type="arrow" onClick={() => navigate(-1)} />
+        <div className="device-container">
+            <BackOrCloseButton type="arrow" onClick={() => navigate(-1)}/>
+            <div className="rulesButton">
+                <TextButton handleClick={() => navigate(`/rule/${device.id}`)} text="Reglas"/>
+            </div>
 
             <section className="section">
                 <h2 className="section-title">Información del dispositivo</h2>
 
                 <div className="info-group">
                     <span className="info-label">Nombre:</span>
-                    <div className="name-and-button">
+                    <div className={`name-and-button ${isOwner ? 'owner' : 'not-owner'}`}>
                         {editingName ? (
                             <input
                                 className="form-input"
@@ -86,14 +95,17 @@ const DeviceConfig = () => {
                         )}
                         {isOwner && (
                             <div className="edit-btn">
-                            {editingName ? (
-                                <TextButton text={"Guardar"} handleClick={handleNameChange}/>
-                            ) : (
-                                <TextButton text={"Editar"} handleClick={() => setEditingName(true)}/>
-                            )}
-                        </div>
-                    )}
-                </div>
+                                {editingName ? (
+                                    <>
+                                        <TextButton text={"Guardar"} handleClick={handleNameChange}/>
+                                        <TextButton text={"Cancelar"} handleClick={handleCancel}/>
+                                    </>
+                                ) : (
+                                    <TextButton text={"Editar"} handleClick={() => setEditingName(true)}/>
+                                )}
+                            </div>
+                        )}
+                    </div>
                 </div>
 
 
@@ -124,10 +136,10 @@ const DeviceConfig = () => {
                     message={toast.message}
                     onClose={() => setToast({show: false, message: ''})}
                     type={toast.type}
-            />
+                />
             )}
         </div>
-);
+    );
 };
 
 export default DeviceConfig;

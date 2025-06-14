@@ -7,7 +7,14 @@
     align-items: center;
     gap: 10px;
     margin-top: 5px;
+}
+
+.name-and-button.owner {
     justify-content: flex-end;
+}
+
+.name-and-button.not-owner {
+    justify-content: center;
 }
 
 .edit-btn {
@@ -15,6 +22,9 @@
     border-radius: 10px;
     border: none;
     cursor: pointer;
+    display: flex;
+    gap: 10px;
+    margin-left: 10px;
 }
 
 
