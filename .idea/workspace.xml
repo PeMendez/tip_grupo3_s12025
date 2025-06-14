@@ -6,11 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="09bf219a-ddab-407c-b6b8-1beb0e5da310" name="Changes" comment="fix visuales">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/api/roomService.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/api/roomService.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/hooks/useRoomData.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/hooks/useRoomData.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/RoomDetail.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/RoomDetail.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/controller/RoomController.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/controller/RoomController.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/model/Room.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/model/Room.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/service/RoomService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/service/RoomService.kt" afterDir="false" />
     </list>
     <list id="c93fa67c-d594-4956-a819-2b86e3ca1c3c" name="Changes by Martin" comment="" />
@@ -164,7 +160,8 @@
       <workItem from="1749336582186" duration="11251000" />
       <workItem from="1749404433717" duration="21151000" />
       <workItem from="1749744447841" duration="24396000" />
-      <workItem from="1749852755491" duration="23732000" />
+      <workItem from="1749852755491" duration="23926000" />
+      <workItem from="1749905716237" duration="3054000" />
     </task>
     <task id="LOCAL-00001" summary="fix visuales">
       <option name="closed" value="true" />
