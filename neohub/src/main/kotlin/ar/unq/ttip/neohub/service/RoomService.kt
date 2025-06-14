@@ -43,13 +43,16 @@ class RoomService(
 
 
     fun sendAckToDevices(roomId: Long, username: String): Map<Long, Boolean> {
+        val user = userService.getUserByUsername(username)
         val room = getRoomDetails(roomId)
 
-        val visibleDevices = room.deviceList.filter { device ->
-            device.visible || device.owner!!.username == username
+        if (!room.home!!.getAdmins().contains(user)) { //si no es admin
+            room.deviceList = room.deviceList.filter { device ->
+                device.visible || device.owner!!.username == username
+            }.toMutableList()
         }
 
-        val futures = visibleDevices.associate { device ->
+        val futures = room.deviceList.associate { device ->
             val future = mqttService.registerAckFuture(device.id)
             // mqttService.publish("${device.topic}/command", """{"command": "ack"}""")
             deviceService.sendCommand(device.id, "ack")

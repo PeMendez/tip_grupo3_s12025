@@ -14,6 +14,8 @@ import salaImg from '../assets/salaDeJuegos.jpg'
 import './styles/mainPage.css';
 import usePushNotifications from "../hooks/usePushNotifications.js";
 import {useTitle} from "../contexts/TitleContext.jsx";
+import { useAuth } from "../contexts/AuthContext";
+import {getUserRoleInCurrentHome} from "../api/userHomeService.js";
 
 const roomImages = {
     'Cocina': cocinaImg,
@@ -33,6 +35,7 @@ const MainPage = () => {
     const {isSubscribed,error} = usePushNotifications(); //Sin esto no andan las push
     //usar el flag y el msg error para mostrar un toast?
     const {setHeaderTitle} = useTitle();
+    const { setRole } = useAuth();
 
     useEffect(() => {
         const titles = {
@@ -48,6 +51,8 @@ const MainPage = () => {
             try {
                 const fetchedRooms = await getHome(token);
                 setRooms(fetchedRooms.rooms || []);
+                const response = await getUserRoleInCurrentHome(fetchedRooms.id, token)
+                setRole(response);
             } catch (error) {
                 console.error("Error al obtener habitaciones", error);
             }
