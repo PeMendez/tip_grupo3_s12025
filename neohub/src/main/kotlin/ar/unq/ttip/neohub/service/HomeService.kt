@@ -14,7 +14,8 @@ import org.springframework.stereotype.Service
 class HomeService(
     private val homeRepository: HomeRepository,
     private val roomRepository: RoomRepository,
-    private val roomService: RoomService
+    private val roomService: RoomService,
+    private val userService: UserService
 ){
     fun getHomeForUser(userId: Long): Home {
         val homes = homeRepository.findByUserId(userId)
@@ -42,11 +43,29 @@ class HomeService(
         return homeRepository.findDevicesByHomeIdAndType(home.id, types).map { it.toDTO() }
     }
 
-    fun getRulesInHome(userId: Long): List<RuleDTO>{
+    /*fun getRulesInHome(userId: Long): List<RuleDTO>{
+        val user = userService.getUserById(userId)
         val home = getHomeForUser(userId)
         val homeId = home.id
-        return homeRepository.findRulesByHomeId(homeId).map { it.toDTO() }
+        if (!home.getAdmins().contains(user)) {
+            TODO("chequear reglas solo que pueda ver ")
+        } else {
+            return homeRepository.findRulesByHomeId(homeId).map { it.toDTO() }
+        }
+    }*/
+
+    fun getRulesInHome(userId: Long): List<RuleDTO> {
+        val user = userService.getUserById(userId)
+        val home = getHomeForUser(userId)
+        val isAdmin = home.getAdmins().contains(user)
+
+        val rulesWithConditions = homeRepository.findRulesWithConditions(user.username, isAdmin)
+        val completeRules = homeRepository.fetchActionsForRules(rulesWithConditions, user.username, isAdmin)
+
+        return completeRules.map { it.toDTO() }
     }
+
+
 
     @Transactional
     fun addRoomToHome(user: User, roomName: String): Room {
