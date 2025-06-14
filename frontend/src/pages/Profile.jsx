@@ -7,12 +7,14 @@ import TextButton from "../components/TextButton.jsx";
 import Toast from "../components/Toast.jsx";
 import BackOrCloseButton from "../components/BackOrCloseButton.jsx";
 import {navigate} from "jsdom/lib/jsdom/living/window/navigation.js";
+import {useAuth} from "../contexts/AuthContext.jsx";
+import { getUserRoleInCurrentHome } from "../api/userHomeService.js";
 
 const Profile = () => {
     const { setHeaderTitle } = useTitle();
     const [homeName, setHomeName] = useState('');
     const [key, setKey] = useState('');
-    const [username, setUsername] = useState('UsuarioEjemplo');
+    const [userRole, setUserRole] = useState('');
     const [password, setPassword] = useState({
         current: '',
         new: '',
@@ -23,33 +25,38 @@ const Profile = () => {
         message: ''
     });
 
+    const token = localStorage.getItem("token");
+    const { user } = useAuth();
+    const username = user?.sub;
+
     useEffect(() => {
         setHeaderTitle("Mi Perfil");
     }, [setHeaderTitle]);
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
         const fetchHome = async () => {
             try {
                 const home = await getHome(token);
                 setHomeName(home.name);
                 setKey(home.key);
+
+                const role = await getUserRoleInCurrentHome(home.id, token);
+                setUserRole(role);
+
             } catch (error) {
                 console.error("Error al obtener datos", error);
-                // Fallback for notification system
-                alert("Error al cargar los datos");
             }
         };
         fetchHome();
     }, []);
 
-    const showToast = (message) => {
+    const showToast = (message, type) => {
         setToast({
             show: true,
-            message: message
+            message: message,
+            type: type
         });
 
-        // Ocultar el toast después de 3 segundos
         setTimeout(() => {
             setToast(prev => ({...prev, show: false}));
         }, 3000);
@@ -57,7 +64,7 @@ const Profile = () => {
 
     const handleCopyKey = () => {
         navigator.clipboard.writeText(key);
-        showToast("Clave copiada al portapapeles");
+        showToast("Clave copiada al portapapeles", "info");
     };
 
     const handlePasswordChange = (e) => {
@@ -71,11 +78,11 @@ const Profile = () => {
     const handleSubmitPassword = (e) => {
         e.preventDefault();
         if (password.new !== password.confirm) {
-            alert("Las contraseñas no coinciden");
+            showToast("Las contraseñas no coinciden", "error");
             return;
         }
         // Password change logic here
-        alert("Contraseña cambiada con éxito");
+        showToast("Contraseña cambiada con éxito", "success");
         setPassword({
             current: '',
             new: '',
@@ -98,22 +105,24 @@ const Profile = () => {
                     <span className="info-value">{homeName}</span>
                 </div>
 
-                <div className="info-group">
-                    <span className="info-label">Clave de la casa:</span>
-                    <div className="key-container">
-                        <code className="key-value">{key}</code>
-                        <button
-                            onClick={handleCopyKey}
-                            className="copy-btn"
-                            aria-label="Copiar clave"
-                        >
-                            <FaCopy className="copy-icon" />
-                        </button>
+                {userRole === 'ADMIN' && (
+                    <div className="info-group">
+                        <span className="info-label">Clave de la casa:</span>
+                        <div className="key-container">
+                            <code className="key-value">{key}</code>
+                            <button
+                                onClick={handleCopyKey}
+                                className="copy-btn"
+                                aria-label="Copiar clave"
+                            >
+                                <FaCopy className="copy-icon" />
+                            </button>
+                        </div>
+                        <p className="caption">
+                            Comparte esta clave con otros usuarios para que puedan unirse a tu casa.
+                        </p>
                     </div>
-                    <p className="caption">
-                        Comparte esta clave con otros usuarios para que puedan unirse a tu casa.
-                    </p>
-                </div>
+                )}
             </section>
 
             {/* Sección del Usuario */}
@@ -173,7 +182,7 @@ const Profile = () => {
                 <Toast
                     message={toast.message}
                     onClose={() => setToast(prev => ({...prev, show: false}))}
-                    type='info'
+                    type={toast.type}
                 />
             )}
         </div>
