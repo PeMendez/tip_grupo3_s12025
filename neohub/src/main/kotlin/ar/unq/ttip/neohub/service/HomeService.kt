@@ -7,6 +7,7 @@ import ar.unq.ttip.neohub.model.User
 import ar.unq.ttip.neohub.model.devices.DeviceType
 import ar.unq.ttip.neohub.repository.HomeRepository
 import ar.unq.ttip.neohub.repository.RoomRepository
+import ar.unq.ttip.neohub.repository.UserHomeRepository
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 
@@ -15,7 +16,8 @@ class HomeService(
     private val homeRepository: HomeRepository,
     private val roomRepository: RoomRepository,
     private val roomService: RoomService,
-    private val userService: UserService
+    private val userService: UserService,
+    private val userHomeService: UserHomeService
 ){
     fun getHomeForUser(userId: Long): Home {
         val homes = homeRepository.findByUserId(userId)
@@ -97,5 +99,10 @@ class HomeService(
 
     fun getAllMembers(homeId: Long) : List<UserHomeDTO> {
         return homeRepository.findAllMembersByHome(homeId).map { it.toDTO() }
+    }
+
+    fun deleteMember(homeId: Long, userId: Long)  {
+        val user = userService.getUserById(userId)
+        userHomeService.deleteMember(homeId, user, user.username)
     }
 }

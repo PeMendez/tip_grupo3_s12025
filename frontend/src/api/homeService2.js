@@ -45,3 +45,19 @@ export const getAllMembers = async (token, homeId) => {
         throw e;
     }
 }
+
+export const deleteMember = async  (homeId, userId, token) => {
+    try {
+        const response = await axios.put(`${API_URL}/${homeId}/members/${userId}`, {},{
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        return response.data
+
+    } catch (e) {
+        console.log(e);
+        throw e;
+    }
+}

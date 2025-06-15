@@ -1,6 +1,6 @@
 import { useTitle } from "../contexts/TitleContext.jsx";
 import { useEffect, useState } from "react";
-import {getAllMembers, getHome} from "../api/homeService2.js";
+import {deleteMember, getAllMembers, getHome} from "../api/homeService2.js";
 import './styles/profile.css';
 import { FaCopy } from 'react-icons/fa';
 import TextButton from "../components/TextButton.jsx";
@@ -8,13 +8,19 @@ import Toast from "../components/Toast.jsx";
 import BackOrCloseButton from "../components/BackOrCloseButton.jsx";
 import {useAuth} from "../contexts/AuthContext.jsx";
 import { getUserRoleInCurrentHome } from "../api/userHomeService.js";
+import RoundButton from "../components/RoundButton.jsx";
+import DeleteModal from "../components/DeleteModal.jsx";
+
 
 const Profile = () => {
     const { setHeaderTitle } = useTitle();
     const [homeName, setHomeName] = useState('');
     const [key, setKey] = useState('');
     const [userRole, setUserRole] = useState('');
-    const [members, setMembers] = useState([])
+    const [members, setMembers] = useState([]);
+    const [isEditing, setIsEditing] = useState(false);
+    const [itemToDelete, setItemToDelete] = useState(null);
+    const [homeId, setHomeId] = useState(null);
     const [password, setPassword] = useState({
         current: '',
         new: '',
@@ -39,6 +45,7 @@ const Profile = () => {
                 const home = await getHome(token);
                 setHomeName(home.name);
                 setKey(home.key);
+                setHomeId(home.id);
 
                 const role = await getUserRoleInCurrentHome(home.id, token);
                 setUserRole(role);
@@ -93,9 +100,30 @@ const Profile = () => {
         });
     };
 
+    const handleEditMembers = () => {
+        setIsEditing(!isEditing);
+    };
+
+    const handleConfirmDelete = async () => {
+        if (!itemToDelete) return;
+        try {
+            await deleteMember(itemToDelete.homeId, itemToDelete.user.id, token);
+            const updatedMembers = members.filter(
+                m => m.user.id !== itemToDelete.user.id
+            );
+            setMembers(updatedMembers);
+            showToast("Miembro eliminado correctamente", "success");
+        } catch (error) {
+            showToast("Error al eliminar miembro", "error");
+            console.error("Delete error:", error);
+        } finally {
+            setItemToDelete(null);
+            setIsEditing(false);
+        }
+    };
     return (
         <div className="profile-container">
-            <BackOrCloseButton type="arrow" /*onClick={handleClose}*/ />
+            <BackOrCloseButton type="arrow"/>
             <section className="section">
                 <h2 className="section-title">Información de la Casa</h2>
 
@@ -123,26 +151,42 @@ const Profile = () => {
                     </div>
                 )}
                 <div className='info-home'>
-                    <h3 className="section-subtitle">Integrantes</h3>
+                    <div className="section-header">
+                        <h2 className="section-subtitle">Integrantes</h2>
+                        {userRole === 'ADMIN' && (
+                            <RoundButton
+                                type="edit"
+                                onClick={() => handleEditMembers()}
+                            />
+                        )}
+                    </div>
                     <div className='home-container'>
-                        {members.length > 0 ? (
-                            <ul className="members-list">
-                                {members.map((member, index) => (
-                                    <li key={index} className="member-item">
-                                        <div className="member-info">
+                        <ul className={`members-list`}>
+                            {members.map((member, index) => (
+                                <li key={index} className="member-item">
+                                    <div className="member-info">
                                              <span className="member-name">
                                                 {member.user.username}
                                              </span>
-                                        </div>
-                                        <span className={`member-role ${member.role.toLowerCase()}`}>
-                                                    {member.role}
+                                    </div>
+
+                                    {member.role === 'ADMIN' && (
+                                        <span className="member-role admin">
+                                            ADMIN
                                         </span>
-                                    </li>
-                                ))}
-                            </ul>
-                        ) : (
-                            <p className="no-members">No hay miembros en esta casa</p>
-                        )}
+                                    )}
+                                    {isEditing && userRole === 'ADMIN' && member.role !== 'ADMIN' && (
+                                        <TextButton
+                                            text={"Eliminar"}
+                                            onClick={() => setItemToDelete({
+                                                user: member.user,
+                                                homeId: homeId
+                                            })}
+                                        />
+                                    )}
+                                </li>
+                            ))}
+                        </ul>
                     </div>
                 </div>
             </section>
@@ -205,6 +249,16 @@ const Profile = () => {
                     message={toast.message}
                     onClose={() => setToast(prev => ({...prev, show: false}))}
                     type={toast.type}
+                />
+            )}
+
+            {itemToDelete && (
+                <DeleteModal
+                    device={itemToDelete}
+                    onConfirm={handleConfirmDelete}
+                    onCancel={() => setItemToDelete(null)}
+                    message={`¿Estás seguro que querés eliminar a "${itemToDelete.user.username}" de tu casa?
+                                Al confirmar todos sus dispositivos pasarán a desconfigurados`}
                 />
             )}
         </div>

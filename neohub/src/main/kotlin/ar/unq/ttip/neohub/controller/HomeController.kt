@@ -4,10 +4,11 @@ import ar.unq.ttip.neohub.dto.*
 import ar.unq.ttip.neohub.model.Room
 import ar.unq.ttip.neohub.service.HomeService
 import ar.unq.ttip.neohub.service.UserService
-import org.apache.catalina.startup.HomesUserDatabase
+import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.web.bind.annotation.*
+
 
 @RestController
 @RequestMapping("/home")
@@ -61,6 +62,16 @@ class HomeController(
         @PathVariable homeId: Long
     ): List<UserHomeDTO> {
         return homeService.getAllMembers(homeId);
+    }
+
+    @PutMapping("/{homeId}/members/{userId}")
+    fun deleteMemberFromHome(
+        @PathVariable homeId: Long,
+        @PathVariable userId: Long,
+        @AuthenticationPrincipal userDetails: UserDetails
+    ): ResponseEntity<Void> {
+        homeService.deleteMember(homeId, userId)
+        return ResponseEntity.ok().build()
     }
 
 }

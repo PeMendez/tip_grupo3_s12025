@@ -136,3 +136,15 @@
     background-color: var(--champagne-pink);
     color: var(--success-green-dark);
 }
+
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    justify-content: center;
+}
+
+
+
+
