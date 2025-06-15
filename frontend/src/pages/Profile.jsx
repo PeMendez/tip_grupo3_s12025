@@ -1,6 +1,6 @@
 import { useTitle } from "../contexts/TitleContext.jsx";
 import { useEffect, useState } from "react";
-import {deleteMember, getAllMembers, getHome} from "../api/homeService2.js";
+import {deleteMember, getAllMembers, getHome} from "../api/homeService.js";
 import './styles/profile.css';
 import { FaCopy } from 'react-icons/fa';
 import TextButton from "../components/TextButton.jsx";

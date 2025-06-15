@@ -20,7 +20,7 @@ class HomeController(
     @GetMapping
     fun getHome(@AuthenticationPrincipal userDetails: UserDetails): ResponseEntity<HomeDTO?> {
         val user = userService.getUserByUsername(userDetails.username)
-        val home = homeService.getHomeForUser(user.id)
+        val home = homeService.getHomeForUserNulleable(user.id)
         return ResponseEntity.ok(home?.toDTO())
     }
 

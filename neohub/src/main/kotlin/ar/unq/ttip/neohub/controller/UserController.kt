@@ -1,5 +1,7 @@
 package ar.unq.ttip.neohub.controller
 
+import ar.unq.ttip.neohub.dto.UserHomeDTO
+import ar.unq.ttip.neohub.dto.userHomeRequest
 import ar.unq.ttip.neohub.service.UserHomeService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -28,5 +30,11 @@ class UserController (
         return userHomeService.getRoleForUserInCurrentHome(userDetails.username, homeId)
             ?.let { ResponseEntity.ok(it) }
             ?: ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found in current home")
+    }
+
+    @PostMapping("/create")
+    fun createUser(@AuthenticationPrincipal userDetails: UserDetails,
+                   @RequestBody request : userHomeRequest): UserHomeDTO {
+        return userHomeService.createUserHome(userDetails.username, request).toDTO()
     }
 }

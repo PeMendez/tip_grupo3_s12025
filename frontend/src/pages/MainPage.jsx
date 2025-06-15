@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getHome, addRoom, deleteRoom } from '../api/homeService2.js';
+import { getHome, addRoom, deleteRoom } from '../api/homeService.js';
 import GridView from '../components/grid/GridView';
 import RoundButton from '../components/RoundButton';
 import TextButton from '../components/TextButton';
@@ -30,8 +30,7 @@ const roomImages = {
 
 const MainPage = () => {
     const [rooms, setRooms] = useState([]);
-    const [mode, setMode] = useState('view'); // 'view' | 'add' | 'edit'
-    const [home, setHome] = useState(null);
+    const [mode, setMode] = useState('view'); // 'view' | 'add' | 'edit' | 'noHome'
     const navigate = useNavigate();
     const token = localStorage.getItem('token');
     const {isSubscribed,error} = usePushNotifications(); //Sin esto no andan las push
@@ -52,14 +51,15 @@ const MainPage = () => {
         const fetchRooms = async () => {
             try {
                 const fetchedRooms = await getHome(token);
+
                 if (!fetchedRooms) {
-                    setHome(null);
+                    setMode('noHome');
                     return;
                 }
-                setHome(fetchedRooms);
                 setRooms(fetchedRooms.rooms || []);
                 const response = await getUserRoleInCurrentHome(fetchedRooms.id, token)
                 setRole(response);
+                console.log(home)
             } catch (error) {
                 console.error("Error al obtener habitaciones", error);
             }
@@ -88,8 +88,8 @@ const MainPage = () => {
         }
     };
 
-    if (!home) {
-        return <NoHomePage />;
+    if (mode === 'noHome') {
+        navigate('/noHome');
     }
 
     if (mode === 'add') {
