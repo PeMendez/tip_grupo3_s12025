@@ -27,6 +27,11 @@ class HomeService(
         return homes.first() // Retornar la primera en caso de que haya múltiples
     }
 
+    fun getHomeForUserNulleable(userId: Long): Home? {
+        val homes = homeRepository.findByUserId(userId)
+        return homes.firstOrNull()
+    }
+
     fun getAdminHomeForUser(userId: Long): Home {
         val adminHomes = homeRepository.findAdminHomeByUserId(userId)
         if (adminHomes.isEmpty()) {

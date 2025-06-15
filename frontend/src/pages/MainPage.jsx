@@ -16,6 +16,7 @@ import usePushNotifications from "../hooks/usePushNotifications.js";
 import {useTitle} from "../contexts/TitleContext.jsx";
 import { useAuth } from "../contexts/AuthContext";
 import {getUserRoleInCurrentHome} from "../api/userHomeService.js";
+import NoHomePage from './NoHomePage';
 
 const roomImages = {
     'Cocina': cocinaImg,
@@ -30,6 +31,7 @@ const roomImages = {
 const MainPage = () => {
     const [rooms, setRooms] = useState([]);
     const [mode, setMode] = useState('view'); // 'view' | 'add' | 'edit'
+    const [home, setHome] = useState(null);
     const navigate = useNavigate();
     const token = localStorage.getItem('token');
     const {isSubscribed,error} = usePushNotifications(); //Sin esto no andan las push
@@ -50,6 +52,11 @@ const MainPage = () => {
         const fetchRooms = async () => {
             try {
                 const fetchedRooms = await getHome(token);
+                if (!fetchedRooms) {
+                    setHome(null);
+                    return;
+                }
+                setHome(fetchedRooms);
                 setRooms(fetchedRooms.rooms || []);
                 const response = await getUserRoleInCurrentHome(fetchedRooms.id, token)
                 setRole(response);
@@ -80,6 +87,10 @@ const MainPage = () => {
             console.error("Error al eliminar habitación", error);
         }
     };
+
+    if (!home) {
+        return <NoHomePage />;
+    }
 
     if (mode === 'add') {
         return (

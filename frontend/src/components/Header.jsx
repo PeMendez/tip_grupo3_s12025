@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import styles from './styles/header.module.css'; // Importar la hoja de estilos
+import styles from './styles/header.module.css';
 import logo from "../assets/Logo1.svg"
 import { FiMenu } from "react-icons/fi";
 import { useNavigate } from 'react-router-dom'
@@ -14,7 +14,7 @@ const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
     const navigate = useNavigate();
-    const {setIsAuthenticated} = useAuth();
+    const {setIsAuthenticated, role} = useAuth();
     const {unsubscribe} = usePushNotifications();
 
     const {headerTitle} = useTitle();
@@ -38,8 +38,7 @@ const Header = () => {
             <h1 className={styles.headerTitle}>{headerTitle}</h1>
 
             {/* Logo */}
-            <img src={logo} alt="App Logo" className= {styles.headerLogo}/> {/* Sobre esta imagen no toma los estilos. */}
-
+            <img src={logo} alt="App Logo" className={styles.headerLogo}/>
 
             {/* Fondo para cerrar el menú */}
             {isMenuOpen && <div className={styles.menuOverlay} onClick={toggleMenu}></div>}
@@ -48,15 +47,19 @@ const Header = () => {
             {isMenuOpen && (
                 <div className={styles.menu}>
                     <ul className={styles.menuList} onClick={() => setIsMenuOpen(false)}>
-                        <li className={styles.menuItem}>
-                            <Link to="/home" className={styles.menuLink}>Mi Hogar</Link>
-                        </li>
-                        <li className={styles.menuItem}>
-                            <Link to="/profile" className={styles.menuLink}>Mi Perfil</Link>
-                        </li>
-                        <li className={styles.menuItem}>
-                            <Link to="/rules" className={styles.menuLink}>Reglas</Link>
-                        </li>
+                        {role ? (
+                            <>
+                                <li className={styles.menuItem}>
+                                    <Link to="/home" className={styles.menuLink}>Mi Hogar</Link>
+                                </li>
+                                <li className={styles.menuItem}>
+                                    <Link to="/profile" className={styles.menuLink}>Mi Perfil</Link>
+                                </li>
+                                <li className={styles.menuItem}>
+                                    <Link to="/rules" className={styles.menuLink}>Reglas</Link>
+                                </li>
+                            </>
+                        ) : null}
                         <li className={styles.menuItem}>
                             <TextButton handleClick={handleLogout} text="Cerrar Sesión"/>
                         </li>
