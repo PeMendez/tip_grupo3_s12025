@@ -132,9 +132,10 @@ class RuleService(
             deviceService.sendCommand(action.device.id, action.actionType.name.lowercase(), action.parameters)
         }
     }
+
     @EventListener
     fun onRuleTriggered(event: RuleTriggeredEvent) {
-        println("${event.device.name} triggered a rule...")
+        println("Se dispara una regla para el dispositivo: ${event.device.name}")
         evaluateRulesForDevice(event.device)
     }
 

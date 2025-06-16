@@ -17,7 +17,6 @@ class HomeService(
     private val roomService: RoomService,
     private val userService: UserService,
     private val userHomeService: UserHomeService,
-    private val deviceService: DeviceService,
     private val ruleService: RuleService
 ){
     fun getHomeForUser(userId: Long): Home {
@@ -72,8 +71,6 @@ class HomeService(
 
         return completeRules.map { it.toDTO() }
     }
-
-
 
     @Transactional
     fun addRoomToHome(user: User, roomName: String): Room {

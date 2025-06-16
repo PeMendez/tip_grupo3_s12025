@@ -96,6 +96,7 @@ class DeviceService(
         }
         return device.toDTO()
     }
+
     fun getDeviceEntityById(id: Long): Device {
         val device = repository.findById(id).orElseThrow {
             IllegalArgumentException("Device with ID $id not found.")
@@ -150,6 +151,5 @@ class DeviceService(
         val updated = repository.save(device)
         return updated.toDTO()
     }
-
 }
 
