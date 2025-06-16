@@ -21,7 +21,6 @@ class DeviceService(
     private val repository: DeviceRepository,
     private val factory: DeviceFactory,
     private val objectMapper: ObjectMapper = jacksonObjectMapper(),
-    private val ruleService: RuleService
 ) {
 
     @EventListener
@@ -113,13 +112,6 @@ class DeviceService(
         val devices = repository.findAll()
 
         return devices.filter { device -> device.owner == user }
-    }
-
-    fun unregisterAllDevicesForUser(user: User)  {
-        getAllDevicesForUser(user).forEach { device ->
-            unregisterDevice(device.id)
-            ruleService.disableRulesForDevice(device.id)
-        }
     }
 
     fun getUnconfiguredDevices(): List<DeviceDTO> {

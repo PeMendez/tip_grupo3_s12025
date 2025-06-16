@@ -25,7 +25,6 @@ import java.util.concurrent.ConcurrentHashMap
 class MqttService(
     private val applicationEventPublisher: ApplicationEventPublisher,
     private val webSocketHandler: MqttWebSocketHandler,
-    private val ruleService: RuleService,
     private val deviceRepository: DeviceRepository,
     private val notificationService: PushNotificationService,
     private val objectMapper: ObjectMapper=jacksonObjectMapper(),
@@ -206,7 +205,9 @@ class MqttService(
                 // Guardar cambios en el dispositivo (ya que sus atributos internos fueron modificados)
                 deviceRepository.save(device)
                 println("Se actualizó correctamente el estado de '${device.name}' (MAC: ${device.macAddress}). Atributos procesados del mensaje: $message")
-                evaluateRulesForDevice(device) // Evaluar reglas si el estado cambió
+
+                //Evaluar reglas si el estado cambió
+                applicationEventPublisher.publishEvent(RuleTriggeredEvent(device))
                 handleDeviceUpdate(device)
             } else {
                 println("No se procesaron atributos actualizables para '${device.name}' (MAC: ${device.macAddress}) del mensaje: $message")
@@ -227,38 +228,12 @@ class MqttService(
         return future
     }
 
-    private fun evaluateRulesForDevice(device: Device) {
-        // Obtener las reglas asociadas al dispositivo
-        val rulesDTOs = ruleService.getEnableRulesForDevice(device.id)
-        if (rulesDTOs.isEmpty()) return
-
-        val rules = rulesDTOs.map { it.toEntity(deviceRepository) } // Conversión de DTO a entidad
-
-        // Evaluar cada regla
-        rules.forEach { rule ->
-            val modifiedDevices = rule.evaluateAndExecute()
-            if (modifiedDevices.isNotEmpty()) {
-                println("Rule '${rule.name}' triggered and actions executed.")
-
-                modifiedDevices.forEach { modifiedDevice ->
-                    try {
-                        deviceRepository.save(modifiedDevice)
-                        println("Estado actualizado guardado para ${modifiedDevice.name}")
-                        handleDeviceUpdate(modifiedDevice)
-                    } catch (e: Exception) {
-                        println("ERROR al guardar ${modifiedDevice.name}: ${e.message}")
-                    }
-                }
-            }
-        }
-    }
-
     fun handleUnconfiguredDevice(message: String) {
         println("Received unconfigured device: $message")
         applicationEventPublisher.publishEvent(UnconfiguredDeviceEvent(message))
     }
 
-    private fun handleDeviceUpdate(device: Device) {
+    fun handleDeviceUpdate(device: Device) {
         println("Se recibió una actualización para el dispositivo de tipo ${device.type}...")
         when (device.type) {
             DeviceType.OPENING_SENSOR -> {

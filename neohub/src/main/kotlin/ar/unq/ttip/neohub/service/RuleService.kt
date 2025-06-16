@@ -3,20 +3,33 @@ package ar.unq.ttip.neohub.service
 import ar.unq.ttip.neohub.dto.*
 import ar.unq.ttip.neohub.model.ActionType
 import ar.unq.ttip.neohub.model.Attribute
+import ar.unq.ttip.neohub.model.Device
 import ar.unq.ttip.neohub.model.Operator
+import ar.unq.ttip.neohub.model.User
 import ar.unq.ttip.neohub.model.ruleEngine.Action
 import ar.unq.ttip.neohub.model.ruleEngine.Condition
 import ar.unq.ttip.neohub.model.ruleEngine.Rule
 import ar.unq.ttip.neohub.repository.DeviceRepository
 import ar.unq.ttip.neohub.repository.RuleRepository
 import jakarta.transaction.Transactional
+import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Service
 
 @Service
 class RuleService(
     private val ruleRepository: RuleRepository,
-    private val deviceRepository: DeviceRepository
+    private val deviceRepository: DeviceRepository,
+    private val deviceService: DeviceService,
+    private val mqttService: MqttService
 ) {
+    @Transactional
+    fun unregisterAllDevicesForUser(user: User)  {
+        deviceService.getAllDevicesForUser(user).forEach { device ->
+            deviceService.unregisterDevice(device.id)
+            disableRulesForDevice(device.id)
+        }
+    }
+
     @Transactional
     fun createRule(request: CreateRuleRequest): RuleDTO {
         //Crear objeto regla
@@ -111,6 +124,43 @@ class RuleService(
             deviceRepository.findById(id)
                 .map { it.room != null } //usé el id de room porque en los device no saben responder si están ok
                 .orElse(false)
+        }
+    }
+
+    fun executeRuleActions(rule: Rule) {
+        rule.actions.forEach { action ->
+            deviceService.sendCommand(action.device.id, action.actionType.name.lowercase(), action.parameters)
+        }
+    }
+    @EventListener
+    fun onRuleTriggered(event: RuleTriggeredEvent) {
+        println("${event.device.name} triggered a rule...")
+        evaluateRulesForDevice(event.device)
+    }
+
+    fun evaluateRulesForDevice(device: Device) {
+        // Obtener las reglas asociadas al dispositivo
+        val rulesDTOs = getEnableRulesForDevice(device.id)
+        if (rulesDTOs.isEmpty()) return
+
+        val rules = rulesDTOs.map { it.toEntity(deviceRepository) } // Conversión de DTO a entidad
+
+        // Evaluar cada regla
+        rules.forEach { rule ->
+            val modifiedDevices = rule.evaluateAndExecute()
+            if (modifiedDevices.isNotEmpty()) {
+                executeRuleActions(rule)
+                println("Rule '${rule.name}' triggered and actions executed.")
+                modifiedDevices.forEach { modifiedDevice ->
+                    try {
+                        deviceRepository.save(modifiedDevice)
+                        println("Estado actualizado guardado para ${modifiedDevice.name}")
+                        mqttService.handleDeviceUpdate(modifiedDevice)
+                    } catch (e: Exception) {
+                        println("ERROR al guardar ${modifiedDevice.name}: ${e.message}")
+                    }
+                }
+            }
         }
     }
 }

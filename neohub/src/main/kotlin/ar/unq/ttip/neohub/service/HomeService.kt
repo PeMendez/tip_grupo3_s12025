@@ -109,7 +109,7 @@ class HomeService(
 
     fun deleteMember(homeId: Long, userId: Long)  {
         val user = userService.getUserById(userId)
-        deviceService.unregisterAllDevicesForUser(user)
+        ruleService.unregisterAllDevicesForUser(user)
         userHomeService.deleteMember(homeId, user, user.username)
     }
 }
