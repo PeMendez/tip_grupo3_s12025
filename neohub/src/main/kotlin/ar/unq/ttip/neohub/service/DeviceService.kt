@@ -5,7 +5,7 @@ import ar.unq.ttip.neohub.dto.DeviceDTO
 import ar.unq.ttip.neohub.dto.DeviceData
 import ar.unq.ttip.neohub.dto.DeviceUpdateDTO
 import ar.unq.ttip.neohub.model.Device
-import ar.unq.ttip.neohub.model.Role
+import ar.unq.ttip.neohub.model.User
 import ar.unq.ttip.neohub.model.devices.DeviceFactory
 import ar.unq.ttip.neohub.model.devices.DeviceType
 import ar.unq.ttip.neohub.repository.DeviceRepository
@@ -13,7 +13,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import jakarta.transaction.Transactional
 import org.springframework.context.event.EventListener
-import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
 
 @Service
@@ -21,7 +20,8 @@ class DeviceService(
     private val mqttService: MqttService,
     private val repository: DeviceRepository,
     private val factory: DeviceFactory,
-    private val objectMapper: ObjectMapper = jacksonObjectMapper()
+    private val objectMapper: ObjectMapper = jacksonObjectMapper(),
+    private val ruleService: RuleService
 ) {
 
     @EventListener
@@ -107,6 +107,19 @@ class DeviceService(
     fun getAllDevices(): List<DeviceDTO> {
         val devices = repository.findAll()
         return devices.map { it.toDTO() }
+    }
+
+    fun getAllDevicesForUser(user: User) : List<Device> {
+        val devices = repository.findAll()
+
+        return devices.filter { device -> device.owner == user }
+    }
+
+    fun unregisterAllDevicesForUser(user: User)  {
+        getAllDevicesForUser(user).forEach { device ->
+            unregisterDevice(device.id)
+            ruleService.disableRulesForDevice(device.id)
+        }
     }
 
     fun getUnconfiguredDevices(): List<DeviceDTO> {

@@ -23,12 +23,13 @@ class DeviceServiceTest {
     private val mqttServiceMock = mock(MqttService::class.java)
     private val repositoryMock = mock(DeviceRepository::class.java)
     private val factoryMock = mock(DeviceFactory::class.java)
+    private val ruleServiceMock = mock(RuleService::class.java)
 
     @Autowired lateinit var deviceFactory: DeviceFactory
     @Autowired lateinit var objectMapper: ObjectMapper
 
     private val home = Home(1, "myHome", accessKey = "123")
-    private var deviceService = DeviceService(mqttServiceMock, repositoryMock, factoryMock)
+    private var deviceService = DeviceService(mqttServiceMock, repositoryMock, factoryMock, objectMapper, ruleServiceMock)
 
     @Test
     fun `desregistrar un dispositivo deberia delegar al MqttService`() {
