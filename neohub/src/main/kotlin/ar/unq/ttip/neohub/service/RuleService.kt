@@ -26,6 +26,7 @@ class RuleService(
     fun unregisterAllDevicesForUser(user: User)  {
         deviceService.getAllDevicesForUser(user).forEach { device ->
             deviceService.unregisterDevice(device.id)
+            mqttService.publishConfiguration(device, unconfigure = true)
             disableRulesForDevice(device.id)
         }
     }

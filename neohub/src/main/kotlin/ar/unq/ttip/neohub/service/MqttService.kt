@@ -1,7 +1,6 @@
 package ar.unq.ttip.neohub.service
 
 import ar.unq.ttip.neohub.dto.DeviceConfiguration
-import ar.unq.ttip.neohub.dto.toEntity
 import ar.unq.ttip.neohub.handler.MqttWebSocketHandler
 import ar.unq.ttip.neohub.model.Attribute
 import ar.unq.ttip.neohub.model.Device

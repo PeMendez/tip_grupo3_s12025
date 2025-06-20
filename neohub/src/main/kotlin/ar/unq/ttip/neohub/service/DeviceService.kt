@@ -48,6 +48,7 @@ class DeviceService(
         val device = repository.findById(deviceId).orElseThrow {
             IllegalArgumentException("Device with ID $deviceId not found.")
         }
+        println("Desregistrando dispositivo ${device.name}")
         mqttService.unregisterDevice(device)
     }
 
@@ -110,9 +111,11 @@ class DeviceService(
     }
 
     fun getAllDevicesForUser(user: User) : List<Device> {
-        val devices = repository.findAll()
-
-        return devices.filter { device -> device.owner == user }
+        //val devices = repository.findAll()
+        //val devicesOfUser = devices.filter {device -> device.owner == user}
+        val devicesOfUser = repository.findByOwnerId(user.id)
+        println("Se encontraron ${devicesOfUser.size} devices para ${user.username}")
+        return devicesOfUser
     }
 
     fun getUnconfiguredDevices(): List<DeviceDTO> {
