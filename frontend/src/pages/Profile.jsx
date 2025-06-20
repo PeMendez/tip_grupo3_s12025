@@ -2,14 +2,15 @@ import { useTitle } from "../contexts/TitleContext.jsx";
 import { useEffect, useState } from "react";
 import {deleteMember, getAllMembers, getHome} from "../api/homeService.js";
 import './styles/profile.css';
-import { FaCopy } from 'react-icons/fa';
+import {FaCopy} from 'react-icons/fa';
 import TextButton from "../components/TextButton.jsx";
 import Toast from "../components/Toast.jsx";
 import BackOrCloseButton from "../components/BackOrCloseButton.jsx";
 import {useAuth} from "../contexts/AuthContext.jsx";
 import { getUserRoleInCurrentHome } from "../api/userHomeService.js";
 import RoundButton from "../components/RoundButton.jsx";
-import DeleteModal from "../components/DeleteModal.jsx";
+import DeleteModal from "../components/DeleteModal.jsx"
+import {useNavigate} from "react-router-dom";
 
 
 const Profile = () => {
@@ -21,6 +22,7 @@ const Profile = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [itemToDelete, setItemToDelete] = useState(null);
     const [homeId, setHomeId] = useState(null);
+    const navigate = useNavigate();
     const [password, setPassword] = useState({
         current: '',
         new: '',
@@ -121,6 +123,22 @@ const Profile = () => {
             setIsEditing(false);
         }
     };
+
+    const handleLeaveHome = async () => {
+        if (!itemToDelete) return;
+        try {
+            await deleteMember(itemToDelete.homeId, itemToDelete.user.id, token);
+            navigate('/home')
+            showToast("Has dejado el hogar con éxito", "success");
+        } catch (error) {
+            showToast("Error al dejar el hogar", "error");
+            console.error("Leave error:", error);
+        } finally {
+            setItemToDelete(null);
+            setIsEditing(false);
+        }
+    }
+
     return (
         <div className="profile-container">
             <BackOrCloseButton type="arrow"/>
@@ -175,6 +193,24 @@ const Profile = () => {
                                             ADMIN
                                         </span>
                                     )}
+                                    {member.user.username === username && member.role === 'USER' && (
+                                       <div className="tooltip-container">
+                                        <RoundButton
+                                            type = 'exit'
+                                            onClick={() =>
+                                                setItemToDelete({
+                                                    user: member.user,
+                                                    homeId: homeId,
+                                                    isSelf: true
+                                                })
+                                            }
+                                        />
+                                           <div className="tooltip-text">
+                                                Salir del hogar
+                                           </div>
+                                       </div>
+                                    )}
+
                                     {isEditing && userRole === 'ADMIN' && member.role !== 'ADMIN' && (
                                         <TextButton
                                             text={"Eliminar"}
@@ -255,10 +291,14 @@ const Profile = () => {
             {itemToDelete && (
                 <DeleteModal
                     device={itemToDelete}
-                    onConfirm={handleConfirmDelete}
+                    onConfirm={itemToDelete.isSelf ? handleLeaveHome : handleConfirmDelete}
                     onCancel={() => setItemToDelete(null)}
-                    message={`¿Estás seguro que querés eliminar a "${itemToDelete.user.username}" de tu casa?
-                                Al confirmar todos sus dispositivos pasarán a desconfigurados`}
+                    message={
+                        itemToDelete.isSelf
+                            ? `¿Estás seguro que querés salir del hogar "${homeName}"?\nPerderás acceso a todos los dispositivos y configuraciones.`
+                            : `¿Estás seguro que querés eliminar a "${itemToDelete.user.username}" de tu casa?
+                                Al confirmar todos sus dispositivos pasarán a desconfigurados`
+                    }
                 />
             )}
         </div>
