@@ -32,12 +32,17 @@ class DeviceService(
         val deviceData : DeviceData = objectMapper.readValue(message, DeviceData::class.java)
         val type = DeviceType.fromString(deviceData.type)
         val name = deviceData.name
-
-        val newDevice = factory.createDevice(name, type)
-        newDevice.macAddress=(deviceData.mac_address)
-
-        repository.save(newDevice)
-        return newDevice.toDTO()
+        val existing = repository.findByMacAddress(deviceData.mac_address)
+        if (existing == null){
+            println("Device $name not found")
+            val newDevice = factory.createDevice(name, type)
+            newDevice.macAddress=(deviceData.mac_address)
+            repository.save(newDevice)
+            return newDevice.toDTO()
+        } else {
+            println("El dispositivo ${existing.name} ya existe!")
+            return existing.toDTO()
+        }
     }
 
     fun registerDeviceOnMqtt(device: Device) {

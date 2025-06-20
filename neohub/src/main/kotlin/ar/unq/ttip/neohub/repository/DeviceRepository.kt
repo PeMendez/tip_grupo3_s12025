@@ -14,4 +14,6 @@ interface DeviceRepository : JpaRepository<Device, Long>{
     fun countConfiguredDevices(): Long
 
     fun findByOwnerId(ownerId: Long): List<Device>
+
+    fun findByMacAddress(macAddress: String): Device?
 }
