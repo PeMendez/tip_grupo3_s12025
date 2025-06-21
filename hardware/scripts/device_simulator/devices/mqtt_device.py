@@ -300,7 +300,7 @@ class MqttDevice:
             try:
                 os.remove(self.config_file)
                 self.logger.info(f"Archivo de configuración borrado.")
-                sys.exit()
+                sys.exit("Terminando el script porque el device fue reseteado.")
             except OSError as e:
                 self.logger.error(f"Error al borrar archivo de configuración.")
         else: 
