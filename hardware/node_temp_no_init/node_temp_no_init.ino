@@ -18,7 +18,6 @@ DHT dht(DHTPIN, DHTTYPE);
 Adafruit_SH1106G display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 const unsigned char logo[] PROGMEM = {
-
 	// 'logo mono v2, 128x64px
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
@@ -95,7 +94,7 @@ const char* ssid = "Rengo-AP";
 const char* password = "Acm27pts"; //Santo y seña por ahora hardcoded
 const char* mqttBroker = "test.mosquitto.org";
 const int mqttPort = 1883;
-const char* topic = "unq-temperature";
+const char* topic = "neohub/unconfigured";
 
 WiFiClient espClient;
 PubSubClient mqttClient(espClient);
