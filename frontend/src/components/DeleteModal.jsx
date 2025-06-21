@@ -31,7 +31,7 @@ const DeleteModal = ({ onConfirm, onCancel, message, type }) => {
                     </div>
                 )}
                 <div className="modal-actions">
-                    <TextButton text={"Confirmar"} handleClick={handleConfirm}/>
+                    <TextButton text={"Confirmar"} handleClick={() => handleConfirm(factoryReset)}/>
                     <TextButton text={"Cancelar"} handleClick={onCancel}/>
                 </div>
             </div>

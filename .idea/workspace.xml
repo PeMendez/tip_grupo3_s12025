@@ -6,11 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="09bf219a-ddab-407c-b6b8-1beb0e5da310" name="Changes" comment="fix visuales">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/grid/DeviceCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/grid/DeviceCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/grid/styles/deviceCard.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/grid/styles/deviceCard.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/MainPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/MainPage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Profile.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/Profile.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/service/RoomService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/service/RoomService.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/grid/GridView.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/grid/GridView.jsx" afterDir="false" />
     </list>
     <list id="c93fa67c-d594-4956-a819-2b86e3ca1c3c" name="Changes by Martin" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -199,7 +195,8 @@
       <workItem from="1749905716237" duration="19716000" />
       <workItem from="1749939847637" duration="38002000" />
       <workItem from="1750430265838" duration="7976000" />
-      <workItem from="1750462161520" duration="8525000" />
+      <workItem from="1750462161520" duration="12067000" />
+      <workItem from="1750520482266" duration="2983000" />
     </task>
     <task id="LOCAL-00001" summary="fix visuales">
       <option name="closed" value="true" />
