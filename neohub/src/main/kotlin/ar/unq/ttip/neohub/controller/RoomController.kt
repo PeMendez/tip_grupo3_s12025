@@ -71,6 +71,7 @@ class RoomController(
         @PathVariable roomId: Long,
         @PathVariable deviceId: Long
     ): ResponseEntity<RoomDTO> {
+        deviceService.sendCommand(deviceId,"factory_reset")
         ruleService.deleteAllRulesForDevice(deviceId)
         val room = roomService.removeDeviceFromRoom(deviceId, roomId)
         deviceService.deleteDevice(deviceId)
