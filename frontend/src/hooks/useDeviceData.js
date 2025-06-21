@@ -102,12 +102,15 @@ const useDeviceData = (roomId, fetchRoom, setDevices) => {
         }
     }, [token]);
 
-    const handleAddDevice = useCallback(async (device) => {
+    const handleAddDevice = useCallback(async (device, { onStart, onEnd } = {}) => {
         try {
+            onStart?.();
             await addDeviceToRoom(roomId, device.id, token);
             await fetchRoom();
         } catch (err) {
             console.error("Error al agregar dispositivo", err);
+        } finally {
+            onEnd?.();
         }
     }, [roomId, token, fetchRoom]);
 

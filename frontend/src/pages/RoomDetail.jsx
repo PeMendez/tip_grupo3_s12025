@@ -105,8 +105,13 @@ const RoomDetail = () => {
                         type="device"
                         items={availableDevices}
                         onItemClick={(device) => {
-                            handleAddDevice(device);
-                            setMode('view');
+                            handleAddDevice(device, {
+                                onStart: () => setLoading(true),
+                                onEnd: () => {
+                                    setLoading(false);
+                                    setMode('view');
+                                }
+                            });
                         }}
                         onClose={() => setMode('view')}
                         getIcon={(device) => getDeviceIcon(device.type)}
