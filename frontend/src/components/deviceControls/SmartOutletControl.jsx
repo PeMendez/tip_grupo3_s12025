@@ -1,3 +1,4 @@
+
 const SmartOutletControl = ({ device, toggleLight }) => {
     return (
         <div className="switch-container" onClick={(e) => e.stopPropagation()}>

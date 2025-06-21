@@ -16,7 +16,8 @@ data class Rule(
     @OneToMany(mappedBy = "rule", cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
     val actions: MutableList<Action> = mutableListOf(),
 
-    var lastEvaluationResult: Boolean = false
+    var lastEvaluationResult: Boolean = false,
+    var isEnabled: Boolean = true
 ) {
     /*fun evaluateAndExecute(): Boolean {
         validateConditions() //Esto tiene que arrojar una excepcion si falla.

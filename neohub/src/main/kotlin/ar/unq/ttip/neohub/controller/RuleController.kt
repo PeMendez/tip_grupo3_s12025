@@ -27,7 +27,7 @@ class RuleController(
 
     @GetMapping("/{deviceId}")
     fun getRulesForDevice(@PathVariable deviceId: Long): List<RuleDTO> {
-        return ruleService.getRulesForDevice(deviceId)
+        return ruleService.getEnableRulesForDevice(deviceId)
     }
 
     @PostMapping

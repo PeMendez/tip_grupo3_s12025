@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import {useState} from 'react';
 import BackOrCloseButton from "../BackOrCloseButton";
 import TextButton from "../TextButton";
 import DeleteModal from "../DeleteModal";
 import { FiPlus } from 'react-icons/fi';
-import '../../pages/styles/mainPage.css';
+import DeviceCard from '../../components/grid/DeviceCard.jsx';
+import './styles/gridView.css'
 
 const GridView = ({
                       type,
@@ -13,73 +14,103 @@ const GridView = ({
                       onClose,
                       editMode,
                       onDelete,
+                      onResetFactory,
                       getImage,
-                      getIcon
+                      toggleLight,
+                      setBrightness,
+                      addMode
                   }) => {
     const [itemToDelete, setItemToDelete] = useState(null);
+    const [nameItemToDelete, setNameToDelete] = useState(null);
 
     const handleItemClick = (item) => {
         if (editMode) {
+            setNameToDelete(item.name);
             setItemToDelete(item);
-        } else {
-            onItemClick(item);
+
         }
+        onItemClick(item);
     };
 
-    const handleConfirmDelete = () => {
-        onDelete(itemToDelete);
+    const handleConfirmDelete = (factoryReset) => {
+        if (factoryReset && type === 'device') {
+            onResetFactory(itemToDelete.id);
+        } else {
+            onDelete(type === 'device' ? itemToDelete.id : itemToDelete);
+        }
         setItemToDelete(null);
+    };
+
+    const getItemClass = (item) => {
+        if (editMode) return 'room-button edit-mode';
+        if (type === 'device') {
+            if (item.ackStatus === true) return 'room-button ack';
+            if (item.ackStatus === false) return 'room-button noAck';
+        }
+        return 'room-button';
     };
 
     return (
         <div className="main-container">
-            <BackOrCloseButton type="arrow" onClick={onClose} />
-
-            <div className={type === 'room' ? 'room-grid' : 'room2-grid'}>
+            <div className={'room-grid'}>
+                {((type === 'room' && (editMode || addMode)) || type === 'device') && (
+                    <BackOrCloseButton type="arrow" onClick={onClose} />
+                )}
                 {items.map((item, index) => (
                     <div
                         key={index}
-                        className={`${type === 'room' ? 'room' : 'device'}-button ${editMode ? 'edit-mode' : ''}`}
+                        className={getItemClass(item)}
                         onClick={() => handleItemClick(item)}
                     >
-                        {type === 'room' ? (
-                            <>
-                                <img src={getImage(item)} alt={item.name} />
-                                <span>{item.name}</span>
-                            </>
+                        {type === 'device' ? (
+                        <DeviceCard
+                            key={index}
+                            device={item}
+                            toggleLight={item.ackStatus === true ? toggleLight : () => {}}
+                            setBrightness={item.ackStatus === true ? setBrightness : () => {}}
+                            onClick={() => handleItemClick(item)}
+                            editMode={editMode}
+                            addMode={addMode}
+                        />
                         ) : (
                             <>
-                                <div className="device-icon">{getIcon(item.type)}</div>
+                                <img src={getImage(item)} alt={item.name}/>
                                 <span>{item.name}</span>
-                            </>
+                                </>
                         )}
-                        {editMode && (
-                            <div className="delete-icon-full">🗑️</div>
-                        )}
-                    </div>
-                ))}
 
-                {onAdd && (
-                    <div className={`add-${type}-icon`}>
-                        {type === 'room' ? (
-                            <TextButton handleClick={onAdd} text="Nueva" />
-                        ) : (
-                            <button onClick={onAdd}>
-                                <FiPlus size={24} className="icon" />
-                            </button>
-                        )}
-                    </div>
-                )}
-            </div>
+                            {editMode && (
+                                <div className="delete-icon-full">🗑️</div>
+                            )}
 
-            {itemToDelete && (
-                <DeleteModal
+                            {!editMode && !item.ackStatus && (
+                            <div className="delete-icon-full">🔌</div>
+                            )}
+
+                        </div>
+                     ))}
+
+                        {onAdd && (
+                            <div className={`add-room-icon`}>
+                                {type === 'room' ? (
+                                    <TextButton handleClick={onAdd} text="Nueva"/>
+                                ) : (
+                                    <TextButton handleClick={onAdd} text={<FiPlus size={24} className="icon"/>}/>
+                                )}
+                            </div>
+                        )}
+
+
+                {itemToDelete && (
+                    <DeleteModal
                     device={itemToDelete}
                     onConfirm={handleConfirmDelete}
                     onCancel={() => setItemToDelete(null)}
-                    message={`¿Estás seguro que querés eliminar la ${type === 'room' ? 'habitación' : 'dispositivo'} "${itemToDelete.name}"?`}
+                    type={type}
+                    message={`¿Estás seguro que querés  ${type === 'room' ? 'eliminar la habitación' : 'desconfigurar el dispositivo'} "${nameItemToDelete}"?`}
                 />
             )}
+            </div>
         </div>
     );
 };

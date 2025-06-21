@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getAllDevices } from '../api/deviceService.js'; //
+import {getAllDevicesConfigured} from '../api/deviceService.js'; //
 import './styles/rule.css'; //
 import TextButton from "./TextButton.jsx"; //
 
@@ -86,7 +86,7 @@ const RuleFormPopup = ({ onClose, onCreate, device: initialDevice }) => { // Ren
     useEffect(() => { //
         const fetchDevices = async () => { //
             try { //
-                const devicesData = await getAllDevices(token); //
+                const devicesData = await getAllDevicesConfigured(token); //
                 setDevices(devicesData); //
             } catch (err) { //
                 console.log('No se pudieron obtener los dispositivos disponibles.', err); //
@@ -141,9 +141,11 @@ const RuleFormPopup = ({ onClose, onCreate, device: initialDevice }) => { // Ren
         onClose(); //
     };
 
+/*
     console.log('Datos para el desplegable de Acciones:', JSON.stringify(deviceActions, null, 2));
     console.log('Estado de carga para Acciones:', loadingActions);
     console.log('Dispositivo de Acción seleccionado:', actionDevice ? actionDevice.name : 'Ninguno');
+*/
 
 
     // Render
@@ -156,6 +158,7 @@ const RuleFormPopup = ({ onClose, onCreate, device: initialDevice }) => { // Ren
                     placeholder="Nombre de la regla" //
                     value={name} //
                     onChange={e => setName(e.target.value)} //
+                    data-testid = "nombreRegla"
                 />
                 {formErrors.name && <span className="error">{formErrors.name}</span>} {/* */}
 
@@ -169,6 +172,8 @@ const RuleFormPopup = ({ onClose, onCreate, device: initialDevice }) => { // Ren
                             setConditionDevice(selectedDev); //
                             setCond(prev => ({ ...prev, deviceId: selectedDev?.id || '', attribute: '', operator: '', value: '' })); // Resetea al cambiar dispositivo
                         }}
+                        data-testid = "condDevice"
+
                     >
                         <option value="">Seleccionar</option> {/* */}
                         {devices.map(d => ( //
@@ -183,6 +188,7 @@ const RuleFormPopup = ({ onClose, onCreate, device: initialDevice }) => { // Ren
                         value={cond.attribute}
                         onChange={e => setCond({...cond, attribute: e.target.value, operator: '', value: ''})} // Resetea operador y valor
                         disabled={loadingAttributes || !conditionDevice}
+                        data-testid="attributeSelect"
                     >
                         <option value="">{loadingAttributes ? "Cargando..." : "Seleccionar"}</option> {/* */}
                         {conditionAttributes.map(attr => ( // `conditionAttributes` ahora es [{value, label}, ...]
@@ -200,6 +206,7 @@ const RuleFormPopup = ({ onClose, onCreate, device: initialDevice }) => { // Ren
                             value={cond.value}
                             onChange={e => setCond({ ...cond, value: e.target.value })}
                             disabled={!cond.attribute}
+                            data-testid="condValueBool"
                         >
                             <option value="">Seleccionar Estado</option>
                             <option value="true">{cond.attribute === 'IS_ON' ? "Encendido" : "Abierto"} </option>
@@ -214,6 +221,7 @@ const RuleFormPopup = ({ onClose, onCreate, device: initialDevice }) => { // Ren
                             value={cond.value} //
                             onChange={e => setCond({ ...cond, value: e.target.value })} //
                             disabled={!cond.attribute}
+                            data-testid="condValue"
                         />
                         {formErrors.value && <span className="error">{formErrors.value}</span>} {/* */}
                     </div>
@@ -225,6 +233,7 @@ const RuleFormPopup = ({ onClose, onCreate, device: initialDevice }) => { // Ren
                         value={cond.operator}
                         onChange={e => setCond({ ...cond, operator: e.target.value })} //
                         disabled={loadingOperators || !cond.attribute }
+                        data-testid="operSelect"
                     >
                         <option value="">{loadingOperators ? "Cargando..." : "Seleccionar"}</option> {/* */}
                         {conditionOperators.map(op => ( // `conditionOperators` ahora es [{value, label}, ...]
@@ -242,7 +251,9 @@ const RuleFormPopup = ({ onClose, onCreate, device: initialDevice }) => { // Ren
                         const selectedDev = devices.find(d => d.id === Number(e.target.value)); //
                         setActionDevice(selectedDev); //
                         setAct(prev => ({ ...prev, deviceId: selectedDev?.id || '', actionType: '', parameters: '' })); // Resetea
-                    }}>
+                    }}
+                    data-testid="actDeviceSelect"
+                    >
                         <option value="">Seleccionar</option> {/* */}
                         {devices.map(d => ( //
                             <option key={d.id} value={d.id}>{d.name}</option> //
@@ -256,6 +267,7 @@ const RuleFormPopup = ({ onClose, onCreate, device: initialDevice }) => { // Ren
                         value={act.actionType}
                         onChange={e => setAct({ ...act, actionType: e.target.value, parameters: '' })} // Resetea parámetros
                         disabled={loadingActions || !actionDevice}
+                        data-testid="actionSelect"
                     >
                         <option value="">{loadingActions ? "Cargando..." : "Seleccionar"}</option> {/* */}
                         {(deviceActions || []).map(action => ( // `deviceActions` ahora es [{value, label}, ...]
@@ -272,13 +284,14 @@ const RuleFormPopup = ({ onClose, onCreate, device: initialDevice }) => { // Ren
                         onChange={e => setAct({ ...act, parameters: e.target.value })} //
                         disabled={!requiresParameters(act.actionType)} //
                         placeholder={act.actionType === 'SET_BRIGHTNESS' ? '0-100' : ''}
+                        data-testid="actParameter"
                     />
                     {formErrors.parameters && <span className="error">{formErrors.parameters}</span>} {/* */}
                 </div>
 
                 <div className="modal-rule-actions"> {/* */}
-                    <TextButton text={"Crear"} handleClick={handleSubmit}/> {/* */}
-                    <TextButton text={"Cancelar"} handleClick={onClose}/> {/* */}
+                    <TextButton text={"Crear"} handleClick={handleSubmit} data-testid="crear"/> {/* */}
+                    <TextButton text={"Cancelar"} handleClick={onClose} data-testid="cancelar"/> {/* */}
                 </div>
             </div>
         </div>

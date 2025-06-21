@@ -1,9 +1,9 @@
 import styles from './styles/textButton.module.css'
-const textButton = ({text, handleClick}) => {
+const TextButton = ({text, handleClick, ...rest }) => {
 
 
     return (
-        <button className={styles.textButton} onClick={handleClick}>{text}</button>
+        <button className={styles.textButton} onClick={handleClick} {...rest} >{text}</button>
     )
 }
-export default textButton
+export default TextButton

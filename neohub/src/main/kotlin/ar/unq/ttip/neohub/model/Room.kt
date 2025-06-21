@@ -19,13 +19,13 @@ data class Room(
     fun addDevice(device: Device){
         deviceList.add(device)
         device.room=this
-        device.configureTopic()
+        device.configure()
     }
 
     fun removeDevice(device: Device){
         deviceList.remove(device)
         device.room=null
-        device.configureTopic()
+        device.configure()
     }
 
     override fun toString(): String {

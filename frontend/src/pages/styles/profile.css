@@ -1,0 +1,93 @@
+.profile-container {
+    display: flex;
+    justify-content: space-around;
+}
+
+.section {
+    background-color: var(--light-grone);
+    border-radius: 8px;
+    padding: 20px;
+    margin: 30px;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--ghost-white);
+}
+
+.info-group {
+    margin-bottom: 15px;
+}
+
+.info-label {
+    display: block;
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+}
+
+.info-value {
+    padding: 0.6rem 1.4rem;
+    background-color: var(--blue-gray);
+    border: none;
+    color: var(--ghost-white);
+    font-size: 1rem;
+    border-radius: 10px;
+}
+
+.key-container {
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.key-value {
+    background-color: var(--champagne-pink);
+    padding: 8px 12px;
+    border-radius: 4px;
+    word-break: break-all;
+    color: var(--light-grone);
+}
+
+.copy-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-left: 10px;
+    color: var(--ghost-white);
+    transition: color 0.2s;
+}
+
+.copy-btn:hover {
+    color: var(--light-grone);
+}
+
+.copy-icon {
+    font-size: 1.2rem;
+}
+
+.caption {
+    font-size: 0.8rem;
+}
+
+.password-form {
+    margin-top: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.form-input {
+    padding: 10px;
+    border: 1px solid var(--champagne-pink);
+    border-radius: 4px;
+    font-size: 1rem;
+}

@@ -14,6 +14,7 @@ import org.eclipse.paho.client.mqttv3.MqttClient
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions
 import org.eclipse.paho.client.mqttv3.MqttException
 import org.eclipse.paho.client.mqttv3.MqttMessage
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
 import java.util.*
@@ -27,9 +28,12 @@ class MqttService(
     private val ruleService: RuleService,
     private val deviceRepository: DeviceRepository,
     private val notificationService: PushNotificationService,
-    private val objectMapper: ObjectMapper=jacksonObjectMapper()
+    private val objectMapper: ObjectMapper=jacksonObjectMapper(),
+    @Value("\${mqtt.broker.url}") private val brokerUrl: String,
 ) {
-    private val brokerUrl = "tcp://localhost:1883" //"tcp://broker.hivemq.com:1883" // "tcp://test.mosquitto.org:1883"
+    /*@Value("\${mqtt.broker.url}")
+    private var brokerUrl: String = System.getenv("MQTT_BROKER_URL")*/
+    //private val brokerUrl =  environment.getProperty("MQTT_BROKER_URL")// = System.getenv("MQTT_BROKER_URL")
     private val clientId = "NeoHub-API-" + UUID.randomUUID().toString().substring(0, 8)
     private val mqttClient: MqttClient = MqttClient(brokerUrl, clientId, null)
     private val subscribedTopics = mutableSetOf<String>()
@@ -225,7 +229,9 @@ class MqttService(
 
     private fun evaluateRulesForDevice(device: Device) {
         // Obtener las reglas asociadas al dispositivo
-        val rulesDTOs = ruleService.getRulesForDevice(device.id) // Debes llamar al service, no al repo directamente
+        val rulesDTOs = ruleService.getEnableRulesForDevice(device.id)
+        if (rulesDTOs.isEmpty()) return
+
         val rules = rulesDTOs.map { it.toEntity(deviceRepository) } // Conversión de DTO a entidad
 
         // Evaluar cada regla

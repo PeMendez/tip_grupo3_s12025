@@ -4,12 +4,17 @@ import SmartOutletControl from "../DeviceControls/SmartOutletControl";
 import DimmerControl from "../DeviceControls/DimmerControl";
 import TemperatureSensorControl from "../deviceControls/TemperatureSensorControl.jsx";
 import OpeningSensorControl from "../deviceControls/OpeningSensorControl.jsx";
+import './styles/deviceCard.css'
 
-const DeviceCard = ({ device, toggleLight, setBrightness }) => {
+const DeviceCard = ({ device, toggleLight, setBrightness, editMode, onClick, addMode }) => {
     const navigate = useNavigate();
 
     const handleClick = () => {
-        navigate(`/rule/${device.id}`);
+        if(editMode || addMode) {
+            onClick(device);
+        } else {
+            navigate(`/rule/${device.id}`);
+        }
     };
 
     const renderDeviceControl = () => {
@@ -29,9 +34,7 @@ const DeviceCard = ({ device, toggleLight, setBrightness }) => {
 
     return (
         <div
-            className={`room-button ${device.status ? 'active' : ''} ${
-                device.type === 'opening_sensor' && device.status ? 'alarm-active' : ''
-            }`}
+            className={`${device.type === 'opening_sensor' && device.status ? 'alarm-active' : ''}`}
             onClick={handleClick}
         >
             <div className={`device-icon ${device.type === 'opening_sensor' && device.status ? 'alarm-active' : ''}`}>

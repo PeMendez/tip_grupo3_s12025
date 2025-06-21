@@ -7,7 +7,8 @@ data class RuleDTO(
     val id: Long,
     val name: String,
     val conditions: List<ConditionDTO>,
-    val actions: List<ActionDTO>
+    val actions: List<ActionDTO>,
+    val isEnabled: Boolean
 )
 
 fun Rule.toDTO(): RuleDTO {
@@ -15,7 +16,8 @@ fun Rule.toDTO(): RuleDTO {
         id,
         name,
         conditions.map { it.toDTO() },
-        actions.map { it.toDTO() }
+        actions.map { it.toDTO() },
+        isEnabled
     )
 }
 
@@ -25,7 +27,8 @@ fun RuleDTO.toEntity(deviceRepository: DeviceRepository): Rule {
         id = this.id,
         name = this.name,
         conditions = mutableListOf(), // Inicialmente vacías
-        actions = mutableListOf()    // Inicialmente vacías
+        actions = mutableListOf(),   // Inicialmente vacías
+        isEnabled = this.isEnabled
     )
 
     // Resolver dispositivos necesarios para condiciones y acciones

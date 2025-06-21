@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository
 interface DeviceRepository : JpaRepository<Device, Long>{
     fun findByRoomIsNull(): List<Device>
 
+    fun findByRoomIsNotNull(): List<Device>
     @Query("""SELECT COUNT (d) FROM Device d WHERE d.room IS NOT NULL""")
     fun countConfiguredDevices(): Long
 }

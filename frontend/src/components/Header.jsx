@@ -47,15 +47,18 @@ const Header = () => {
             {/* Menú desplegable */}
             {isMenuOpen && (
                 <div className={styles.menu}>
-                    <ul className={styles.menuList} onClick={()=>setIsMenuOpen(false)}>
+                    <ul className={styles.menuList} onClick={() => setIsMenuOpen(false)}>
                         <li className={styles.menuItem}>
                             <Link to="/home" className={styles.menuLink}>Mi Hogar</Link>
+                        </li>
+                        <li className={styles.menuItem}>
+                            <Link to="/profile" className={styles.menuLink}>Mi Perfil</Link>
                         </li>
                         <li className={styles.menuItem}>
                             <Link to="/rules" className={styles.menuLink}>Reglas</Link>
                         </li>
                         <li className={styles.menuItem}>
-                            <TextButton handleClick={handleLogout} text="Cerrar Sesión" />
+                            <TextButton handleClick={handleLogout} text="Cerrar Sesión"/>
                         </li>
                     </ul>
                 </div>

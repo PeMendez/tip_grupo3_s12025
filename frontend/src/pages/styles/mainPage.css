@@ -1,9 +1,3 @@
-.main-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 0 auto;
-}
 
 .header-wrapper {
     position: fixed;
@@ -23,45 +17,6 @@
      text-align: center;
  }
 
-.room-grid {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 16px;
-    margin-top: 20px;
-    overflow: scroll;
-    max-width: 490px;
-    height: 450px;
-}
-
-.room-grid::-webkit-scrollbar {
-    display: none;
-}
-
-.room-button {
-    position: relative;
-    border-radius: 12px;
-    padding: 10px;
-    box-shadow: 0 2px 5px var(--light-grone);
-    width: 120px;
-    text-align: center;
-    background-color: var(--blue-gray);
-    cursor: pointer;
-    margin: 5px;
-}
-
-.room-button:hover {
-    transform: scale(1.1);
-    background-color: var(--app-green);
-}
-
-.room-button img {
-    width: 100%;
-    height: 80px;
-    object-fit: cover;
-    border-radius: 8px;
-}
 
 .edit-container {
     min-width: 490px;
@@ -88,82 +43,11 @@
 }
 
 
-.modal-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--light-grone);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
 
-.modal {
-    background-color: var(--light-grone);
-    padding: 2rem;
-    border-radius: 8px;
-    width: 300px;
-    color: var(--ghost-white);
-    display: flex;
-    flex-direction: column;
-}
 
-.modal-actions {
-    margin-top: 1rem;
-    display: flex;
-    justify-content: space-between;
-}
 
-.room-button.edit-mode {
-    position: relative;
-    transition: all 0.3s ease;
-    overflow: hidden;
-}
 
-.room-button.edit-mode::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(138, 153, 168, 0.6);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    z-index: 1;
-}
-.room-button.edit-mode:hover::before {
-    opacity: 1;
-}
 
-.delete-icon-full {
-    position: absolute;
-    font-size: xxx-large;
-    cursor: pointer;
-    opacity: 0;
-    z-index: 2;
-    transition: opacity 0.3s ease;
-}
 
-.room-button.edit-mode img,
-.room-button.edit-mode span {
-    position: relative;
-    z-index: 1;
-    transition: filter 0.3s ease;
-}
-
-/* Desenfocar contenido al hover */
-.room-button.edit-mode:hover img,
-.room-button.edit-mode:hover span {
-    filter: blur(2px);
-    opacity: 0.8;
-}
-.room-button.edit-mode:hover .delete-icon-full {
-    opacity: 1;
-}
 
 

@@ -1,0 +1,156 @@
+.main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto;
+}
+
+.room-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 16px;
+    margin-top: 20px;
+    overflow: scroll;
+    max-width: 490px;
+    height: 450px;
+    align-content: flex-start;
+    padding: 20px;
+}
+
+.room-grid::-webkit-scrollbar {
+    display: none;
+}
+
+.room-button {
+    position: relative;
+    border-radius: 12px;
+    padding: 10px;
+    box-shadow: 0 2px 5px var(--light-grone);
+    width: 120px;
+    height: 120px;
+    text-align: center;
+    background-color: var(--blue-gray);
+    cursor: pointer;
+    margin: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.room-button:hover {
+    transform: scale(1.1);
+    background-color: var(--app-green);
+}
+
+.room-button img {
+    width: 100%;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.room-button.edit-mode {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.room-button.edit-mode::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(138, 153, 168, 0.6);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1;
+    border-radius: 12px;
+}
+
+.room-button.edit-mode:hover::before {
+    opacity: 1;
+}
+
+.delete-icon-full {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2rem;
+    cursor: pointer;
+    opacity: 0;
+    z-index: 2;
+    transition: opacity 0.3s ease;
+}
+
+.room-button.edit-mode:hover .delete-icon-full {
+    opacity: 1;
+}
+
+.room-button.edit-mode:hover img,
+.room-button.edit-mode:hover span {
+    filter: blur(2px);
+    opacity: 0.8;
+}
+
+.add-room-icon {
+    border-radius: 12px;
+    box-shadow: 0 2px 5px var(--light-grone);
+    text-align: center;
+    background-color: var(--blue-gray);
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+    flex-direction: column-reverse;
+    margin-bottom: 40px;
+}
+
+.room-button.ack {
+    border: 2px solid var(--light-green);
+}
+
+.room-button.noAck {
+    border: 2px solid var(--alarm-red);
+    background-color: var(--red--gray);
+}
+
+.room-button.edit-mode {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.room-button.noAck::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(138, 153, 168, 0.6);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1;
+    border-radius: 12px;
+}
+
+.room-button.noAck:hover::before {
+    opacity: 1;
+}
+
+.room-button.noAck:hover .delete-icon-full {
+    opacity: 1;
+}
+
+.room-button.noAck:hover img,
+.room-button.noAck:hover span {
+    filter: blur(2px);
+    opacity: 0.8;
+}

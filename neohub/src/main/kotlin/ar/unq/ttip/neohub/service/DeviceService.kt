@@ -26,7 +26,7 @@ class DeviceService(
         handleNewDevice(event.message)
     }
 
-    fun handleNewDevice(message: String) {
+    fun handleNewDevice(message: String): DeviceDTO {
         val deviceData : DeviceData = objectMapper.readValue(message, DeviceData::class.java)
         val type = DeviceType.fromString(deviceData.type)
         val name = deviceData.name
@@ -35,6 +35,7 @@ class DeviceService(
         newDevice.macAddress=(deviceData.mac_address)
 
         repository.save(newDevice)
+        return newDevice.toDTO()
     }
 
     fun registerDeviceOnMqtt(device: Device) {
@@ -93,6 +94,12 @@ class DeviceService(
         }
         return device.toDTO()
     }
+    fun getDeviceEntityById(id: Long): Device {
+        val device = repository.findById(id).orElseThrow {
+            IllegalArgumentException("Device with ID $id not found.")
+        }
+        return device
+    }
 
     fun getAllDevices(): List<DeviceDTO> {
         val devices = repository.findAll()
@@ -101,6 +108,10 @@ class DeviceService(
 
     fun getUnconfiguredDevices(): List<DeviceDTO> {
         return repository.findByRoomIsNull().map { it.toDTO() }
+    }
+
+    fun getConfiguredDevices(): List<DeviceDTO> {
+        return repository.findByRoomIsNotNull().map {it.toDTO() }
     }
 
     fun countConfiguredDevices(): Long{

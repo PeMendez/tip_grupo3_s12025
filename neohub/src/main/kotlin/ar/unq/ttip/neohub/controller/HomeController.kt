@@ -21,7 +21,7 @@ class HomeController(
     @GetMapping
     fun getHome(@AuthenticationPrincipal userDetails: UserDetails): HomeDTO? {
         val user = userService.getUserByUsername(userDetails.username)
-        return homeService.getHomeByUser(user)?.toDTO()
+        return homeService.getHomeForUser(user.id).toDTO()
     }
 
     @GetMapping("/rooms")

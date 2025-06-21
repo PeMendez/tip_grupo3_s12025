@@ -4,6 +4,8 @@ import ar.unq.ttip.neohub.dto.DeviceDTO
 import ar.unq.ttip.neohub.dto.DeviceMessageRequest
 import ar.unq.ttip.neohub.service.DeviceService
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -23,10 +25,22 @@ class DeviceController(
         return deviceService.getAllDevices()
     }
 
+    @GetMapping("/user_devices")
+    fun getAllUserDevices(
+        @AuthenticationPrincipal userDetails: UserDetails,
+    ): List<DeviceDTO> {
+        return emptyList()
+    }
+
     // Endpoint para obtener dispositivos desconfigurados
     @GetMapping("/unconfigured")
     fun getUnconfiguredDevices(): List<DeviceDTO> {
         return deviceService.getUnconfiguredDevices()
+    }
+
+    @GetMapping("/configured")
+    fun getConfiguredDevices(): List<DeviceDTO> {
+        return deviceService.getConfiguredDevices()
     }
 
     @GetMapping("/configuredCount")
@@ -41,7 +55,7 @@ class DeviceController(
     }
 
     @PostMapping("/manual")
-    fun createManualDevice(@RequestBody message: String) {
+    fun createManualDevice(@RequestBody message: String): DeviceDTO {
         return deviceService.handleNewDevice(message)
     }
 
@@ -52,7 +66,6 @@ class DeviceController(
     ): ResponseEntity<Void>{
         //editar la clase DeviceMessageRequest si necesitamos que mande mas cosas
         deviceService.sendCommand(deviceId, messageRequest.message, messageRequest.parameter)
-        println("Respondiendo la request")
         return ResponseEntity.ok().build()
     }
 }

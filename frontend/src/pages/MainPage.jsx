@@ -1,7 +1,9 @@
-import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import BackOrCloseButton from "../components/BackOrCloseButton.jsx"
-import { getHome, addRoom, deleteRoom } from '../api/homeService2.js'
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { getHome, addRoom, deleteRoom } from '../api/homeService2.js';
+import GridView from '../components/grid/GridView';
+import RoundButton from '../components/RoundButton';
+import TextButton from '../components/TextButton';
 import cocinaImg from '../assets/cocina.jpg'
 import dormitorioImg from '../assets/dormitorio.jpg'
 import livingImg from '../assets/living.jpg'
@@ -9,63 +11,48 @@ import garajeImg from '../assets/garaje.jpg'
 import lavaderoImg from '../assets/lavadero.jpg'
 import banoImg from '../assets/Baño.jpg'
 import salaImg from '../assets/salaDeJuegos.jpg'
-import { FiPlus } from 'react-icons/fi'
-import './styles/mainPage.css'
-import TextButton from "../components/TextButton.jsx";
-import RoundButton from "../components/RoundButton.jsx";
+import './styles/mainPage.css';
 import usePushNotifications from "../hooks/usePushNotifications.js";
 import {useTitle} from "../contexts/TitleContext.jsx";
 
+const roomImages = {
+    'Cocina': cocinaImg,
+    'Dormitorio': dormitorioImg,
+    'Living': livingImg,
+    'Garaje': garajeImg,
+    'Lavadero': lavaderoImg,
+    'Baño': banoImg,
+    'Sala de juegos': salaImg
+};
+
 const MainPage = () => {
-    const [rooms, setRooms] = useState([])
-    const [editMode, setEditMode] = useState(false)
-    const [editHome, setEditHome] = useState(false)
-    const navigate = useNavigate()
-    const [showDeletePopup, setShowDeletePopup] = useState(false)
-    const [roomToDelete, setRoomToDelete] = useState(null)
-
-    const {isSubscribed,error} = usePushNotifications();
-
+    const [rooms, setRooms] = useState([]);
+    const [mode, setMode] = useState('view'); // 'view' | 'add' | 'edit'
+    const navigate = useNavigate();
+    const token = localStorage.getItem('token');
+    const {isSubscribed,error} = usePushNotifications(); //Sin esto no andan las push
+    //usar el flag y el msg error para mostrar un toast?
     const {setHeaderTitle} = useTitle();
 
-    const roomTypes = [
-        {name: 'Cocina', img: cocinaImg},
-        {name: 'Dormitorio', img: dormitorioImg},
-        {name: 'Living', img: livingImg},
-        {name: 'Garaje', img: garajeImg},
-        {name: 'Lavadero', img: lavaderoImg},
-        {name: 'Baño', img: banoImg},
-        {name: 'Sala de juegos', img: salaImg},
-    ]
-
-    const token = localStorage.getItem('token')
-
     useEffect(() => {
-        setHeaderTitle("Mi Hogar");
-    }, []);
-
-    useEffect(() => {
-        if (editMode) {
-            setHeaderTitle("Agregar Habitaciones");
-        }
-    }, [editMode]);
-
-    useEffect(() => {
-        if (editHome) {
-            setHeaderTitle("Editar Mis Habitaciones");
-        }
-    }, [editHome]);
+        const titles = {
+            'view': "Mi Hogar",
+            'add': "Agregar Habitaciones",
+            'edit': "Editar Mis Habitaciones"
+        };
+        setHeaderTitle(titles[mode]);
+    }, [mode]);
 
     useEffect(() => {
         const fetchRooms = async () => {
             try {
-                const fetchedRooms = await getHome(token)
-                setRooms(fetchedRooms.rooms || [])
+                const fetchedRooms = await getHome(token);
+                setRooms(fetchedRooms.rooms || []);
             } catch (error) {
-                console.error("Error al obtener habitaciones", error)
+                console.error("Error al obtener habitaciones", error);
             }
-        }
-        fetchRooms()
+        };
+        fetchRooms();
     }, [token]);
 
     const handleAddRoom = async (roomName) => {
@@ -73,144 +60,76 @@ const MainPage = () => {
             await addRoom(token, roomName);
             const updatedRooms = await getHome(token);
             setRooms(updatedRooms.rooms || []);
-            setEditMode(false);
+            setMode('view');
         } catch (error) {
             console.error("Error al agregar habitación", error);
         }
-    }
+    };
 
-    const handleConfirmDelete = async () => {
-        if (!roomToDelete) return;
+    const handleDeleteRoom = async (room) => {
         try {
-            await deleteRoom(token, roomToDelete.id);
+            await deleteRoom(token, room.id);
             const updatedRooms = await getHome(token);
             setRooms(updatedRooms.rooms || []);
-            setShowDeletePopup(false);
-            setRoomToDelete(null);
         } catch (error) {
             console.error("Error al eliminar habitación", error);
         }
-    }
+    };
 
-    const handleCloseModal = (e) => {
-        if (e.target === e.currentTarget) {
-            setShowDeletePopup(false)
-        }
-    }
-
-    const showRules = () => {
-        navigate("/rules");
-    }
-
-    if (editMode) {
+    if (mode === 'add') {
         return (
-            <div className="main-container">
-                <BackOrCloseButton type="arrow" onClick={() => setEditMode(false)}/>
-                <div className="room-grid">
-                    {roomTypes.map((room, index) => (
-                        <button key={index} onClick={() => handleAddRoom(room.name)} className="room-button">
-                            <img src={room.img} alt={room.name}/>
-                            <span>{room.name}</span>
-                        </button>
-                    ))}
-                    <div className="add-room-icon">
-                        <button onClick={() => {/* Falta agregar opcion hab personalizada */  }}>
-                            <FiPlus size={24} className="icon"/>
-                        </button>
-                    </div>
-                </div>
-            </div>
+            <GridView
+                type="room"
+                items={Object.entries(roomImages).map(([name, img]) => ({ name, img }))}
+                onItemClick={(room) => handleAddRoom(room.name)}
+                onClose={() => setMode('view')}
+                getImage={(room) => room.img}
+                addMode={true}
+            />
         );
     }
 
-    if (editHome) {
+    if (mode === 'edit') {
         return (
-            <div className="main-container">
-                <BackOrCloseButton type="arrow" onClick={() => setEditHome(false)}/>
-                <div className="room-grid">
-                    {rooms.map((room, index) => {
-                        const type = roomTypes.find((r) => r.name === room.name);
-                        return (
-                            <div
-                                key={index}
-                                className="room-editable-container"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    setRoomToDelete(room);
-                                    setShowDeletePopup(true);
-                                }}
-                            >
-                                <div className="room-button edit-mode">
-                                    <img src={type?.img || salaImg} alt={room.name} />
-                                    <span>{room.name}</span>
-                                    <div className="delete-icon-full">
-                                        🗑️
-                                    </div>
-                                </div>
-                            </div>
-                        );
-                    })}
-                    <div className="add-room-icon">
-                        <TextButton handleClick={() => {
-                            setEditMode(true);
-                            setEditHome(false);
-                        }}
-                        text="Nueva" />
-                    </div>
-                </div>
-
-                {showDeletePopup && (
-                    <div className="modal-backdrop" onClick={handleCloseModal}>
-                        <div className="modal">
-                            <p>¿Estás seguro que querés eliminar la habitación "{roomToDelete?.name}"?</p>
-                            <div className="modal-actions">
-                                <TextButton handleClick={handleConfirmDelete} text="Confirmar"/>
-                                <TextButton handleClick={() => setShowDeletePopup(false)} text="Cancelar"/>
-                            </div>
-                        </div>
-                    </div>
-                )}
-            </div>
+            <GridView
+                type="room"
+                items={rooms}
+                editMode={true}
+                onDelete={handleDeleteRoom}
+                onItemClick={(room) => console.log("solo para que no rompa")}
+                onAdd={() => setMode('add')}
+                onClose={() => setMode('view')}
+                getImage={(room) => roomImages[room.name] || salaImg}
+            />
         );
     }
 
     return (
         <div className="main-container">
-            <div className="">
-                <div className="rulesButton">
-                    <TextButton handleClick={()=> showRules()} text="Reglas"/>
-                </div>
+            <div className="rulesButton">
+                <TextButton handleClick={() => navigate("/rules")} text="Reglas"/>
             </div>
 
             {rooms.length > 0 ? (
                 <>
                     <div className="edit-container">
-                        <RoundButton type="edit" onClick={() => setEditHome(true)}/>
+                        <RoundButton type="edit" onClick={() => setMode('edit')}/>
                     </div>
-                    <div className="room-grid">
-                        {rooms.map((room, index) => {
-                            const type = roomTypes.find((r) => r.name === room.name);
-                            return (
-                                <div
-                                    key={index}
-                                    className="room-button"
-                                    onClick={() => navigate(`/room/${room.id}`)}
-                                >
-                                    <img src={type?.img || salaImg} alt={room.name}/>
-                                    <span>{room.name}</span>
-                                </div>
-                            );
-                        })}
-                    </div>
+                    <GridView
+                        type="room"
+                        items={rooms}
+                        onItemClick={(room) => navigate(`/room/${room.id}`)}
+                        getImage={(room) => roomImages[room.name] || salaImg}
+                    />
                 </>
             ) : (
                 <div className="no-rooms">
                     <p>Aún no tenés habitaciones...</p>
-                    <RoundButton type="edit" onClick={()=>setEditMode(true)}/>
+                    <RoundButton type="edit" onClick={() => setMode('add')}/>
                 </div>
             )}
         </div>
-    )
-}
+    );
+};
 
 export default MainPage;

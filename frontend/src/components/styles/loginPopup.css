@@ -68,3 +68,10 @@
     color: var(--light-grone);
     opacity: 1;
 }
+
+.action-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 20px 0;
+}

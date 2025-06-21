@@ -87,39 +87,6 @@ export const getActions = async (deviceType, token) => {
     }
 };
 
-export const getDevicestypeForAction = async (actionType, token) => {
-    try {
-        const response = await axios.get(`${API_URL}/${actionType}/devices`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        return response.data;
-    } catch (e) {
-        console.log('Error al obtner los dispositivos', e)
-        throw e;
-    }
-};
-
-export const getDevicesForAction = async (deviceTypes, token) => {
-    try {
-        const params = new URLSearchParams();
-        deviceTypes.forEach(type => params.append('types', type));
-
-        const response = await axios.get(`${API_URL}/device-options?${params.toString()}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            }
-        });
-
-        return response.data;
-    } catch (e) {
-        console.log('Error al obtener los dispositivos', e);
-        throw e;
-    }
-};
-
 export const getAllRules = async (token) => {
     try {
         const response = await axios.get(`${API_URL}/allRules`, {
