@@ -23,6 +23,7 @@ const Profile = () => {
     const [itemToDelete, setItemToDelete] = useState(null);
     const [homeId, setHomeId] = useState(null);
     const navigate = useNavigate();
+    const { setRole } = useAuth();
     const [password, setPassword] = useState({
         current: '',
         new: '',
@@ -128,6 +129,7 @@ const Profile = () => {
         if (!itemToDelete) return;
         try {
             await deleteMember(itemToDelete.homeId, itemToDelete.user.id, token);
+            setRole(null);
             navigate('/home')
             showToast("Has dejado el hogar con éxito", "success");
         } catch (error) {

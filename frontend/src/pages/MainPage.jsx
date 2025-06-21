@@ -16,7 +16,6 @@ import usePushNotifications from "../hooks/usePushNotifications.js";
 import {useTitle} from "../contexts/TitleContext.jsx";
 import { useAuth } from "../contexts/AuthContext";
 import {getUserRoleInCurrentHome} from "../api/userHomeService.js";
-import NoHomePage from './NoHomePage';
 
 const roomImages = {
     'Cocina': cocinaImg,

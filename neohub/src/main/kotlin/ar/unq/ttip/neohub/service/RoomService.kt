@@ -96,6 +96,8 @@ class RoomService(
         val targetRoom = getRoomDetails(roomId)
         val targetDevice = deviceService.getDeviceEntityById(deviceId)
 
+        targetDevice.owner = null;
+
         // Eliminar el dispositivo de la lista del cuarto
 
         mqttService.publishConfiguration(targetDevice, unconfigure = true)
