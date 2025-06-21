@@ -20,14 +20,19 @@ class RuleService(
     private val ruleRepository: RuleRepository,
     private val deviceRepository: DeviceRepository,
     private val deviceService: DeviceService,
-    private val mqttService: MqttService
+    private val mqttService: MqttService,
+    private val roomService: RoomService
 ) {
     @Transactional
     fun unregisterAllDevicesForUser(user: User)  {
         deviceService.getAllDevicesForUser(user).forEach { device ->
             disableRulesForDevice(device.id)
-            mqttService.publishConfiguration(device, unconfigure = true)
-            mqttService.unregisterDevice(device)
+/*            mqttService.publishConfiguration(device, unconfigure = true)
+            mqttService.unregisterDevice(device)*/
+            val room = device.room
+            if (room != null) {
+                roomService.removeDeviceFromRoom(device.id, room.id)
+            }
         }
     }
 

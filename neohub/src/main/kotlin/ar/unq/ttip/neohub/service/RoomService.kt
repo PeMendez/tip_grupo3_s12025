@@ -89,10 +89,7 @@ class RoomService(
 
     @Transactional
     fun removeDeviceFromRoom(deviceId: Long, roomId: Long) : Room {
-/*
-        val targetRoom = roomRepository.findById(roomId)
-            .orElseThrow { RuntimeException("Room not found") }
-*/
+
         val targetRoom = getRoomDetails(roomId)
         val targetDevice = deviceService.getDeviceEntityById(deviceId)
 
