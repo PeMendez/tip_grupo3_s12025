@@ -8,7 +8,9 @@ import ar.unq.ttip.neohub.model.Operator
 import ar.unq.ttip.neohub.model.User
 import ar.unq.ttip.neohub.model.ruleEngine.Action
 import ar.unq.ttip.neohub.model.ruleEngine.Condition
+import ar.unq.ttip.neohub.model.ruleEngine.DeviceCondition
 import ar.unq.ttip.neohub.model.ruleEngine.Rule
+import ar.unq.ttip.neohub.model.ruleEngine.TimeCondition
 import ar.unq.ttip.neohub.repository.DeviceRepository
 import ar.unq.ttip.neohub.repository.RuleRepository
 import jakarta.transaction.Transactional
@@ -42,9 +44,16 @@ class RuleService(
         val rule = Rule(name= request.name)
         println("Creado el objeto regla")
 
-        // Obtener todos los IDs de dispositivos (de condiciones y acciones)
-        val allDeviceIds = (request.conditions.map { it.deviceId } + request.actions.map { it.deviceId })
-            .distinct() // Eliminamos duplicados
+        // Obtener todos los IDs de dispositivos de condiciones que tienen un deviceId
+        val conditionDeviceIds = request.conditions
+            .mapNotNull { it.deviceId } // Ignorar condiciones que no tienen deviceId
+
+        // Obtener todos los IDs de dispositivos de acciones
+        val actionDeviceIds = request.actions
+            .map { it.deviceId } // Suponemos que las acciones siempre tienen un deviceId
+
+        // Combinar y eliminar duplicados
+        val allDeviceIds = (conditionDeviceIds + actionDeviceIds).distinct()
 
         // Crear un mapa de dispositivos
         val deviceMap = allDeviceIds.associateWith { id ->
@@ -55,18 +64,30 @@ class RuleService(
         println("Obtenidos los dispositivos")
 
         val conditions = request.conditions.map {
-            val device = deviceMap[it.deviceId]!!
-            val attribute = Attribute.fromString(it.attribute)
-            val operator = Operator.fromString(it.operator)
-
-            Condition(
-                rule = rule,
-                device = device,
-                attribute = attribute,
-                operator = operator,
-                value = it.value
-            )
+            when (it.type) { // `type` indica el tipo de condición en el DTO (e.g., "DEVICE" o "TIME")
+                "DEVICE" -> {
+                    val device = deviceRepository.findById(it.deviceId!!).orElseThrow {
+                        IllegalArgumentException("No se encontró el dispositivo con ID: ${it.deviceId}")
+                    }
+                    DeviceCondition(
+                        rule = rule,
+                        device = device,
+                        attribute = Attribute.fromString(it.attribute),
+                        operator = Operator.fromString(it.operator),
+                        value = it.value
+                    )
+                }
+                "TIME" -> {
+                    TimeCondition(
+                        rule = rule,
+                        operator = Operator.fromString(it.operator),
+                        value = it.value
+                    )
+                }
+                else -> throw IllegalArgumentException("Tipo de condición no soportado: ${it.type}")
+            }
         }
+
         conditions.forEach { it.validate() }
         println("Mapeadas las condiciones")
         val actions = request.actions.map {
@@ -123,12 +144,25 @@ class RuleService(
     }
 
     fun allDevicesAreAvailable(rule: Rule, deviceId: Long): Boolean {
-        val allDeviceIds = (rule.actions.map { it.device.id } + rule.conditions.map { it.device.id }).toSet()
+        // Filtrar las condiciones con un dispositivo asociado
+        val conditionDeviceIds = rule.conditions
+            .filterIsInstance<DeviceCondition>() // Considera solo las condiciones basadas en dispositivos (CUESTIONABLE)
+            .map { it.device.id }
+
+        // Obtener los IDs de dispositivos de las acciones
+        val actionDeviceIds = rule.actions
+            .map { it.device.id }
+
+        // Combinar y eliminar duplicados
+        val allDeviceIds = (conditionDeviceIds + actionDeviceIds).toSet()
+
+        // Excluir el dispositivo dado
         val otherDeviceIds = allDeviceIds.filter { it != deviceId }
 
+        // Verificar si todos los dispositivos restantes están disponibles
         return otherDeviceIds.all { id ->
             deviceRepository.findById(id)
-                .map { it.room != null } //usé el id de room porque en los device no saben responder si están ok
+                .map { it.room != null } // Considerar el dispositivo como disponible si tiene un room asignado
                 .orElse(false)
         }
     }

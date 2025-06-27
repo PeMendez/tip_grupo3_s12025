@@ -1,7 +1,8 @@
 package ar.unq.ttip.neohub.dto
 
 data class ConditionRequest(
-    val deviceId: Long,
+    val type: String,
+    val deviceId: Long? = null,
     val attribute: String,
     val operator: String,
     val value: String
