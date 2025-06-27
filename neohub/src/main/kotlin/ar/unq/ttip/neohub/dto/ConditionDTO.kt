@@ -7,7 +7,6 @@ import ar.unq.ttip.neohub.model.ruleEngine.Condition
 import ar.unq.ttip.neohub.model.ruleEngine.DeviceCondition
 import ar.unq.ttip.neohub.model.ruleEngine.Rule
 import ar.unq.ttip.neohub.model.ruleEngine.TimeCondition
-import com.sun.source.doctree.AttributeTree
 
 data class ConditionDTO(
     val id: Long,

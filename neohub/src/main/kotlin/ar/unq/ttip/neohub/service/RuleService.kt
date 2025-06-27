@@ -1,13 +1,11 @@
 package ar.unq.ttip.neohub.service
 
-import ar.unq.ttip.neohub.dto.*
-import ar.unq.ttip.neohub.model.ActionType
-import ar.unq.ttip.neohub.model.Attribute
-import ar.unq.ttip.neohub.model.Device
-import ar.unq.ttip.neohub.model.Operator
-import ar.unq.ttip.neohub.model.User
+import ar.unq.ttip.neohub.dto.CreateRuleRequest
+import ar.unq.ttip.neohub.dto.RuleDTO
+import ar.unq.ttip.neohub.dto.toDTO
+import ar.unq.ttip.neohub.dto.toEntity
+import ar.unq.ttip.neohub.model.*
 import ar.unq.ttip.neohub.model.ruleEngine.Action
-import ar.unq.ttip.neohub.model.ruleEngine.Condition
 import ar.unq.ttip.neohub.model.ruleEngine.DeviceCondition
 import ar.unq.ttip.neohub.model.ruleEngine.Rule
 import ar.unq.ttip.neohub.model.ruleEngine.TimeCondition

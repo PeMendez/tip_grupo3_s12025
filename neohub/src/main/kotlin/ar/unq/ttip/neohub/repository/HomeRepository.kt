@@ -2,7 +2,6 @@ package ar.unq.ttip.neohub.repository
 
 import ar.unq.ttip.neohub.model.Device
 import ar.unq.ttip.neohub.model.Home
-import ar.unq.ttip.neohub.model.ruleEngine.ConditionType
 import ar.unq.ttip.neohub.model.UserHome
 import ar.unq.ttip.neohub.model.devices.DeviceType
 import ar.unq.ttip.neohub.model.ruleEngine.Rule
