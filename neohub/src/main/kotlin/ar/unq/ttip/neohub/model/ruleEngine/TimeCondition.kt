@@ -14,6 +14,7 @@ class TimeCondition(
 
     @Column(name = "time_value") // Nuevo campo para el tiempo
     val value: String // Ejemplo: "12:00", "18:30", formato HH:mm
+
 ) : Condition(rule = rule, type = ConditionType.TIME) {
     override fun evaluate(): Boolean {
         val currentTime = LocalTime.now() // Hora actual

@@ -203,7 +203,7 @@ class MqttService(
                 println("Se actualizó correctamente el estado de '${device.name}' (MAC: ${device.macAddress}). Atributos procesados del mensaje: $message")
 
                 //Evaluar reglas si el estado cambió
-                applicationEventPublisher.publishEvent(RuleTriggeredEvent(device))
+                applicationEventPublisher.publishEvent(RuleTriggeredByDeviceEvent(device))
                 handleDeviceUpdate(device)
             } else {
                 println("No se procesaron atributos actualizables para '${device.name}' (MAC: ${device.macAddress}) del mensaje: $message")

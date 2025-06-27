@@ -172,7 +172,13 @@ class RuleService(
     }
 
     @EventListener
-    fun onRuleTriggered(event: RuleTriggeredEvent) {
+    fun onRuleTriggeredByTime(event: RuleTriggeredByTimeEvent) {
+        println("Ejecutando regla disparada: ${event.rule.name}")
+        executeRuleActions(event.rule)
+    }
+
+    @EventListener
+    fun onRuleTriggeredByDevice(event: RuleTriggeredByDeviceEvent) {
         println("Se dispara una regla para el dispositivo: ${event.device.name}")
         evaluateRulesForDevice(event.device)
     }
