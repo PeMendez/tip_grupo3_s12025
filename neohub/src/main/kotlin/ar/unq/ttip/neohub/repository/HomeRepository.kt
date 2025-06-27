@@ -2,7 +2,7 @@ package ar.unq.ttip.neohub.repository
 
 import ar.unq.ttip.neohub.model.Device
 import ar.unq.ttip.neohub.model.Home
-import ar.unq.ttip.neohub.model.User
+import ar.unq.ttip.neohub.model.ruleEngine.ConditionType
 import ar.unq.ttip.neohub.model.UserHome
 import ar.unq.ttip.neohub.model.devices.DeviceType
 import ar.unq.ttip.neohub.model.ruleEngine.Rule
@@ -43,14 +43,22 @@ interface HomeRepository : JpaRepository<Home, Long> {
         @Param("deviceTypes") deviceTypes: List<DeviceType>
     ): List<Device>
 
-
     @Query("""
     SELECT DISTINCT r
     FROM Rule r
     JOIN FETCH r.conditions rc
-    JOIN FETCH rc.device dc
-    WHERE (:isAdmin = true OR (dc.visible = true OR dc.owner.username = :username))
-    AND r.isEnabled = true
+    LEFT JOIN FETCH rc.device dc
+    WHERE r.isEnabled = true
+    AND (
+        rc.type = 'TIME' OR 
+        :isAdmin = true OR 
+        rc.id IN (
+            SELECT c.id
+            FROM Condition c
+            JOIN c.device d
+            WHERE d.visible = true OR d.owner.username = :username
+        )
+    )
 """)
     fun findRulesWithConditions(
         @Param("username") username: String,

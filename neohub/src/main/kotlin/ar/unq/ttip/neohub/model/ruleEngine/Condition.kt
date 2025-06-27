@@ -13,6 +13,7 @@ abstract class Condition(
     @JoinColumn(name = "rule_id")
     var rule: Rule? = null,
 
+    @Enumerated(EnumType.STRING)
     val type: ConditionType,
 ) {
     abstract fun evaluate(): Boolean
