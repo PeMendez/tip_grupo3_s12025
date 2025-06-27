@@ -19,23 +19,23 @@ const RoomDetail = () => {
     const {
         roomName,
         devices,
-        availableDevices,
-        fetchRoom,
-        fetchRoomEdit,
         setDevices,
+        availableDevices,
+        fetchRoomEdit,
         fetchAvailableDevices,
-        deviceAck
+        deviceAck,
+        fetchRoomRole
     } = useRoomData(id);
 
     const {
         toggleLight,
+        setBrightness,
         handleAddDevice,
         handleDeleteDevice,
         handleFactoryReset,
         toast,
         setToast,
-        setBrightness
-    } = useDeviceData(id, fetchRoom, fetchRoomEdit, setDevices, fetchAvailableDevices, deviceAck);
+    } = useDeviceData(id, fetchRoomRole, setDevices);
 
     useEffect(() => {
         const titles = {
@@ -54,14 +54,13 @@ const RoomDetail = () => {
             } else if (mode === 'edit') {
                 await fetchRoomEdit();
             } else if (mode === 'view') {
-                await fetchRoom();
+                await fetchRoomRole();
             }
             setLoading(false);
         };
 
         fetchData();
-    }, [mode, fetchAvailableDevices, fetchRoom, fetchRoomEdit]);
-
+    }, [mode, fetchAvailableDevices, fetchRoomRole, fetchRoomEdit]);
 
     const handleDeviceClick = (device) => {
         if (mode !== 'view') return;
@@ -106,8 +105,13 @@ const RoomDetail = () => {
                         type="device"
                         items={availableDevices}
                         onItemClick={(device) => {
-                            handleAddDevice(device);
-                            setMode('view');
+                            handleAddDevice(device, {
+                                onStart: () => setLoading(true),
+                                onEnd: () => {
+                                    setLoading(false);
+                                    setMode('view');
+                                }
+                            });
                         }}
                         onClose={() => setMode('view')}
                         getIcon={(device) => getDeviceIcon(device.type)}

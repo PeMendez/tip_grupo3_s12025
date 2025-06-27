@@ -103,3 +103,19 @@ input:checked + .slider:before {
     font-size: 36px;
     color: var(--alarm-red);
 }
+
+.marquee-container {
+    width: 110px;
+    overflow: hidden;
+    white-space: nowrap;
+    position: relative;
+}
+
+.marquee {
+    display: inline-block;
+    transition: transform 1.5s ease;
+}
+
+.marquee-container:hover .marquee {
+    transform: translateX(calc(110px - 100%));
+}

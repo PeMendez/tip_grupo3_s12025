@@ -1,15 +1,14 @@
 package ar.unq.ttip.neohub.controller
 
-import ar.unq.ttip.neohub.dto.HomeDTO
-import ar.unq.ttip.neohub.dto.RoomDTO
-import ar.unq.ttip.neohub.dto.RoomRequest
-import ar.unq.ttip.neohub.dto.toDTO
+import ar.unq.ttip.neohub.dto.*
 import ar.unq.ttip.neohub.model.Room
 import ar.unq.ttip.neohub.service.HomeService
 import ar.unq.ttip.neohub.service.UserService
+import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.web.bind.annotation.*
+
 
 @RestController
 @RequestMapping("/home")
@@ -19,9 +18,10 @@ class HomeController(
 ) {
 
     @GetMapping
-    fun getHome(@AuthenticationPrincipal userDetails: UserDetails): HomeDTO? {
+    fun getHome(@AuthenticationPrincipal userDetails: UserDetails): ResponseEntity<HomeDTO?> {
         val user = userService.getUserByUsername(userDetails.username)
-        return homeService.getHomeForUser(user.id).toDTO()
+        val home = homeService.getHomeForUserNulleable(user.id)
+        return ResponseEntity.ok(home?.toDTO())
     }
 
     @GetMapping("/rooms")
@@ -55,6 +55,24 @@ class HomeController(
     ) {
         val user = userService.getUserByUsername(userDetails.username)
         homeService.removeRoomFromHome(user, roomId)
+    }
+
+    @GetMapping("/{homeId}/members")
+    fun getMembers(
+        @AuthenticationPrincipal userDetails: UserDetails,
+        @PathVariable homeId: Long
+    ): List<UserHomeDTO> {
+        return homeService.getAllMembers(homeId);
+    }
+
+    @PutMapping("/{homeId}/members/{userId}")
+    fun deleteMemberFromHome(
+        @PathVariable homeId: Long,
+        @PathVariable userId: Long,
+        @AuthenticationPrincipal userDetails: UserDetails
+    ): ResponseEntity<Void> {
+        homeService.deleteMember(homeId, userId)
+        return ResponseEntity.ok().build()
     }
 
 }

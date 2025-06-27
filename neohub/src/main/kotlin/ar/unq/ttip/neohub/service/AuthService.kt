@@ -65,7 +65,7 @@ class AuthService(
 
                 val userHome = UserHome(user = newUser, home = home, role = Role.USER)
                 home.addUserHome(userHome)
-                homeRepository.save(home)
+                //homeRepository.save(home) esto aca estaba duplicando la relación.
                 userHomeRepository.save(userHome)
             }
 
@@ -74,4 +74,6 @@ class AuthService(
         val token = jwtService.generateToken(newUser.username)
         return LoginResponse(token)
     }
+
+
 }

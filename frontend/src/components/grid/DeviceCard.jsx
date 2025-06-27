@@ -13,7 +13,8 @@ const DeviceCard = ({ device, toggleLight, setBrightness, editMode, onClick, add
         if(editMode || addMode) {
             onClick(device);
         } else {
-            navigate(`/rule/${device.id}`);
+            navigate(`/device/${device.id}`, { state: { device } });
+
         }
     };
 
@@ -40,7 +41,11 @@ const DeviceCard = ({ device, toggleLight, setBrightness, editMode, onClick, add
             <div className={`device-icon ${device.type === 'opening_sensor' && device.status ? 'alarm-active' : ''}`}>
                 {getDeviceIcon(device.type)}
             </div>
-            <span>{device.name}</span>
+            <div className="marquee-container">
+                <div className="marquee">
+                    <span>{device.name}</span>
+                </div>
+            </div>
 
             {renderDeviceControl()}
 

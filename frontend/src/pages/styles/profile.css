@@ -59,7 +59,7 @@
 }
 
 .copy-btn:hover {
-    color: var(--light-grone);
+    color: var(--blue-gray);
 }
 
 .copy-icon {
@@ -91,3 +91,84 @@
     border-radius: 4px;
     font-size: 1rem;
 }
+
+.info-home {
+    margin-top: 2rem;
+}
+
+.home-container {
+    margin-top: 1rem;
+}
+
+.members-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.member-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid var(--ghost-white);
+}
+
+.member-name {
+    font-size: 1rem;
+    color: var(--champagne-pink);
+}
+
+.member-role {
+    font-size: 0.8rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 12px;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.member-role.admin {
+    background-color: var(--rosado);
+    color: var(--majorelle-blue);
+}
+
+.member-role.user {
+    background-color: var(--champagne-pink);
+    color: var(--success-green-dark);
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    justify-content: center;
+}
+
+.tooltip-container {
+    position: relative;
+    display: inline-block;
+    cursor: help;
+}
+
+.tooltip-text {
+    visibility: hidden;
+    width: 120px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 0.85rem;
+    line-height: 1.3;
+}
+
+.tooltip-container:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+
+

@@ -12,9 +12,11 @@ data class DeviceDTO(
     val macAddress : String? = null,
     val roomId : Long?,
     val ownerId : Long?,
+    val owner: String?,
     val temperature: Double? = null,
     val status: Boolean? = null,
-    val brightness: Int? = null
+    val brightness: Int? = null,
+    val visible: Boolean? = null
 )
 
 fun DeviceDTO.toEntity(factory: DeviceFactory): Device {

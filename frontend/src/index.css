@@ -31,4 +31,11 @@ body {
   --champagne-pink: #f2dfd7;
   --ghost-white: #fef9ff;
   --rosado: #ECC6D0;
+  --info-blue: #3498db;
+  --info-blue-dark: #2980b9;
+  --success-green: #2ecc71;
+  --success-green-dark: #27ae60;
+  --error-red: #e74c3c;
+  --error-red-dark: #c0392b;
+  --extra-dark-gay:#333;
 }

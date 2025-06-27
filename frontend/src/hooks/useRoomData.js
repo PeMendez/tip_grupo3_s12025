@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import {getRoomDetails, getRoomDetailsEdit} from "../api/roomService";
+import { getRoomDetailsEdit, getRoomDetailsForRole} from "../api/roomService";
 import {getUnconfiguredDevices } from "../api/deviceService.js"
 
 const useRoomData = (roomId) => {
@@ -10,7 +10,7 @@ const useRoomData = (roomId) => {
     const [error, setError] = useState(null);
     const token = localStorage.getItem('token');
 
-    const fetchRoom = useCallback(async () => {
+   /*const fetchRoom = useCallback(async () => {
         try {
             const {room, ack} = await getRoomDetails(roomId, token);
             setRoomName(room.name || "Habitación sin nombre");
@@ -22,6 +22,24 @@ const useRoomData = (roomId) => {
                 })) : []
             );
             console.log(ack)
+            return { room, ack };
+        } catch (err) {
+            console.error(err);
+            setError("Error al cargar detalles de la habitación");
+        }
+    }, [roomId, token]);*/
+
+    const fetchRoomRole = useCallback(async () => {
+        try {
+            const {room, ack} = await getRoomDetailsForRole(roomId, token);
+            setRoomName(room.name || "Habitación sin nombre");
+            setDevices(room.deviceList || []);
+            setDeviceAck(
+                ack ? Object.entries(ack).map(([deviceId, status]) => ({
+                    deviceId: parseInt(deviceId),
+                    status
+                })) : []
+            );
             return { room, ack };
         } catch (err) {
             console.error(err);
@@ -51,9 +69,9 @@ const useRoomData = (roomId) => {
         }
     }, [token]);
 
-    useEffect(() => {
+   /* useEffect(() => {
         fetchRoom();
-    }, [fetchRoom]);
+    }, [fetchRoom]);*/
 
     useEffect(() => {
         fetchRoomEdit();
@@ -63,16 +81,21 @@ const useRoomData = (roomId) => {
         fetchAvailableDevices();
     }, [fetchAvailableDevices]);
 
+    useEffect(() => {
+        fetchRoomRole();
+    }, [fetchRoomRole]);
+
     return {
         roomName,
         devices,
         availableDevices,
         error,
-        fetchRoom,
+        //fetchRoom,
         fetchRoomEdit,
         fetchAvailableDevices,
         setDevices,
-        deviceAck
+        deviceAck,
+        fetchRoomRole
     };
 };
 

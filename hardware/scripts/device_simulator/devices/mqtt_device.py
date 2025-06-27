@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 import random
 import logging
 from time import time
@@ -243,6 +244,8 @@ class MqttDevice:
                         
                         if command_value == "ack":
                             self._send_ack_response(message_json)
+                        elif command_value == "factory_reset":
+                            self._factory_reset()
                         else:
                             self._handle_device_command(message_json)
                     elif not self.is_configured:
@@ -259,7 +262,6 @@ class MqttDevice:
             self.logger.warning(f"Mensaje recibido en '{msg.topic}' no es JSON válido: '{payload_str}'. Ignorando.")
         except Exception as e:
             self.logger.error(f"Error procesando mensaje en '{msg.topic}': {e}. Payload: '{payload_str}'", exc_info=True)
-
 
     def _handle_device_command(self, command_json: dict):
         """
@@ -291,6 +293,19 @@ class MqttDevice:
         except Exception as e:
             self.logger.error(f"Error al enviar respuesta ACK: {e}")
         
+    def _factory_reset(self):
+        """Resetea el dispositivo borrando toda la configuración"""
+        self.logger.info(f"Iniciando factory reset...")
+        if os.path.exists(self.config_file):
+            try:
+                os.remove(self.config_file)
+                self.logger.info(f"Archivo de configuración borrado.")
+                sys.exit("Terminando el script porque el device fue reseteado.")
+            except OSError as e:
+                self.logger.error(f"Error al borrar archivo de configuración.")
+        else: 
+            self.logger.warning(f"No existe archivo de configuración.")
+        return
 
     def start(self):
         """Conecta al broker MQTT e inicia el bucle del cliente."""

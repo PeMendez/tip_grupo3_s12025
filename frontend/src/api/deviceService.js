@@ -104,9 +104,9 @@ export const getAllDevices = async (token) => {
     }
 };
 
-export const getAllDevicesConfigured = async (token) => {
+export const getAllDevicesConfigured = async (token, role) => {
     try {
-        const response = await axios.get(`${API_URL}/configured`, {
+        const response = await axios.get(`${API_URL}/configured/${role}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -115,5 +115,21 @@ export const getAllDevicesConfigured = async (token) => {
     } catch (e) {
         console.log("Error al obtener los dispositivos configurados:", e);
         throw new Error("No se pudieron obtener los dispositivos configurados");
+    }
+}
+
+export const updateDevice = async (deviceId, updateData, token) => {
+    try {
+        const response = await axios.put(`${API_URL}/${deviceId}`, updateData, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        });
+        console.log(response)
+        return response.data;
+    } catch (e) {
+        console.log("Error al editar el dispositivo", e);
+        throw new Error("No se pudo editar el dispositivo");
     }
 }

@@ -10,4 +10,9 @@ class UserService(private val userRepository: UserRepository) {
         return userRepository.findByUsername(username)
             ?: throw IllegalArgumentException("Usuario no encontrado")
     }
+
+    fun getUserById(id: Long): User {
+        return userRepository.findById(id)
+        .orElseThrow { IllegalArgumentException("Usuario con ID $id no encontrado") }
+    }
 }

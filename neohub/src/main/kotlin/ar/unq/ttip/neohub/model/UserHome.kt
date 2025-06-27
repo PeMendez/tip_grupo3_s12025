@@ -23,9 +23,9 @@ data class UserHome(
     @Column(nullable = false)
     val role: Role // "admin" o "user"
 ){
-    fun toDTO(): UserHomeDTO { //innecesario por ahora
+    fun toDTO(): UserHomeDTO {
         return UserHomeDTO(
-            userId = user!!.id,
+            user = toDTO(user!!),
             homeDTO= home!!.toDTO(),
             role= role.toString()
         )

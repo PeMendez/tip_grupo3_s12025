@@ -15,7 +15,7 @@ const DeleteModal = ({ onConfirm, onCancel, message, type }) => {
                 <p>{message}</p>
                 {type === 'device' && (
                     <div className="styled-checkbox-container">
-                        <label className="styled-checkbox">
+                        <label className="styled-checkbox tooltip-container">
                             <input
                                 type="checkbox"
                                 checked={factoryReset}
@@ -23,11 +23,15 @@ const DeleteModal = ({ onConfirm, onCancel, message, type }) => {
                             />
                             <span className="checkmark"></span>
                             <span className="checkbox-label">Eliminar el dispositivo</span>
+                            <div className="tooltip-text">
+                                Si marcás esta opción, el dispositivo será eliminado completamente del hogar.
+                                Solo se podrá reconfigurar haciendo un factory reset desde el dispositivo físico.
+                            </div>
                         </label>
                     </div>
                 )}
                 <div className="modal-actions">
-                    <TextButton text={"Confirmar"} handleClick={handleConfirm}/>
+                    <TextButton text={"Confirmar"} handleClick={() => handleConfirm(factoryReset)}/>
                     <TextButton text={"Cancelar"} handleClick={onCancel}/>
                 </div>
             </div>

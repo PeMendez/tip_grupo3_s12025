@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import {getAllDevicesConfigured} from '../api/deviceService.js'; //
 import './styles/rule.css'; //
 import TextButton from "./TextButton.jsx"; //
+import { useAuth } from "../contexts/AuthContext";
 
 // Importa los nuevos hooks
 import useDeviceAttributes from '../hooks/useDeviceAttributes';
@@ -16,6 +17,7 @@ const RuleFormPopup = ({ onClose, onCreate, device: initialDevice }) => { // Ren
     const [conditionDevice, setConditionDevice] = useState(initialDevice || null); //
     const [actionDevice, setActionDevice] = useState(null); //
 
+    const { role } = useAuth();
     const token = localStorage.getItem('token');
 
     const [cond, setCond] = useState({ //
@@ -86,7 +88,7 @@ const RuleFormPopup = ({ onClose, onCreate, device: initialDevice }) => { // Ren
     useEffect(() => { //
         const fetchDevices = async () => { //
             try { //
-                const devicesData = await getAllDevicesConfigured(token); //
+                const devicesData = await getAllDevicesConfigured(token, role.toString()); //
                 setDevices(devicesData); //
             } catch (err) { //
                 console.log('No se pudieron obtener los dispositivos disponibles.', err); //

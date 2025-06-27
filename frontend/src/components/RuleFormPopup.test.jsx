@@ -1,12 +1,46 @@
 import {test} from "vitest";
 import {render, screen, fireEvent, waitFor} from '@testing-library/react';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import RuleFormPopup from './RuleFormPopup';
+
+// Mockea los módulos una sola vez al principio del archivo de test.
+// Vitest elevará (hoist) estos mocks.
+vi.mock('../api/deviceService.js');
+vi.mock('../hooks/useDeviceAttributes.js');
+vi.mock('../hooks/useAttributeOperators.js');
+vi.mock('../hooks/useDeviceActions.js');
+vi.mock('../contexts/AuthContext', () => ({
+    __esModule: true,
+    useAuth: vi.fn(() => ({ role: 'ADMIN' })),
+}));
+
+// Importa los módulos mockeados DESPUÉS de llamar a vi.mock
+import { getAllDevicesConfigured } from '../api/deviceService.js';
+import useDeviceAttributes from '../hooks/useDeviceAttributes.js';
+import useAttributeOperators from "../hooks/useAttributeOperators.js";
+import useDeviceActions from "../hooks/useDeviceActions.js";
 
 describe('RuleFormPopup Component', () => {
     it('muestra errores al intentar enviar el formulario sin nombre de regla', () => {
         const onClose = vi.fn();
         const onCreate = vi.fn();
+
+        getAllDevicesConfigured.mockResolvedValue([]);
+
+        useDeviceAttributes.mockReturnValue({
+            attributes: [],
+            loading: false,
+        });
+
+        useAttributeOperators.mockReturnValue({
+            operators: [],
+            loading: false,
+        });
+
+        useDeviceActions.mockReturnValue({
+            actions: [],
+            loading: false,
+        })
         // Arrange
         // Renderizar el componente
         render(<RuleFormPopup onClose={onClose} onCreate={onCreate} />);
@@ -29,6 +63,23 @@ describe('RuleFormPopup Component', () => {
     it('muestra errores si se completa el nombre solamente', () => {
         const onClose = vi.fn();
         const onCreate = vi.fn();
+
+        getAllDevicesConfigured.mockResolvedValue([]);
+
+        useDeviceAttributes.mockReturnValue({
+            attributes: [],
+            loading: false,
+        });
+
+        useAttributeOperators.mockReturnValue({
+            operators: [],
+            loading: false,
+        });
+
+        useDeviceActions.mockReturnValue({
+            actions: [],
+            loading: false,
+        })
 
         // Renderizar el componente
         render(<RuleFormPopup onClose={onClose} onCreate={onCreate} />);
@@ -56,8 +107,28 @@ describe('RuleFormPopup Component', () => {
         const onClose = vi.fn();
         const onCreate = vi.fn();
 
-        vi.mock('../api/deviceService.js', () => ({
-            getAllDevices: vi.fn(() =>
+        getAllDevicesConfigured.mockResolvedValue([
+            { id: 1, name: 'Sensor de Temperatura' },
+            { id: 2, name: 'Lámpara Inteligente' },
+        ]);
+
+        useDeviceAttributes.mockReturnValue({
+            attributes: [],
+            loading: false,
+        });
+
+        useAttributeOperators.mockReturnValue({
+            operators: [],
+            loading: false,
+        });
+
+        useDeviceActions.mockReturnValue({
+            actions: [],
+            loading: false,
+        })
+
+        vi.mock("../api/deviceService.js", () => ({
+            getAllDevicesConfigured: vi.fn(() =>
                 Promise.resolve([
                     { id: 1, name: 'Sensor de Temperatura' },
                     { id: 2, name: 'Lámpara Inteligente' },
@@ -99,133 +170,85 @@ describe('RuleFormPopup Component', () => {
         expect(onCreate).not.toHaveBeenCalled();
     });
 
-    it('muestra errores si se completan nombre, dispositivo, atributo de la condicion', async () => {
+    it('muestra errores si se completan nombre, dispositivo y atributo de la condicion', async () => {
         const onClose = vi.fn();
         const onCreate = vi.fn();
 
-        vi.mock('../api/deviceService.js', () => ({
-            getAllDevices: vi.fn(() =>
-                Promise.resolve([
-                    { id: 1, name: 'Sensor de Temperatura', type: 'temperature_sensor' },
-                    { id: 2, name: 'Lámpara Inteligente', type: 'dimmer' },
-                ])
-            ),
-        }));
+        // Configura el comportamiento de los mocks para ESTE test en específico.
+        getAllDevicesConfigured.mockResolvedValue([
+            { id: 1, name: 'Sensor de Temperatura', type: 'TEMPERATURE_SENSOR' },
+            { id: 2, name: 'Lámpara Inteligente', type: 'DIMMER' },
+        ]);
 
-        vi.mock('../hooks/useDeviceAttributes', () => ({
-            __esModule: true,
-            default: vi.fn((deviceType, token) => {
-                console.log('Mock useDeviceAttributes called with:', deviceType);
-                return {
-                    attributes:
-                        [{ value: 'TEMPERATURE', label: 'Temperatura' }],
-                    loading: false,
-                };
-            }),
-        }));
+        useDeviceAttributes.mockReturnValue({
+            attributes: [{ value: 'TEMPERATURE', label: 'Temperatura' }],
+            loading: false,
+        });
 
-        // Renderizar el componente
-        render(<RuleFormPopup onClose={onClose} onCreate={onCreate}/>);
+        // Renderiza el componente
+        render(<RuleFormPopup onClose={onClose} onCreate={onCreate} />);
 
-        //Esperar que se carguen los dispositivos
+        // Espera a que los dispositivos se carguen
         await waitFor(() => {
             expect(screen.getByTestId('condDevice')).toBeInTheDocument();
         });
 
-        // Simular que el usuario escribe un nombre en el campo de entrada
+        // Simula la interacción del usuario
         const nameInput = screen.getByTestId("nombreRegla");
-        fireEvent.change(nameInput, {target: {value: 'Regla 1'}});
+        fireEvent.change(nameInput, { target: { value: 'Regla 1' } });
 
-        // Asegurarse de que el valor ha cambiado
-        expect(nameInput.value).toBe('Regla 1');
+        const deviceSelect = screen.getByTestId("condDevice");
+        fireEvent.change(deviceSelect, { target: { value: '1' } });
 
-        // Simular que el usuario selecciona un dispositivo para la condición
-        const deviceSelect = screen.getByTestId("condDevice"); // Ajusta el selector si el label es diferente
-        fireEvent.change(deviceSelect, {target: {value: '1'}});
-
-        // Asegurarse de que el valor del dispositivo ha cambiado
-        expect(deviceSelect.value).toBe('1');
-
-        //Esperar a que los atributos se carguen
-        await waitFor(()=>{
-            expect(screen.getByTestId("attributeSelect"));
+        // Espera a que los atributos aparezcan después de seleccionar el dispositivo
+        await waitFor(() => {
+            expect(screen.getByTestId("attributeSelect")).toBeInTheDocument();
         });
 
-        // Simular la selección de un atributo
+        // Selecciona el atributo
         const attributeSelect = screen.getByTestId('attributeSelect');
-        fireEvent.change(attributeSelect, { target: { value: 'TEMPERATURE' } }); // Selecciona "Temperatura"
+        fireEvent.change(attributeSelect, { target: { value: 'TEMPERATURE' } });
 
-        // Verificar que el atributo seleccionado es correcto
+        // Verifica que el valor es el correcto
         expect(attributeSelect.value).toBe('TEMPERATURE');
 
-        // Hacer clic en el botón "Crear"
+        // Intenta crear la regla
         const createButton = screen.getByTestId('crear');
         fireEvent.click(createButton);
 
-        // Verificar que se muestran los mensajes de error
-        expect(screen.getByText('Seleccioná un operador')).toBeInTheDocument();
-
-        // Verificar que no se llamó a onCreate porque aún hay errores
+        // Verifica el mensaje de error esperado
+        expect(await screen.findByText('Seleccioná un operador')).toBeInTheDocument();
         expect(onCreate).not.toHaveBeenCalled();
     });
 
     it('regla creada correctamente con sensor temp y dimmer', async () => {
+        console.log("Arrange");
         const onClose = vi.fn();
         const onCreate = vi.fn();
 
-        vi.mock('../api/deviceService.js', () => ({
-            getAllDevices: vi.fn(() =>
-                Promise.resolve([
-                    { id: 1, name: 'Sensor de Temperatura', type: 'temperature_sensor' },
-                    { id: 2, name: 'Lámpara Inteligente', type: 'dimmer' },
-                ])
-            ),
-        }));
+        getAllDevicesConfigured.mockResolvedValue([
+            { id: 1, name: 'Sensor de Temperatura', type: 'TEMPERATURE_SENSOR' },
+            { id: 2, name: 'Lámpara Inteligente', type: 'DIMMER' },
+        ]);
 
-        vi.mock('../hooks/useDeviceAttributes', () => ({
-            __esModule: true,
-            default: vi.fn((deviceType, token) => {
-                console.log('Mock useDeviceAttributes called with:', deviceType);
-                let attributes = [{ value: 'TEMPERATURE', label: 'Temperatura' }];
-                return {
-                    attributes: attributes,
-                    loading: false,
-                };
-            }),
-        }));
+        useDeviceAttributes.mockReturnValue({
+            attributes: [{ value: 'TEMPERATURE', label: 'Temperatura' }],
+            loading: false,
+        });
 
-        vi.mock('../hooks/useAttributeOperators', () => ({
-            __esModule: true,
-            default: vi.fn((attribute, token) => {
-                console.log('Mock useAttributeOperators called with:', attribute);
+        useAttributeOperators.mockReturnValue({
+            operators: [
+                { value: '>', label: 'Mayor que' },
+                { value: '<', label: 'Menor que' },
+                { value: '=', label: 'Igual a' },
+            ],
+            loading: false,
+        });
 
-                let operators = [];
-                if (attribute === 'TEMPERATURE') {
-                    operators = [
-                        { value: '>', label: 'Mayor que' },
-                        { value: '<', label: 'Menor que' },
-                        { value: '=', label: 'Igual a' },
-                    ];
-                }
-                return {
-                    operators,
-                    loading: false,
-                };
-            }),
-        }));
-
-        vi.mock('../hooks/useDeviceActions', () => ({
-            __esModule: true,
-            default: vi.fn((deviceType, token) => {
-                console.log('Mock useDeviceActions called with:', deviceType);
-                let actions = [{ value: 'SET_BRIGHTNESS', label: 'Ajustar Brillo' },];
-                return {
-                    actions,
-                    loading: false,
-                };
-            }),
-        }));
-
+        useDeviceActions.mockReturnValue({
+            actions: [{ value: 'SET_BRIGHTNESS', label: 'Ajustar Brillo' },],
+            loading: false,
+        })
 
         // Renderizar el componente
         render(<RuleFormPopup onClose={onClose} onCreate={onCreate}/>);
@@ -313,60 +336,30 @@ describe('RuleFormPopup Component', () => {
         const onClose = vi.fn();
         const onCreate = vi.fn();
 
-        vi.mock('../api/deviceService.js', () => ({
-            getAllDevices: vi.fn(() =>
-                Promise.resolve([
-                    { id: 1, name: 'Sensor de Ventana', type: 'opening_sensor' },
-                    { id: 2, name: 'Enchufe Inteligente', type: 'smart_outlet' },
-                ])
-            ),
-        }));
+        getAllDevicesConfigured.mockResolvedValue([
+            { id: 1, name: 'Sensor de Ventana', type: 'opening_sensor' },
+            { id: 2, name: 'Enchufe Inteligente', type: 'smart_outlet' },
+        ]);
 
-        vi.mock('../hooks/useDeviceAttributes', () => ({
-            __esModule: true,
-            default: vi.fn((deviceType, token) => {
-                console.log('Mock useDeviceAttributes called with:', deviceType);
-                let attributes = [{ value: 'IS_OPEN', label: 'Está' }];
-                return {
-                    attributes: attributes,
-                    loading: false,
-                };
-            }),
-        }));
+        useDeviceAttributes.mockReturnValue({
+            attributes: [{ value: 'IS_OPEN', label: 'Está' }],
+            loading: false,
+        });
 
-        vi.mock('../hooks/useAttributeOperators', () => ({
-            __esModule: true,
-            default: vi.fn((attribute, token) => {
-                console.log('Mock useAttributeOperators called with:', attribute);
+        useAttributeOperators.mockReturnValue({
+            operators: [
+                { value: '=', label: 'Igual a' },
+            ],
+            loading: false,
+        });
 
-                let operators = [];
-                if (attribute === 'IS_OPEN') {
-                    operators = [
-                        { value: '=', label: 'Igual a' },
-                    ];
-                }
-                return {
-                    operators,
-                    loading: false,
-                };
-            }),
-        }));
-
-        vi.mock('../hooks/useDeviceActions', () => ({
-            __esModule: true,
-            default: vi.fn((deviceType, token) => {
-                console.log('Mock useDeviceActions called with:', deviceType);
-                let actions = [
-                    { value: 'TURN_ON', label: 'Encender' },
-                    { value: 'TURN_OFF', label: 'Apagar' },
-                ];
-                return {
-                    actions,
-                    loading: false,
-                };
-            }),
-        }));
-
+        useDeviceActions.mockReturnValue({
+            actions: [
+                { value: 'TURN_ON', label: 'Encender' },
+                { value: 'TURN_OFF', label: 'Apagar' },
+            ],
+            loading: false,
+        })
 
         // Renderizar el componente
         render(<RuleFormPopup onClose={onClose} onCreate={onCreate}/>);
@@ -443,7 +436,6 @@ describe('RuleFormPopup Component', () => {
         // Verificar que se llamó a onCreate porque no hay errores
         expect(onCreate).toHaveBeenCalled();
     });
-
 });
 
 

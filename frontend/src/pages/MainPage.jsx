@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getHome, addRoom, deleteRoom } from '../api/homeService2.js';
+import { getHome, addRoom, deleteRoom } from '../api/homeService.js';
 import GridView from '../components/grid/GridView';
 import RoundButton from '../components/RoundButton';
 import TextButton from '../components/TextButton';
@@ -14,6 +14,8 @@ import salaImg from '../assets/salaDeJuegos.jpg'
 import './styles/mainPage.css';
 import usePushNotifications from "../hooks/usePushNotifications.js";
 import {useTitle} from "../contexts/TitleContext.jsx";
+import { useAuth } from "../contexts/AuthContext";
+import {getUserRoleInCurrentHome} from "../api/userHomeService.js";
 
 const roomImages = {
     'Cocina': cocinaImg,
@@ -27,12 +29,13 @@ const roomImages = {
 
 const MainPage = () => {
     const [rooms, setRooms] = useState([]);
-    const [mode, setMode] = useState('view'); // 'view' | 'add' | 'edit'
+    const [mode, setMode] = useState('view'); // 'view' | 'add' | 'edit' | 'noHome'
     const navigate = useNavigate();
     const token = localStorage.getItem('token');
     const {isSubscribed,error} = usePushNotifications(); //Sin esto no andan las push
     //usar el flag y el msg error para mostrar un toast?
     const {setHeaderTitle} = useTitle();
+    const { setRole } = useAuth();
 
     useEffect(() => {
         const titles = {
@@ -47,7 +50,15 @@ const MainPage = () => {
         const fetchRooms = async () => {
             try {
                 const fetchedRooms = await getHome(token);
+
+                if (!fetchedRooms) {
+                    setMode('noHome');
+                    return;
+                }
                 setRooms(fetchedRooms.rooms || []);
+                const response = await getUserRoleInCurrentHome(fetchedRooms.id, token)
+                setRole(response);
+                console.log(home)
             } catch (error) {
                 console.error("Error al obtener habitaciones", error);
             }
@@ -75,6 +86,10 @@ const MainPage = () => {
             console.error("Error al eliminar habitación", error);
         }
     };
+
+    if (mode === 'noHome') {
+        navigate('/noHome');
+    }
 
     if (mode === 'add') {
         return (

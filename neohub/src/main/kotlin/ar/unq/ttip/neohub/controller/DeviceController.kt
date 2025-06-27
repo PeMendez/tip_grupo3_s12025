@@ -2,6 +2,7 @@ package ar.unq.ttip.neohub.controller
 
 import ar.unq.ttip.neohub.dto.DeviceDTO
 import ar.unq.ttip.neohub.dto.DeviceMessageRequest
+import ar.unq.ttip.neohub.dto.DeviceUpdateDTO
 import ar.unq.ttip.neohub.service.DeviceService
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -38,9 +39,12 @@ class DeviceController(
         return deviceService.getUnconfiguredDevices()
     }
 
-    @GetMapping("/configured")
-    fun getConfiguredDevices(): List<DeviceDTO> {
-        return deviceService.getConfiguredDevices()
+    @GetMapping("/configured/{role}")
+    fun getConfiguredDevices(
+        @AuthenticationPrincipal userDetails: UserDetails,
+        @PathVariable role: String,
+    ): List<DeviceDTO> {
+        return deviceService.getConfiguredDevices(role, userDetails.username)
     }
 
     @GetMapping("/configuredCount")
@@ -67,5 +71,15 @@ class DeviceController(
         //editar la clase DeviceMessageRequest si necesitamos que mande mas cosas
         deviceService.sendCommand(deviceId, messageRequest.message, messageRequest.parameter)
         return ResponseEntity.ok().build()
+    }
+
+    @PutMapping("/{deviceId}")
+    fun updateDevice(
+        @PathVariable deviceId: Long,
+        @RequestBody update: DeviceUpdateDTO,
+        @AuthenticationPrincipal userDetails: UserDetails
+    ): DeviceDTO {
+        val username = userDetails.username
+        return deviceService.updateDevice(deviceId, update, username)
     }
 }

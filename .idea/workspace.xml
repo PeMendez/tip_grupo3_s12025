@@ -5,78 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="09bf219a-ddab-407c-b6b8-1beb0e5da310" name="Changes" comment="fix visuales">
-      <change afterPath="$PROJECT_DIR$/frontend/src/pages/Profile.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/pages/styles/profile.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/Header.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Header.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/RegisterPopup.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/RegisterPopup.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/dto/HomeDTO.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/dto/HomeDTO.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/dto/UserDTO.kt" beforeDir="false" afterPath="$PROJECT_DIR$/neohub/src/main/kotlin/ar/unq/ttip/neohub/dto/UserDTO.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/.package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/.package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/@remix-run/router/CHANGELOG.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/@remix-run/router/LICENSE.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/@remix-run/router/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/@remix-run/router/dist/history.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/@remix-run/router/dist/index.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/@remix-run/router/dist/router.cjs.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/@remix-run/router/dist/router.cjs.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/@remix-run/router/dist/router.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/@remix-run/router/dist/router.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/@remix-run/router/dist/router.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/@remix-run/router/dist/router.umd.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/@remix-run/router/dist/router.umd.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/@remix-run/router/dist/router.umd.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/@remix-run/router/dist/router.umd.min.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/@remix-run/router/dist/utils.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/@remix-run/router/history.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/@remix-run/router/index.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/@remix-run/router/package.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/@remix-run/router/router.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/@remix-run/router/utils.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router-dom/CHANGELOG.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router-dom/LICENSE.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router-dom/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router-dom/dist/dom.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router-dom/dist/index.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router-dom/dist/index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router-dom/dist/index.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router-dom/dist/main.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router-dom/dist/react-router-dom.development.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router-dom/dist/react-router-dom.development.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router-dom/dist/react-router-dom.production.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router-dom/dist/react-router-dom.production.min.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router-dom/dist/server.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router-dom/dist/server.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router-dom/dist/server.mjs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router-dom/dist/umd/react-router-dom.development.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router-dom/dist/umd/react-router-dom.development.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router-dom/dist/umd/react-router-dom.production.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router-dom/dist/umd/react-router-dom.production.min.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router-dom/package.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router-dom/server.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router-dom/server.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router-dom/server.mjs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router/CHANGELOG.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router/LICENSE.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router/dist/index.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router/dist/index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router/dist/index.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router/dist/lib/components.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router/dist/lib/context.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router/dist/lib/deprecations.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router/dist/lib/hooks.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router/dist/main.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router/dist/react-router.development.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router/dist/react-router.development.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router/dist/react-router.production.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router/dist/react-router.production.min.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router/dist/umd/react-router.development.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router/dist/umd/react-router.development.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router/dist/umd/react-router.production.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router/dist/umd/react-router.production.min.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/react-router/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/grid/GridView.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/grid/GridView.jsx" afterDir="false" />
     </list>
     <list id="c93fa67c-d594-4956-a819-2b86e3ca1c3c" name="Changes by Martin" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -88,13 +18,13 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Class" />
-        <option value="Kotlin Interface" />
         <option value="Kotlin Enum" />
-        <option value="Kotlin Class" />
         <option value="Kotlin File" />
+        <option value="Kotlin Interface" />
         <option value="JavaScript File" />
-        <option value="JSX File" />
         <option value="CSS File" />
+        <option value="JSX File" />
+        <option value="Kotlin Class" />
       </list>
     </option>
   </component>
@@ -115,38 +45,40 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Spring Boot.NeohubApplication.executor": "Run",
-    "git-widget-placeholder": "feature/register",
-    "javascript.nodejs.core.library.configured.version": "22.14.0",
-    "javascript.nodejs.core.library.typings.version": "22.13.17",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/Peque/IdeaProjects/UNQ-epers",
-    "list.type.of.created.stylesheet": "CSS",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Libraries",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\IntelliJ IDEA 2024.2.1\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Spring Boot.NeohubApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Vitest.RuleFormPopup Component.muestra errores si se completan nombre, dispositivo, atributo de la condicion.executor&quot;: &quot;Run&quot;,
+    &quot;Vitest.RuleFormPopup.test.jsx.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/permissions&quot;,
+    &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;22.14.0&quot;,
+    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;22.13.17&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Peque/IdeaProjects/UNQ-epers&quot;,
+    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\IntelliJ IDEA 2024.2.1\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "mysql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Peque\IdeaProjects\tip_grupo3_s12025\frontend\src\assets" />
@@ -166,7 +98,31 @@
       <recent name="ar.unq.ttip.neohub.model" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Spring Boot.NeohubApplication">
+    <configuration name="RuleFormPopup Component.muestra errores si se completan nombre, dispositivo, atributo de la condicion" type="JavaScriptTestRunnerVitest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <vitest-package value="$PROJECT_DIR$/frontend/node_modules/vitest" />
+      <working-dir value="$PROJECT_DIR$/frontend" />
+      <vitest-options value="--run" />
+      <envs />
+      <scope-kind value="TEST" />
+      <test-file value="$PROJECT_DIR$/frontend/src/components/RuleFormPopup.test.jsx" />
+      <test-names>
+        <test-name value="RuleFormPopup Component" />
+        <test-name value="muestra errores si se completan nombre, dispositivo, atributo de la condicion" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="RuleFormPopup.test.jsx" type="JavaScriptTestRunnerVitest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <vitest-package value="$PROJECT_DIR$/frontend/node_modules/vitest" />
+      <working-dir value="$PROJECT_DIR$/frontend" />
+      <vitest-options value="--run" />
+      <envs />
+      <scope-kind value="TEST_FILE" />
+      <test-file value="$PROJECT_DIR$/frontend/src/components/RuleFormPopup.test.jsx" />
+      <method v="2" />
+    </configuration>
     <configuration name="NeohubApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <option name="envFilePaths">
         <option value="$PROJECT_DIR$/neohub/src/main/resources/.env" />
@@ -181,6 +137,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Vitest.RuleFormPopup Component.muestra errores si se completan nombre, dispositivo, atributo de la condicion" />
+        <item itemvalue="Vitest.RuleFormPopup.test.jsx" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -228,7 +190,13 @@
       <workItem from="1749249788911" duration="35626000" />
       <workItem from="1749336582186" duration="11251000" />
       <workItem from="1749404433717" duration="21151000" />
-      <workItem from="1749744447841" duration="16998000" />
+      <workItem from="1749744447841" duration="24396000" />
+      <workItem from="1749852755491" duration="23926000" />
+      <workItem from="1749905716237" duration="19716000" />
+      <workItem from="1749939847637" duration="38002000" />
+      <workItem from="1750430265838" duration="7976000" />
+      <workItem from="1750462161520" duration="12067000" />
+      <workItem from="1750520482266" duration="2983000" />
     </task>
     <task id="LOCAL-00001" summary="fix visuales">
       <option name="closed" value="true" />

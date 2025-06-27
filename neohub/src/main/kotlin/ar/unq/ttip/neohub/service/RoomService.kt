@@ -17,6 +17,7 @@ class RoomService(
     private val homeRepository: HomeRepository,
     private val mqttService: MqttService,
     private val deviceService: DeviceService,
+    private val userService: UserService,
 ) {
     private val ackTimeoutMillis: Long = 2400
 
@@ -25,8 +26,32 @@ class RoomService(
             .orElseThrow { RuntimeException("Habitación no encontrada") }
     }
 
-    fun sendAckToDevices(roomId: Long): Map<Long, Boolean> {
+    @Transactional
+    fun getRoomDetailsForUser(roomId: Long, username: String): Room {
+        val user = userService.getUserByUsername(username)
+        /*val room = roomRepository.findById(roomId)
+           .orElseThrow { RuntimeException("Habitación no encontrada") } */
         val room = getRoomDetails(roomId)
+        if (!room.home!!.getAdmins().contains(user)) { //si no es admin
+            room.deviceList = room.deviceList.filter { device ->
+                device.visible || device.owner!!.username == username
+            }.toMutableList()
+        }
+
+        return room
+    }
+
+
+    fun sendAckToDevices(roomId: Long, username: String): Map<Long, Boolean> {
+        val user = userService.getUserByUsername(username)
+        val room = getRoomDetails(roomId)
+
+        if (!room.home!!.getAdmins().contains(user)) { //si no es admin
+            room.deviceList = room.deviceList.filter { device ->
+                device.visible || device.owner!!.username == username
+            }.toMutableList()
+        }
+
         val futures = room.deviceList.associate { device ->
             val future = mqttService.registerAckFuture(device.id)
             // mqttService.publish("${device.topic}/command", """{"command": "ack"}""")
@@ -45,11 +70,12 @@ class RoomService(
 
 
     @Transactional
-    fun addDeviceToRoom(roomId: Long, deviceId: Long): Room {
-        //val room = roomRepository.findById(roomId).orElseThrow { RuntimeException("Room not found") }
+    fun addDeviceToRoom(roomId: Long, deviceId: Long, username: String): Room {
+        val user = userService.getUserByUsername(username)
         val room = getRoomDetails(roomId)
-        //val device = deviceRepository.findById(deviceId).orElseThrow { RuntimeException("Device not found") }
         val device = deviceService.getDeviceEntityById(deviceId)
+
+        device.owner = user
 
         room.addDevice(device)
 
@@ -63,12 +89,13 @@ class RoomService(
 
     @Transactional
     fun removeDeviceFromRoom(deviceId: Long, roomId: Long) : Room {
-        val targetRoom = roomRepository.findById(roomId)
-            .orElseThrow { RuntimeException("Room not found") }
+
+        val targetRoom = getRoomDetails(roomId)
         val targetDevice = deviceService.getDeviceEntityById(deviceId)
 
-        // Eliminar el dispositivo de la lista del cuarto
+        targetDevice.owner = null;
 
+        // Eliminar el dispositivo de la lista del cuarto
         mqttService.publishConfiguration(targetDevice, unconfigure = true)
         mqttService.unregisterDevice(targetDevice)
 
@@ -87,4 +114,5 @@ class RoomService(
         homeRepository.save(home)
         return newRoom.toDTO()
     }
+
 }

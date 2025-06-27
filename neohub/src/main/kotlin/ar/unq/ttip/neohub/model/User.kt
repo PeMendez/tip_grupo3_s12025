@@ -26,5 +26,11 @@ data class User(
         userHomes.add(userHome)
         userHome.user = this
     }
+
+    override fun toString(): String {
+        return "User(id=$id, username='$username', enabled=$enabled)"
+    }
+
+
 }
 

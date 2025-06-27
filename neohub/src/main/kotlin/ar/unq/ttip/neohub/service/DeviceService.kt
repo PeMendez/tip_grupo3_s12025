@@ -3,7 +3,9 @@ package ar.unq.ttip.neohub.service
 import ar.unq.ttip.neohub.dto.DeviceCommand
 import ar.unq.ttip.neohub.dto.DeviceDTO
 import ar.unq.ttip.neohub.dto.DeviceData
+import ar.unq.ttip.neohub.dto.DeviceUpdateDTO
 import ar.unq.ttip.neohub.model.Device
+import ar.unq.ttip.neohub.model.User
 import ar.unq.ttip.neohub.model.devices.DeviceFactory
 import ar.unq.ttip.neohub.model.devices.DeviceType
 import ar.unq.ttip.neohub.repository.DeviceRepository
@@ -18,7 +20,7 @@ class DeviceService(
     private val mqttService: MqttService,
     private val repository: DeviceRepository,
     private val factory: DeviceFactory,
-    private val objectMapper: ObjectMapper = jacksonObjectMapper()
+    private val objectMapper: ObjectMapper = jacksonObjectMapper(),
 ) {
 
     @EventListener
@@ -30,12 +32,17 @@ class DeviceService(
         val deviceData : DeviceData = objectMapper.readValue(message, DeviceData::class.java)
         val type = DeviceType.fromString(deviceData.type)
         val name = deviceData.name
-
-        val newDevice = factory.createDevice(name, type)
-        newDevice.macAddress=(deviceData.mac_address)
-
-        repository.save(newDevice)
-        return newDevice.toDTO()
+        val existing = repository.findByMacAddress(deviceData.mac_address)
+        if (existing == null){
+            println("Device $name not found")
+            val newDevice = factory.createDevice(name, type)
+            newDevice.macAddress=(deviceData.mac_address)
+            repository.save(newDevice)
+            return newDevice.toDTO()
+        } else {
+            println("El dispositivo ${existing.name} ya existe!")
+            return existing.toDTO()
+        }
     }
 
     fun registerDeviceOnMqtt(device: Device) {
@@ -46,6 +53,7 @@ class DeviceService(
         val device = repository.findById(deviceId).orElseThrow {
             IllegalArgumentException("Device with ID $deviceId not found.")
         }
+        println("Desregistrando dispositivo ${device.name}")
         mqttService.unregisterDevice(device)
     }
 
@@ -94,6 +102,7 @@ class DeviceService(
         }
         return device.toDTO()
     }
+
     fun getDeviceEntityById(id: Long): Device {
         val device = repository.findById(id).orElseThrow {
             IllegalArgumentException("Device with ID $id not found.")
@@ -106,18 +115,49 @@ class DeviceService(
         return devices.map { it.toDTO() }
     }
 
+    fun getAllDevicesForUser(user: User) : List<Device> {
+        //val devices = repository.findAll()
+        //val devicesOfUser = devices.filter {device -> device.owner == user}
+        val devicesOfUser = repository.findByOwnerId(user.id)
+        println("Se encontraron ${devicesOfUser.size} devices para ${user.username}")
+        return devicesOfUser
+    }
+
     fun getUnconfiguredDevices(): List<DeviceDTO> {
         return repository.findByRoomIsNull().map { it.toDTO() }
     }
 
-    fun getConfiguredDevices(): List<DeviceDTO> {
-        return repository.findByRoomIsNotNull().map {it.toDTO() }
+    fun getConfiguredDevices(role: String, username: String): List<DeviceDTO> {
+
+        if(role == "ADMIN"){
+            return repository.findByRoomIsNotNull().map {it.toDTO() }
+        } else {
+            return repository.findByRoomIsNotNull().filter { device ->
+                device.visible || device.owner!!.username == username
+            }.map {it.toDTO() }
+        }
     }
 
     fun countConfiguredDevices(): Long{
         val count = repository.countConfiguredDevices()
         println("countConfiguredDevices: $count")
         return count
+    }
+
+    fun updateDevice(deviceId: Long, update: DeviceUpdateDTO, username: String): DeviceDTO {
+        val device = repository.findById(deviceId).orElseThrow {
+            throw IllegalArgumentException("Dispositivo no encontrado")
+        }
+
+        if (device.owner!!.username != username) {
+            throw IllegalAccessException("No sos el dueño del dispositivo")
+        }
+
+        update.name?.let { device.name = it }
+        update.visible?.let { device.visible = it }
+
+        val updated = repository.save(device)
+        return updated.toDTO()
     }
 }
 

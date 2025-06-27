@@ -58,7 +58,7 @@ class SmartOutlet(
             ActionType.TURN_ON -> setOutletStatus("true")
             ActionType.TURN_OFF -> setOutletStatus("false")
             else -> {
-                throw UnsupportedOperationException("El Dimmer no soporta la acción: $actionType")
+                throw UnsupportedOperationException("El SmartOutlet no soporta la acción: $actionType")
             }
         }
     }

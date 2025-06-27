@@ -33,7 +33,7 @@ class RoomController(
         @AuthenticationPrincipal userDetails: UserDetails,
         @PathVariable roomId: Long): ResponseEntity<AckResponse> {
         return try {
-            val ackStatus = roomService.sendAckToDevices(roomId)
+            val ackStatus = roomService.sendAckToDevices(roomId, userDetails.username)
             ResponseEntity.ok(AckResponse(success = true, data = ackStatus))
         } catch (e: Exception) {
             ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
@@ -48,7 +48,8 @@ class RoomController(
         @PathVariable roomId: Long,
         @PathVariable deviceId: Long // PARA AGREGARLO A UN ROOM, YA TIENE QUE EXISTIR.
     ): ResponseEntity<RoomDTO> {
-        val room = roomService.addDeviceToRoom(roomId, deviceId)
+        val username = userDetails.username
+        val room = roomService.addDeviceToRoom(roomId, deviceId, username)
         ruleService.enableRulesForDevice(deviceId)
         return ResponseEntity.ok(room.toDTO())
     }
@@ -70,12 +71,20 @@ class RoomController(
         @PathVariable roomId: Long,
         @PathVariable deviceId: Long
     ): ResponseEntity<RoomDTO> {
+        deviceService.sendCommand(deviceId,"factory_reset")
         ruleService.deleteAllRulesForDevice(deviceId)
         val room = roomService.removeDeviceFromRoom(deviceId, roomId)
         deviceService.deleteDevice(deviceId)
         return ResponseEntity.ok(room.toDTO())
     }
 
+    @GetMapping("/devices/{roomId}")
+    fun getRoomDetailsForRol(
+        @AuthenticationPrincipal userDetails: UserDetails,
+        @PathVariable roomId: Long): ResponseEntity<RoomDTO> {
+        val room = roomService.getRoomDetailsForUser(roomId, userDetails.username)
+        return ResponseEntity.ok(room.toDTO())
+    }
 
 }
 

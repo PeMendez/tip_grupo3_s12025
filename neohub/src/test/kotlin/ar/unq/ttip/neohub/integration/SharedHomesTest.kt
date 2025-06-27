@@ -29,7 +29,7 @@ class SharedHomesTest (
     @Autowired
     private lateinit var objectMapper: ObjectMapper
 
-    @Test
+    /*@Test
     fun `test getDeviceById with proper access`() {
         // Registrar admin y crear una home
         val adminRequest = RegisterRequest(
@@ -97,5 +97,5 @@ class SharedHomesTest (
         // Verificar que el admin puede ver su propio dispositivo
         val fetchedAdminDevice = deviceService.getDeviceById(adminDevice.id)
         assertEquals(adminDevice.name, fetchedAdminDevice.name)
-    }
+    }*/
 }

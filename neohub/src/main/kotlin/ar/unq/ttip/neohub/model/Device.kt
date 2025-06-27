@@ -8,7 +8,7 @@ import jakarta.persistence.*
 @Inheritance(strategy = InheritanceType.JOINED)
 abstract class Device(
     @Id @GeneratedValue val id: Long = 0,
-    val name: String,
+    var name: String,
     @Enumerated(EnumType.STRING)
     val type: DeviceType,
     var topic: String = "neohub/unconfigured", //al instanciarse aun no esta configurado.
@@ -41,7 +41,9 @@ abstract class Device(
             topic = topic,
             roomId = room?.id,
             ownerId = owner?.id,
-            macAddress = macAddress
+            owner = owner?.username,
+            macAddress = macAddress,
+            visible = visible,
         )
     }
 

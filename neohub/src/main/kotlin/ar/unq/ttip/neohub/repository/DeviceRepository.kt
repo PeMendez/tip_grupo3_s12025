@@ -12,4 +12,8 @@ interface DeviceRepository : JpaRepository<Device, Long>{
     fun findByRoomIsNotNull(): List<Device>
     @Query("""SELECT COUNT (d) FROM Device d WHERE d.room IS NOT NULL""")
     fun countConfiguredDevices(): Long
+
+    fun findByOwnerId(ownerId: Long): List<Device>
+
+    fun findByMacAddress(macAddress: String): Device?
 }
