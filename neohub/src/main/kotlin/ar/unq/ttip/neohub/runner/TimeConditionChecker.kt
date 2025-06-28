@@ -6,6 +6,8 @@ import org.springframework.context.ApplicationEventPublisher
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 
 @Component
@@ -15,7 +17,7 @@ class TimeConditionChecker(
 ) {
     @Scheduled(cron = "0 * * * * *")
     fun checkTimeConditions() {
-        val currentTime = LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS).toString()
+        val currentTime = LocalTime.now().truncatedTo(ChronoUnit.MINUTES).format(DateTimeFormatter.ofPattern("HH:mm"))
         val rules = ruleRepository.findRulesWithTimeConditions(currentTime)
         println("Encontradas ${rules.size} reglas...")
         rules.forEach { rule ->
