@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8080/devices';
+const API_URL = import.meta.env.VITE_API_URL + '/devices';
 
 export const getUnconfiguredDevices = async (token) => {
     try {
