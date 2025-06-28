@@ -11,7 +11,7 @@ const connectWebSocket = (onMessageReceived) => {
         return;
     }
 
-    const wsUrl = import.meta.env.VITE_WS_URL || 'ws://localhost:8080/ws/mqtt';
+    const wsUrl = import.meta.env.VITE_WS_URL; //|| 'ws://localhost:8080/ws/mqtt';
     console.log(`Conectando a WebSocket en: ${wsUrl}`);
 
     socket = new WebSocket(wsUrl);

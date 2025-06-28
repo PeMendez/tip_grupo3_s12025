@@ -15,4 +15,16 @@ export default defineConfig({
       '@': path.resolve(new URL('.', import.meta.url).pathname, 'src'),
     },
   },
-})
+  server: {
+    host: '0.0.0.0',
+    port: 5173,
+//    hmr: false,
+    hmr:{
+      port: 24678,
+      clientPort: 5173,
+    },
+  },
+  /*preview:{
+    port: 4173
+  }*/
+});
