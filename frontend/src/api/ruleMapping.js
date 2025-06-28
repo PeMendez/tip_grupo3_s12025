@@ -3,6 +3,7 @@ export const attributeTranslations = {
     IS_ON: 'Estado',
     IS_OPEN: 'Está',
     BRIGHTNESS: 'Brillo',
+    TIME: 'Hora'
     // Agrega aquí todos los atributos que necesites traducir
 };
 

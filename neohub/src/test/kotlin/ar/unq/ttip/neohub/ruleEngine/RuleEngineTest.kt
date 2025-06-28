@@ -7,7 +7,7 @@ import ar.unq.ttip.neohub.model.devices.OpeningSensor
 import ar.unq.ttip.neohub.model.devices.SmartOutlet
 import ar.unq.ttip.neohub.model.devices.TemperatureSensor
 import ar.unq.ttip.neohub.model.ruleEngine.Action
-import ar.unq.ttip.neohub.model.ruleEngine.Condition
+import ar.unq.ttip.neohub.model.ruleEngine.DeviceCondition
 import ar.unq.ttip.neohub.model.ruleEngine.Rule
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
@@ -22,8 +22,7 @@ class RuleEngineTest {
     @Test
     fun `regla creada exitosamente con atributos y operadores validos`() {
         val temperatureSensor = TemperatureSensor(name = "Temperature Sensor")
-        val condition = Condition(
-            id = 1,
+        val condition = DeviceCondition(
             rule = null,
             device = temperatureSensor,
             attribute = Attribute.TEMPERATURE,
@@ -32,7 +31,6 @@ class RuleEngineTest {
         )
 
         val action = Action(
-            id = 1,
             rule = null,
             device = temperatureSensor,
             actionType = ActionType.TURN_ON,
@@ -56,8 +54,7 @@ class RuleEngineTest {
         val temperatureSensor = TemperatureSensor(name = "Temperature Sensor")
         val invalidAttribute = Attribute.IS_OPEN // Atributo no soportado por un TemperatureSensor
 
-        val condition = Condition(
-            id = 1,
+        val condition = DeviceCondition(
             rule = null,
             device = temperatureSensor,
             attribute = invalidAttribute,
@@ -66,7 +63,6 @@ class RuleEngineTest {
         )
 
         val rule = Rule(
-            id = 1,
             name = "Invalid Attribute Rule",
             conditions = mutableListOf(condition),
             actions = mutableListOf()
@@ -82,8 +78,7 @@ class RuleEngineTest {
     @Test
     fun `regla falla por operador invalido`() {
         val window = OpeningSensor(name = "Window")
-        val condition = Condition(
-            id = 1,
+        val condition = DeviceCondition(
             rule = null,
             device = window,
             attribute = Attribute.IS_OPEN,
@@ -110,8 +105,7 @@ class RuleEngineTest {
         val smartOutlet = SmartOutlet(name = "Smart Outlet")
         val unsupportedAttribute = Attribute.TEMPERATURE // Atributo no soportado por un SmartOutlet
 
-        val condition = Condition(
-            id = 1,
+        val condition = DeviceCondition(
             rule = null,
             device = smartOutlet,
             attribute = unsupportedAttribute,
@@ -138,8 +132,7 @@ class RuleEngineTest {
         val smartOutlet = SmartOutlet(name = "Smart Outlet")
 
         // Configurar condición
-        val condition = Condition(
-            id = 1,
+        val condition = DeviceCondition(
             rule = null,
             device = temperatureSensor,
             attribute = Attribute.TEMPERATURE,
@@ -175,8 +168,7 @@ class RuleEngineTest {
         val dimmer = Dimmer(name = "Dimmer")
 
         // Configurar condición
-        val condition = Condition(
-            id = 1,
+        val condition = DeviceCondition(
             rule = null,
             device = openingSensor,
             attribute = Attribute.IS_OPEN,
@@ -212,8 +204,7 @@ class RuleEngineTest {
         val smartOutlet = SmartOutlet(name = "Smart Outlet")
 
         // Configurar condición válida
-        val condition = Condition(
-            id = 1,
+        val condition = DeviceCondition(
             rule = null,
             device = temperatureSensor,
             attribute = Attribute.TEMPERATURE,
@@ -253,8 +244,7 @@ class RuleEngineTest {
         val dimmer = Dimmer(name = "Dimmer")
 
         // Configurar condición válida
-        val condition = Condition(
-            id = 1,
+        val condition = DeviceCondition(
             rule = null,
             device = openingSensor,
             attribute = Attribute.IS_OPEN,
@@ -300,8 +290,7 @@ class RuleEngineTest {
         fan.turnOff()
 
         // Configurar condición asociada al sensor
-        val condition = Condition(
-            id = 1,
+        val condition = DeviceCondition(
             rule = null, // Asociado a la regla después
             device = temperatureSensor,
             attribute = Attribute.TEMPERATURE,
@@ -348,8 +337,7 @@ class RuleEngineTest {
         fan.turnOff()
 
         // Configurar condición asociada al sensor
-        val condition = Condition(
-            id = 1,
+        val condition = DeviceCondition(
             rule = null, // Asociado a la regla después
             device = temperatureSensor,
             attribute = Attribute.TEMPERATURE,
@@ -396,8 +384,7 @@ class RuleEngineTest {
         dimmer.setAttributeValue(Attribute.BRIGHTNESS, "50") // El brillo inicial es 50%
 
         // Configurar condición asociada al sensor
-        val condition = Condition(
-            id = 1,
+        val condition = DeviceCondition(
             rule = null, // Asociado a la regla después
             device = openingSensor,
             attribute = Attribute.IS_OPEN,

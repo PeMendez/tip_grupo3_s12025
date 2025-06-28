@@ -68,7 +68,7 @@ class HomeService(
 
         val rulesWithConditions = homeRepository.findRulesWithConditions(user.username, isAdmin)
         val completeRules = homeRepository.fetchActionsForRules(rulesWithConditions, user.username, isAdmin)
-
+        println("Encontrados ${rulesWithConditions.size}")
         return completeRules.map { it.toDTO() }
     }
 

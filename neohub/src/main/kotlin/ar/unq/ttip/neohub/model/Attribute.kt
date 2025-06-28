@@ -2,7 +2,7 @@ package ar.unq.ttip.neohub.model
 
 
 enum class Attribute {
-    TEMPERATURE, IS_ON, IS_OPEN, BRIGHTNESS; //ver si hace falta descripcion a cada tipo de atributo
+    TEMPERATURE, IS_ON, IS_OPEN, BRIGHTNESS, TIME; //ver si hace falta descripcion a cada tipo de atributo
 
     companion object {
         fun fromString(value: String): Attribute {
@@ -14,6 +14,7 @@ enum class Attribute {
             TEMPERATURE to listOf(Operator.GREATER_THAN, Operator.LESS_THAN, Operator.EQUALS),
             IS_ON to listOf(Operator.EQUALS),
             IS_OPEN to listOf(Operator.EQUALS),
+            TIME to listOf(Operator.EQUALS),
             BRIGHTNESS to listOf(Operator.GREATER_THAN, Operator.LESS_THAN, Operator.EQUALS)
         )
 
