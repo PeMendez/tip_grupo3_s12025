@@ -5,12 +5,18 @@
     display: flex;
     justify-content: center;
     width: 100%;
+    z-index: 10; /* para que esté encima */
+    background-color: var(--majorelle-blue); /* o el que uses */
+    padding: 0.5rem;
+    box-sizing: border-box;
 }
 
 .header {
     width: 100%;
-    max-width: 490px;
+    max-width: 100%;
     text-align: center;
+    color: white;
+    font-size: 1.5rem;
 }
 
 .no-rooms {
@@ -19,10 +25,11 @@
 
 
 .edit-container {
-    min-width: 490px;
+    width: 100%;
     display: flex;
     justify-content: flex-end;
-    margin-right: 30px;
+    padding: 0 1rem;
+    box-sizing: border-box;
 }
 
 
@@ -33,15 +40,32 @@
     background-color: var(--blue-gray);
     display: flex;
     justify-content: center;
-    margin-top: 40px;
+    margin: 40px auto;
     flex-direction: column-reverse;
-    margin-bottom: 40px;
+    width: 100%;
+    max-width: 200px;
+    box-sizing: border-box;
 }
 
 .icon {
     padding: 10px 0;
 }
 
+.rulesButton {
+    background-color: var(--blue-gray);
+    font-weight: bold;
+    border-radius: 20px;
+    padding: 0.5rem 1rem;
+    width: fit-content;
+    margin: 0 auto 20px;
+}
+
+
+@media (max-width: 480px) {
+    .header {
+        font-size: 1.2rem;
+    }
+}
 
 
 
