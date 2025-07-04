@@ -170,5 +170,17 @@
     opacity: 1;
 }
 
+@media (max-width: 768px) {
+    .profile-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .section {
+        width: 90%;
+        margin: 15px 0;
+    }
+}
+
 
 

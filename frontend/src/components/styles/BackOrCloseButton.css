@@ -35,3 +35,10 @@
 .back-or-close.x {
     margin: 0;
 }
+
+@media (max-width: 768px) {
+    .back-or-close.arrow {
+        position: static;
+        margin: 10px 20px 5px auto;
+    }
+}

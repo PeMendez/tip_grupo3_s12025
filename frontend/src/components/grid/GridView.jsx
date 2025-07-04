@@ -11,7 +11,6 @@ const GridView = ({
                       items,
                       onItemClick,
                       onAdd,
-                      onClose,
                       editMode,
                       onDelete,
                       onResetFactory,
@@ -53,9 +52,6 @@ const GridView = ({
     return (
         <div className="main-container">
             <div className={'room-grid'}>
-                {((type === 'room' && (editMode || addMode)) || type === 'device') && (
-                    <BackOrCloseButton type="arrow" onClick={onClose} />
-                )}
                 {items.map((item, index) => (
                     <div
                         key={index}
@@ -63,53 +59,55 @@ const GridView = ({
                         onClick={() => handleItemClick(item)}
                     >
                         {type === 'device' ? (
-                        <DeviceCard
-                            key={index}
-                            device={item}
-                            toggleLight={item.ackStatus === true ? toggleLight : () => {}}
-                            setBrightness={item.ackStatus === true ? setBrightness : () => {}}
-                            onClick={() => handleItemClick(item)}
-                            editMode={editMode}
-                            addMode={addMode}
-                        />
+                            <DeviceCard
+                                key={index}
+                                device={item}
+                                toggleLight={item.ackStatus === true ? toggleLight : () => {
+                                }}
+                                setBrightness={item.ackStatus === true ? setBrightness : () => {
+                                }}
+                                onClick={() => handleItemClick(item)}
+                                editMode={editMode}
+                                addMode={addMode}
+                            />
                         ) : (
                             <>
                                 <img src={getImage(item)} alt={item.name}/>
                                 <span>{item.name}</span>
-                                </>
+                            </>
                         )}
 
-                            {editMode && (
-                                <div className="delete-icon-full">🗑️</div>
-                            )}
+                        {editMode && (
+                            <div className="delete-icon-full">🗑️</div>
+                        )}
 
-                            {!editMode && !item.ackStatus && (
+                        {!editMode && !item.ackStatus && (
                             <div className="delete-icon-full">🔌</div>
-                            )}
-
-                        </div>
-                     ))}
-
-                        {onAdd && (
-                            <div className={`add-room-icon`}>
-                                {type === 'room' ? (
-                                    <TextButton handleClick={onAdd} text="Nueva"/>
-                                ) : (
-                                    <TextButton handleClick={onAdd} text={<FiPlus size={24} className="icon"/>}/>
-                                )}
-                            </div>
                         )}
+
+                    </div>
+                ))}
+
+                {onAdd && (
+                    <div className={`add-room-icon`}>
+                        {type === 'room' ? (
+                            <TextButton handleClick={onAdd} text="Nueva"/>
+                        ) : (
+                            <TextButton handleClick={onAdd} text={<FiPlus size={24} className="icon"/>}/>
+                        )}
+                    </div>
+                )}
 
 
                 {itemToDelete && (
                     <DeleteModal
-                    device={itemToDelete}
-                    onConfirm={handleConfirmDelete}
-                    onCancel={() => setItemToDelete(null)}
-                    type={type}
-                    message={`¿Estás seguro que querés  ${type === 'room' ? 'eliminar la habitación' : 'desconfigurar el dispositivo'} "${nameItemToDelete}"?`}
-                />
-            )}
+                        device={itemToDelete}
+                        onConfirm={handleConfirmDelete}
+                        onCancel={() => setItemToDelete(null)}
+                        type={type}
+                        message={`¿Estás seguro que querés  ${type === 'room' ? 'eliminar la habitación' : 'desconfigurar el dispositivo'} "${nameItemToDelete}"?`}
+                    />
+                )}
             </div>
         </div>
     );

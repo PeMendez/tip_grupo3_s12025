@@ -92,7 +92,7 @@ const RoomDetail = () => {
 
     if (mode === 'add') {
         return (
-            <div>
+            <div className="main-container">
                 {availableDevices.length === 0 ? (
                         <div className="main-container">
                             <BackOrCloseButton type="arrow" onClick={handleClose}/>
@@ -101,6 +101,8 @@ const RoomDetail = () => {
                             </div>
                         </div>
                 ) : (
+                    <div className="main-container">
+                        <BackOrCloseButton type="arrow" onClose={() => setMode('view')}/>
                     <GridView
                         type="device"
                         items={availableDevices}
@@ -113,11 +115,11 @@ const RoomDetail = () => {
                                 }
                             });
                         }}
-                        onClose={() => setMode('view')}
                         getIcon={(device) => getDeviceIcon(device.type)}
                         addMode={true}
                         editMode={false}
                     />
+                    </div>
                 )}
             </div>
         );
@@ -125,60 +127,66 @@ const RoomDetail = () => {
 
     if (mode === 'edit') {
         return (
-            <GridView
-                type="device"
-                items={devices}
-                editMode={true}
-                onDelete={handleDeleteDevice}
-                onResetFactory={handleFactoryReset}
-                onItemClick={ (device) => {console.log("No se que va aca pero si no se lo pasas no borra device.")} }
-                onAdd={() => setMode('add')}
-                onClose={() => setMode('view')}
-                getIcon={(device) => getDeviceIcon(device.type)}
-            />
-        );
-    }
+            <div className="main-container">
+                <BackOrCloseButton type="arrow" onClick={() => setMode('view')}/>
+                <GridView
+                    type="device"
+                    items={devices}
+                    editMode={true}
+                    onDelete={handleDeleteDevice}
+                    onResetFactory={handleFactoryReset}
+                    onItemClick={(device) => {
+                        console.log("No se que va aca pero si no se lo pasas no borra device.")
+                    }}
+                    onAdd={() => setMode('add')}
+                    getIcon={(device) => getDeviceIcon(device.type)}
+                />
 
-    return (
-        <div className="main-container">
-            {devices.length > 0 ? (
-                <>
-                    <div className="edit-container">
-                        <RoundButton type="edit" onClick={() => setMode('edit')}/>
-                    </div>
-                    <GridView
-                        type="device"
-                        items={devices.map(device => ({
-                            ...device,
-                            ackStatus: getAckForDevice(device.id)
-                        }))}
-                        onItemClick={handleDeviceClick}
-                        getIcon={(device) => getDeviceIcon(device.type)}
-                        toggleLight={toggleLight}
-                        setBrightness={setBrightness}
-                        onClose={handleClose}
-                    />
-                </>
-            ) : (
+            </div>
+                );
+                }
+
+                return (
                 <div className="main-container">
                     <BackOrCloseButton type="arrow" onClick={handleClose}/>
-                    <div className="no-rooms">
-                        <p>Aún no tenés dispositivos...</p>
-                        <RoundButton type="edit" onClick={() => setMode('add')}/>
-                    </div>
+                    {devices.length > 0 ? (
+                        <>
+                            <div className="edit-container">
+                                <RoundButton type="edit" onClick={() => setMode('edit')}/>
+                            </div>
+                            <GridView
+                                type="device"
+                                items={devices.map(device => ({
+                                    ...device,
+                                    ackStatus: getAckForDevice(device.id)
+                                }))}
+                                onItemClick={handleDeviceClick}
+                                getIcon={(device) => getDeviceIcon(device.type)}
+                                toggleLight={toggleLight}
+                                setBrightness={setBrightness}
+                                onClose={handleClose}
+                            />
+                        </>
+                    ) : (
+                        <div className="main-container">
+                            <BackOrCloseButton type="arrow" onClick={handleClose}/>
+                            <div className="no-rooms">
+                                <p>Aún no tenés dispositivos...</p>
+                                <RoundButton type="edit" onClick={() => setMode('add')}/>
+                            </div>
+                        </div>
+                    )}
+
+                    {toast && (
+                        <Toast
+                            key={toast.key}
+                            message={toast.message}
+                            duration={3000}
+                            onClose={() => setToast(null)}
+                        />
+                    )}
                 </div>
-            )}
+                );
+                };
 
-            {toast && (
-                <Toast
-                    key={toast.key}
-                    message={toast.message}
-                    duration={3000}
-                    onClose={() => setToast(null)}
-                />
-            )}
-        </div>
-    );
-};
-
-export default RoomDetail;
+                export default RoomDetail;
