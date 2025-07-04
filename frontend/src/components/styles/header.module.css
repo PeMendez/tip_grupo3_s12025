@@ -1,6 +1,6 @@
 /* Estilo para el header */
 .header {
-    position: fixed;
+    position: relative;
     top:0;
     left: 0;
     width: 100%;
@@ -12,6 +12,7 @@
     background-color: var(--majorelle-blue);
     color: var(--ghost-white);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
 }
 
 /* Botón de menú hamburguesa */
@@ -53,15 +54,14 @@
 
 /* Menú desplegable */
 .menu {
-    position: absolute; /* Posicionar relativo al contenedor */
-    top: 100%; /* Ubicar debajo del header */
-    left: 0; /* Alinear a la izquierda */
-    width: 30%; /* Ocupa 0.3 del ancho */
-    height: 100vh;
-    background-color: var(--dark-gray); /* Fondo sólido gris */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para destacar */
-    z-index: 10; /* Por debajo del header (si tiene un z-index más alto) */
-    padding: 10px 0; /* Espaciado interno */
+    position: absolute;
+    top: 100%;
+    left: 0;
+    height: calc(100vh - 60px);
+    background-color: var(--dark-gray);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1001;
+    padding: 10px 0;
     transition: transform 0.3s ease, opacity 0.3s ease;
 }
 

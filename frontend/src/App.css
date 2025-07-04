@@ -13,24 +13,31 @@
   text-align: center;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
-  width: 100%;
-  box-shadow: 0 0 20px var(--app-green);
+  width: 100vw;
   height: 100vh;
-  padding-top: 60px ;
+  padding: 0 1rem 1rem 1rem;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 .hero {
   background-color: var(--light-grone);
-  padding: 10px;
+  padding: 1rem;
   border-radius: 20px;
   box-shadow: 0 0 20px var(--app-green);
   text-align: center;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .logo {
-  width: 120px;
+  width: 100px;
+  max-width: 30vw;
+  height: auto;
   margin-bottom: 1rem;
 }
 
