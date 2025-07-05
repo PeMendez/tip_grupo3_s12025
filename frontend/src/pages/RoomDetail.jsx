@@ -169,7 +169,6 @@ const RoomDetail = () => {
                         </>
                     ) : (
                         <div className="main-container">
-                            <BackOrCloseButton type="arrow" onClick={handleClose}/>
                             <div className="no-rooms">
                                 <p>Aún no tenés dispositivos...</p>
                                 <RoundButton type="edit" onClick={() => setMode('add')}/>
