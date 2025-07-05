@@ -104,7 +104,7 @@ int screenRefreshTime;
 // --- Configuración de Red y MQTT ---
 const char* ssid = "Rengo-AP";     // Tu SSID de WiFi
 const char* password = "Acm27pts"; // Tu contraseña de WiFi
-const char* mqttBroker = "broker.hivemq.com";
+const char* mqttBroker = "192.168.1.56";
 const int mqttPort = 1883;
 const char* initialTopic = "neohub/unconfigured";
 

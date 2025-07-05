@@ -12,7 +12,7 @@ const int RESET_BUTTON_PIN = 23;
 // --- Configuración de Red y MQTT ---
 const char* ssid = "Rengo-AP";     // Tu SSID de WiFi
 const char* password = "Acm27pts"; // Tu contraseña de WiFi
-const char* mqttBroker = "broker.hivemq.com";
+const char* mqttBroker = "192.168.1.56";
 const int mqttPort = 1883;
 const char* initialTopic = "neohub/unconfigured";
 const char* device_type = "smart_outlet";
@@ -195,7 +195,7 @@ void setup_wifi() {
 void connect_to_mqtt() {
   while (!mqttClient.connected()) {
     Serial.print("Intentando conexión MQTT...");
-    String clientId = "ESP32-";
+    String clientId = device_name_prefix;
     clientId += String(config.mac_address[1], HEX) + String(config.mac_address[2], HEX); //String(config.mac_address);
     
     if (mqttClient.connect(clientId.c_str())) {
