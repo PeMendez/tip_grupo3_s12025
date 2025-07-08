@@ -4,13 +4,13 @@
 #include <LittleFS.h>
 
 // --- Configuración de Hardware ---
-const int SENSOR_PIN = 15;
+const int SENSOR_PIN = 26;
 const int RESET_BUTTON_PIN = 23;
 
 // --- Configuración de Red y MQTT ---
 const char* ssid = "Rengo-AP";     // Tu SSID de WiFi
 const char* password = "Acm27pts"; // Tu contraseña de WiFi
-const char* mqttBroker = "broker.hivemq.com";
+const char* mqttBroker = "192.168.1.56";//"broker.hivemq.com";
 const int mqttPort = 1883;
 const char* initialTopic = "neohub/unconfigured";
 const char* device_type = "opening_sensor";
@@ -76,7 +76,7 @@ void loop() {
   }
   mqttClient.loop();
   // Aquí no se pone lógica bloqueante
-  read_sensor(); //actualiza globalmente lastSensorState
+  read_sensor_and_publish(); //actualiza globalmente lastSensorState
 
   // --- Lógica para el botón de reset físico (no bloqueante) ---
   // El pin leerá HIGH normalmente (pull-up) y LOW cuando se presiona.
@@ -104,7 +104,7 @@ void loop() {
 
 void read_sensor_and_publish(){
   // Lectura del sensor con debounce
-  int sensorState = digitalRead(sensorPin); //lee estado actual
+  int sensorState = digitalRead(SENSOR_PIN); //lee estado actual
 
   if (sensorState != lastSensorState) { //detecta si cambió
     unsigned long currentTime = millis(); //toma el tiempo 
@@ -114,9 +114,9 @@ void read_sensor_and_publish(){
         Serial.println("Puerta cerrada (haz interrumpido)");
       } else {
         Serial.println("Puerta abierta (haz no interrumpido)");
-        publish_current_state();
       }
       lastDebounceTime = currentTime; //actualiza el tiempo
+      publish_current_state();
     }
   }
   lastSensorState = sensorState; //actualiza el último estado
