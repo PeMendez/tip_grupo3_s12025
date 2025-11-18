@@ -62,9 +62,9 @@ const GridView = ({
                             <DeviceCard
                                 key={index}
                                 device={item}
-                                toggleLight={item.ackStatus === true ? toggleLight : () => {
+                                toggleLight={item.ackStatus === true && item.type==="SMART_OUTLET" ? toggleLight : () => {
                                 }}
-                                setBrightness={item.ackStatus === true ? setBrightness : () => {
+                                setBrightness={item.ackStatus === true && item.type==="DIMMER" ? setBrightness : () => {
                                 }}
                                 onClick={() => handleItemClick(item)}
                                 editMode={editMode}
