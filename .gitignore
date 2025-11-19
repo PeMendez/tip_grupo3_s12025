@@ -2,6 +2,7 @@
 paho*
 .idea/
 
+hardware/secrets.h
 hardware/scripts/*.json
 hardware/scripts/device_simulator/devices/__pycache__
 hardware/scripts/device_simulator/config/*.json
