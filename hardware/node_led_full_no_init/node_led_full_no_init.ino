@@ -2,6 +2,7 @@
 #include <PubSubClient.h>
 #include <ArduinoJson.h>
 #include <LittleFS.h>
+#include "../secrets.h"
 
 // --- Configuración de Hardware ---
 #define RELAY_ON  false
@@ -10,11 +11,12 @@ const int RELAY_PIN = 15;
 const int RESET_BUTTON_PIN = 23;
 
 // --- Configuración de Red y MQTT ---
-const char* ssid = "Rengo-AP";     // Tu SSID de WiFi
-const char* password = "Acm27pts"; // Tu contraseña de WiFi
-const char* mqttBroker = "192.168.1.56";
+const char* ssid = SECRET_SSID;     // Tu SSID de WiFi
+const char* password = SECRET_PASS; // Tu contraseña de WiFi
+const char* mqttBroker = "10.122.69.161";
 const int mqttPort = 1883;
 const char* initialTopic = "neohub/unconfigured";
+
 const char* device_type = "smart_outlet";
 const char* device_name_prefix = "enchufe_";
 
