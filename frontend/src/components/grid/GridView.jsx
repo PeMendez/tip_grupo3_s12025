@@ -26,7 +26,6 @@ const GridView = ({
         if (editMode) {
             setNameToDelete(item.name);
             setItemToDelete(item);
-
         }
         onItemClick(item);
     };
@@ -62,9 +61,11 @@ const GridView = ({
                             <DeviceCard
                                 key={index}
                                 device={item}
-                                toggleLight={item.ackStatus === true && item.type==="SMART_OUTLET" ? toggleLight : () => {
+                                toggleLight={item.ackStatus && item.type === 'smart_outlet' ? toggleLight : () => {
+                                    console.log("toggle light nt");
                                 }}
-                                setBrightness={item.ackStatus === true && item.type==="DIMMER" ? setBrightness : () => {
+                                setBrightness={item.ackStatus && item.type === 'dimmer' ? setBrightness : () => {
+                                    console.log("set brillo nt");
                                 }}
                                 onClick={() => handleItemClick(item)}
                                 editMode={editMode}

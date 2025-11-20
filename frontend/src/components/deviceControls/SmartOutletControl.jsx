@@ -6,7 +6,9 @@ const SmartOutletControl = ({ device, toggleLight }) => {
                 <input
                     type="checkbox"
                     checked={!!device.status}
-                    onChange={() => toggleLight(device)}
+                    onChange={() =>{
+                        toggleLight(device)
+                    }}
                 />
                 <span className={`slider round ${device.status ? 'on' : 'off'}`}></span>
             </label>

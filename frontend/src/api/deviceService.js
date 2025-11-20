@@ -45,8 +45,12 @@ export const getDevice = async (deviceId, token) => {
 };
 
 export const smartOutletCommand = async (device, forceState, token) => {
-    const message = forceState? "turn_on" : "turn_off"
-    console.log("Enviando un ", message)
+    const message = forceState? "turn_on" : "turn_off";
+    console.log("Enviando un ", message , "al smartOutlet con id", device.id);
+    if (device.id === undefined) {
+        console.log("No se por qué intentas esto");
+        return;
+    }
     try {
         const response = await axios.post(`${API_URL}/message/${device.id}`,
             {
@@ -69,7 +73,7 @@ export const smartOutletCommand = async (device, forceState, token) => {
 
 export const dimmerCommand = async (device, brightness, token) => {
     const message = "set_brightness"
-    console.log("Enviando un ", message)
+    console.log("Enviando un ", message , "al dimmer con id", device.id);
     try {
         const response = await axios.post(`${API_URL}/message/${device.id}`,
             {

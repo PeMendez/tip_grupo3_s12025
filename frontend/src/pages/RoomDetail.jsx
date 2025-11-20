@@ -34,7 +34,7 @@ const RoomDetail = () => {
         handleDeleteDevice,
         handleFactoryReset,
         toast,
-        setToast,
+        setToast
     } = useDeviceData(id, fetchRoomRole, setDevices);
 
     useEffect(() => {
@@ -63,11 +63,13 @@ const RoomDetail = () => {
     }, [mode, fetchAvailableDevices, fetchRoomRole, fetchRoomEdit]);
 
     const handleDeviceClick = (device) => {
+        console.log("cliqueado el device: ", device.id);
+        //navigate("/device/" + device.id); //no se por que no anda esto
         if (mode !== 'view') return;
-
+        /* ESTO ES LO QUE DA LAS REQUEST FALLOP. PROBA DESCOMENTARLO. CON AMOR, NIÑITA
         if (device.type === 'smart_outlet' || device.type === 'dimmer') {
             toggleLight(device.id);
-        }
+        }*/
     };
 
     const getAckForDevice = (deviceId) => {
@@ -132,14 +134,17 @@ const RoomDetail = () => {
                 <GridView
                     type="device"
                     items={devices}
-                    editMode={true}
-                    onDelete={handleDeleteDevice}
-                    onResetFactory={handleFactoryReset}
                     onItemClick={(device) => {
                         console.log("No se que va aca pero si no se lo pasas no borra device.")
                     }}
                     onAdd={() => setMode('add')}
+                    editMode={true}
+                    onDelete={handleDeleteDevice}
+                    onResetFactory={handleFactoryReset}
                     getIcon={(device) => getDeviceIcon(device.type)}
+                    toggleLight={()=>{console.log("no togglees")}}
+                    setBrightness={()=>{console.log("No setees brillo")}}
+                    addMode={false}
                 />
 
             </div>
@@ -161,9 +166,13 @@ const RoomDetail = () => {
                                     ackStatus: getAckForDevice(device.id)
                                 }))}
                                 onItemClick={handleDeviceClick}
+                                onAdd={()=>{setMode('add')}}
+                                onDelete={()=>{}}
+                                onResetFactory={()=>{}}
                                 getIcon={(device) => getDeviceIcon(device.type)}
                                 toggleLight={toggleLight}
                                 setBrightness={setBrightness}
+                                addMode={()=>{}}
                                 onClose={handleClose}
                             />
                         </>
