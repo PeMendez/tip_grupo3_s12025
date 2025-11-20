@@ -13,7 +13,7 @@ const int RESET_BUTTON_PIN = 23;
 // --- Configuración de Red y MQTT ---
 const char* ssid = SECRET_SSID;     // Tu SSID de WiFi
 const char* password = SECRET_PASS; // Tu contraseña de WiFi
-const char* mqttBroker = "10.122.69.161";
+const char* mqttBroker = MQTT_BROKER_IP;
 const int mqttPort = 1883;
 const char* initialTopic = "neohub/unconfigured";
 
