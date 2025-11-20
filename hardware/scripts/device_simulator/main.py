@@ -8,6 +8,7 @@ def main():
     parser.add_argument("--type", default="smart_outlet", help="Tipo de dispositivo a simular (ej: smart_outlet).")
     parser.add_argument("--broker", default="broker.hivemq.com", help="Dirección del broker MQTT.")
     parser.add_argument("--port", type=int, default=1883, help="Puerto del broker MQTT.")
+    parser.add_argument("--reset", action="store_true", help="Reset de fábrica. Elimina la configuración")
     parser.add_argument("--initial-topic", default="neohub/unconfigured", help="Tópico base para dispositivos no configurados.")
     
     cli_args = parser.parse_args()
@@ -48,6 +49,11 @@ def main():
     else:
         print(f"Tipo de dispositivo desconocido: {cli_args.type}")
         exit(1)
+
+    if device_instance and cli_args.reset:
+        device_instance._factory_reset()
+        print("Reseteado el dispositivo. Reinicia el script sin --reset")
+        exit(0) # Aunque al ejecutar factory reset debería terminar el script.
 
     if device_instance:
         device_instance.start()
